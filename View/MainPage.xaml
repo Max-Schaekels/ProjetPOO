@@ -2,11 +2,32 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProjetPOO.View.MainPage">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key= "TestButton" TargetType ="Button">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="BackgroundColor" Value="Grey"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
+            <Button
+                x:Name="buttonCreateLoot"
+                Text="Créer un loot"
+                Clicked="buttonCreateLoot_Clicked"
+                Style="{StaticResource TestButton}" />
+
+            <Button
+                 x:Name="buttonCreateInventory"
+                 Text="Créer un inventaire"
+                 Clicked="buttonCreateInventory_Clicked"
+                 Style="{StaticResource TestButton}" />
 
         </VerticalStackLayout>
     </ScrollView>

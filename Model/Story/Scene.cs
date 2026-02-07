@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjetPOO.Model
+namespace ProjetPOO.Model.Story
 {
-    public class Scenario
+    public class Scene
     {
         private int _id;
         private string _title;
