@@ -19,5 +19,15 @@ namespace ProjetPOO.Model.Combat
         {
             throw new System.NotImplementedException();
         }
+
+        public void DealDamage()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Recei()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
