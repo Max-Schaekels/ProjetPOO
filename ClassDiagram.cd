@@ -17,7 +17,7 @@
   <Class Name="ProjetPOO.Model.Combat.Character">
     <Position X="12" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>ARAAIAAAAAAAAAAAAAQAAAAAAAAAAAAQBAAAAAAAAEA=</HashCode>
       <FileName>Model\Combat\Character.cs</FileName>
     </TypeIdentifier>
   </Class>
