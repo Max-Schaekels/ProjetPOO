@@ -25,7 +25,12 @@ namespace ProjetPOO.Model.Combat
             throw new System.NotImplementedException();
         }
 
-        public void Recei()
+        public void ReceiveDamage(int amount)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Heal(int amount)
         {
             throw new System.NotImplementedException();
         }

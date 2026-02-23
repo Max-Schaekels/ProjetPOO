@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace ProjetPOO.Model.Combat
 {
-    public class Enemy
+    public class Enemy : Character
     {
+        private int _id;
+        private int _rewardGold;
+        private int _rewardExperience;
+        private int _rewardPotioon;
     }
 }
