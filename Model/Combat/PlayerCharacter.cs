@@ -9,9 +9,20 @@ namespace ProjetPOO.Model.Combat
 {
     public class PlayerCharacter : Character
     {
+        private int _id;
         private int _experience;
         private int _level;
-        
+
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                    _id = value;
+            }
+        }
+
         public int Experience
         {
             get => _experience;
@@ -32,8 +43,8 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
-        public PlayerCharacter(string name, int maxHp, int attackPower, int defense, int agility, int experience = 0, int level = 1)
-            : base(name, maxHp, attackPower, defense, agility)
+        public PlayerCharacter(string name, int maxHp, int attack, int defense, int agility, int experience = 0, int level = 1)
+            : base(name, maxHp, attack, defense, agility)
         {
             Experience = experience;
             Level = level;
