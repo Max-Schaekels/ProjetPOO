@@ -1,10 +1,16 @@
 ﻿using ProjetPOO.Model.Game;
 using ProjetPOO.Model.Story.Enums;
+using ProjetPOO.Utilities.EntriesValidation;
 
 namespace ProjetPOO.Model.Story
 {
     public class Scene
     {
+        private const int MINIMUM_TITLE_LENGTH = 3;
+        private const int MAX_TITLE_LENGTH = 200;
+        public static readonly string[] ALLOWED_PICTURE_FILE_FORMATS = { "jpg", "png" };
+        private const int MINIMUM_TEXT_LENGTH = 10;
+
         private int _id;
         private string _title;
         private string _text;
@@ -44,8 +50,8 @@ namespace ProjetPOO.Model.Story
             get => _id;
             set
             {
-                // TODO validations plus tard (ValidUtils.CheckIfPositiveNumber(value))
-                _id = value;
+                if(ValidUtils.CheckIfPositiveNumber(value)) 
+                    _id = value;
             }
         }
 
@@ -54,8 +60,8 @@ namespace ProjetPOO.Model.Story
             get => _title;
             set
             {
-                // TODO validations plus tard (nom non vide, longueur min, etc.)
-                _title = value;
+                if (ValidUtils.CheckEntryName(value, MINIMUM_TITLE_LENGTH, MAX_TITLE_LENGTH))
+                    _title = value;
             }
         }
 
@@ -64,8 +70,8 @@ namespace ProjetPOO.Model.Story
             get => _text;
             set
             {
-                // TODO validations plus tard (non vide, longueur min, etc.)
-                _text = value;
+                if (ValidUtils.CheckEntryDescription(value, MINIMUM_TEXT_LENGTH))
+                    _text = value;
             }
         }
 
@@ -74,7 +80,7 @@ namespace ProjetPOO.Model.Story
             get => _type;
             set
             {
-                // TODO validations plus tard (cohérence avec ShopId / EnemyId etc.)
+              
                 _type = value;
             }
         }
@@ -84,8 +90,8 @@ namespace ProjetPOO.Model.Story
             get => _scenarioId;
             set
             {
-                // TODO validations plus tard (positif)
-                _scenarioId = value;
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                    _scenarioId = value;
             }
         }
 
@@ -96,8 +102,8 @@ namespace ProjetPOO.Model.Story
             get => _shopId;
             set
             {
-                // TODO validations plus tard (si Type == Shop → non null)
-                _shopId = value;
+                if (value == null || ValidUtils.CheckIfPositiveNumber(value.Value))
+                    _shopId = value;
             }
         }
 
@@ -106,8 +112,8 @@ namespace ProjetPOO.Model.Story
             get => _enemyId;
             set
             {
-                // TODO validations plus tard (si Type == Combat → non null)
-                _enemyId = value;
+                if (value == null || ValidUtils.CheckIfPositiveNumber(value.Value))
+                    _enemyId = value;
             }
         }
 
@@ -116,8 +122,8 @@ namespace ProjetPOO.Model.Story
             get => _fleeTargetSceneId;
             set
             {
-                // TODO validations plus tard
-                _fleeTargetSceneId = value;
+                if (value == null || ValidUtils.CheckIfPositiveNumber(value.Value))
+                    _fleeTargetSceneId = value;
             }
         }
 
@@ -126,8 +132,8 @@ namespace ProjetPOO.Model.Story
             get => _defeatTargetSceneId;
             set
             {
-                // TODO validations plus tard
-                _defeatTargetSceneId = value;
+                if (value == null || ValidUtils.CheckIfPositiveNumber(value.Value))
+                    _defeatTargetSceneId = value;
             }
         }
 
@@ -136,8 +142,8 @@ namespace ProjetPOO.Model.Story
             get => _victoryTargetSceneId;
             set
             {
-                // TODO validations plus tard
-                _victoryTargetSceneId = value;
+                if (value == null || ValidUtils.CheckIfPositiveNumber(value.Value))
+                    _victoryTargetSceneId = value;
             }
         }
 
