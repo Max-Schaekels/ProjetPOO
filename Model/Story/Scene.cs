@@ -167,9 +167,9 @@ namespace ProjetPOO.Model.Story
             throw new NotImplementedException();
         }
 
-        public List<string> Validate()
+        public bool Validate(out List<string> errors)
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
     }
 }
