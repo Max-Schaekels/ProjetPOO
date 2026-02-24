@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ProjetPOO.Utilities.EntriesValidation;
 
-namespace ProjetPOO.Model.Inventory
+namespace ProjetPOO.Model.Gameplay
 {
     public class Inventory
     {

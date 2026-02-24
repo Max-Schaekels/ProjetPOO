@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjetPOO.Model.Inventory
+namespace ProjetPOO.Model.Gameplay
 {
     public class Shop
     {
