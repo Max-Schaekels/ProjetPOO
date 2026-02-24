@@ -8,6 +8,15 @@ namespace ProjetPOO.Model.Combat
 {
     public class Combat
     {
+        public int CalculateDamage(Character attacker, Character defender, bool isDefenderBlocking)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryFlee(PlayerCharacter player, Enemy enemy)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

@@ -60,7 +60,11 @@ namespace ProjetPOO.Model.Combat
             set => _isDefendingThisTurn = value;
         }
 
-        public CombatResult Result { get; private set; }
+        public CombatResult Result
+        {
+            get => _result;
+            private set => _result = value;
+        }
 
         public CombatState(PlayerCharacter player, Enemy enemy)
         {
@@ -96,5 +100,9 @@ namespace ProjetPOO.Model.Combat
             throw new NotImplementedException();
         }
 
-    }
+        public void EndTurn()
+        {
+            throw new NotImplementedException();
+
+        }
 }
