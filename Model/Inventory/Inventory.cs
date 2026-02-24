@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjetPOO.Utilities.EntriesValidation;
 
 namespace ProjetPOO.Model.Inventory
 {
@@ -12,11 +13,47 @@ namespace ProjetPOO.Model.Inventory
         private int _potionsCount;
         private int _keysCount;
 
-        public Inventory(int id, int potionCount, int keysCount)
+        public int Id
         {
-            _id = id;
-            _potionsCount = potionCount;
-            _keysCount = keysCount;
+            get => _id;
+            set
+            {
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                    _id = value;
+            }
+        }
+
+        public int PotionsCount
+        {
+            get => _potionsCount;
+            set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                    _potionsCount = value;
+            }
+        }
+
+        public int KeysCount
+        {
+            get => _keysCount;
+            set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                    _keysCount = value;
+            }
+        }
+
+        public Inventory(int id, int potionsCount, int keysCount)
+        {
+            Id = id;
+            PotionsCount = potionsCount;
+            KeysCount = keysCount;
+        }
+
+        public Inventory(int potionsCount, int keysCount)
+        {
+            PotionsCount = potionsCount;
+            KeysCount = keysCount;
         }
 
         public bool HasPotion()
