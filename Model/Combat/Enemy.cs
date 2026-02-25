@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProjetPOO.Model.Combat.Enums;
-using ProjetPOO.Model.Game;
+using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Utilities.EntriesValidation;
 
 namespace ProjetPOO.Model.Combat

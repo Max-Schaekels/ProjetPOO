@@ -1,4 +1,4 @@
-﻿using ProjetPOO.Model.Game;
+﻿using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Inventory;
 
 namespace ProjetPOO.View

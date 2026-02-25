@@ -23,7 +23,7 @@ namespace ProjetPOO.Model.Combat
             get => _player;
             set
             {
-                if(ValidUtils.CheckIfNotNull(value))
+                if (ValidUtils.CheckIfNotNull(value))
                     _player = value;
             }
         }
@@ -71,11 +71,11 @@ namespace ProjetPOO.Model.Combat
             Player = player;
             Enemy = enemy;
 
-            
-            IsPlayerTurn = true;                 
-            TurnCount = 0;                       
-            IsDefendingThisTurn = false;         
-            Result = CombatResult.InProgress;    
+
+            IsPlayerTurn = true;
+            TurnCount = 0;
+            IsDefendingThisTurn = false;
+            Result = CombatResult.InProgress;
         }
 
 
@@ -105,4 +105,6 @@ namespace ProjetPOO.Model.Combat
             throw new NotImplementedException();
 
         }
+
+    }
 }

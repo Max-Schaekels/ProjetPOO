@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjetPOO.Model.Game;
 using ProjetPOO.Utilities.EntriesValidation;
 
-namespace ProjetPOO.Model.Game
+namespace ProjetPOO.Model.Gameplay
 {
     public class Loot
     {
@@ -55,7 +56,7 @@ namespace ProjetPOO.Model.Game
 
         public void Apply(GameState state)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
