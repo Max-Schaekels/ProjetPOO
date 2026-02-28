@@ -74,22 +74,64 @@ namespace ProjetPOO.Model.Gameplay
 
         public bool CanBuyPotion(GameState gameState)
         {
+            if (gameState == null)
+            {
+                return false;
+            }
             return gameState.CanAfford(PotionPrice);
         }
 
         public bool CanBuyKey(GameState gameState)
         {
+            if (gameState == null)
+            {
+                return false;
+            }
             return gameState.CanAfford(KeyPrice);
         }
 
         public bool BuyPotion(GameState gameState)
         {
-            throw new NotImplementedException();
+            if (gameState == null)
+            {
+                return false;
+            }
+
+            if (gameState.PlayerInventory == null)
+            {
+                return false;
+            }
+
+            if (!CanBuyPotion(gameState))
+            {
+                return false;
+            }
+
+            gameState.SpendGold(PotionPrice);
+            gameState.PlayerInventory.AddPotion(1);
+            return true;
         }
 
         public bool BuyKey(GameState gameState)
         {
-            throw new NotImplementedException();
+            if (gameState == null)
+            {
+                return false;
+            }
+
+            if (gameState.PlayerInventory == null)
+            {
+                return false;
+            }
+
+            if (!CanBuyKey(gameState))
+            {
+                return false;
+            }
+
+            gameState.SpendGold(KeyPrice);
+            gameState.PlayerInventory.AddKey(1);
+            return true;
         }
 
     }
