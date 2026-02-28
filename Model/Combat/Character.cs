@@ -92,7 +92,7 @@ namespace ProjetPOO.Model.Combat
 
         protected Character(string name, int maxHp, int attack, int defense, int agility)
         {
-            _maxHp = 1;     // valeurs temporaires pour éviter incohérence au début
+            _maxHp = 1;     
             _currentHp = 0;
 
             Name = name;
@@ -106,38 +106,72 @@ namespace ProjetPOO.Model.Combat
 
         public bool IsAlive()
         {
-            throw new System.NotImplementedException();
+            return CurrentHp > 0;
         }
 
 
         public void ReceiveDamage(int amount)
         {
-            throw new System.NotImplementedException();
+            if (ValidUtils.CheckIfNonNegativeNumber(amount))
+            {
+                if (amount > CurrentHp)
+                {
+                    CurrentHp = 0;
+                }
+                else
+                {
+                    CurrentHp -= amount;
+                }
+            }
+            
         }
 
         public void Heal(int amount)
         {
-            throw new System.NotImplementedException();
+            if(ValidUtils.CheckIfPositiveNumber(amount))
+            {
+                if (CurrentHp + amount > MaxHp)
+                {
+                    CurrentHp = MaxHp;
+                }
+                else
+                {
+                    CurrentHp += amount;
+                }
+            }
         }
 
         public void IncreaseMaxHp(int amount)
         {
-            throw new NotImplementedException();
+            if (ValidUtils.CheckIfPositiveNumber(amount))
+            {
+                MaxHp += amount;
+                CurrentHp += amount;
+            }
         }
 
         public void IncreaseAttack(int amount)
         {
-            throw new NotImplementedException();
+            if (ValidUtils.CheckIfPositiveNumber(amount))
+            {
+                Attack += amount;
+            }
         }
 
         public void IncreaseDefense(int amount)
         {
-            throw new NotImplementedException();
+            if (ValidUtils.CheckIfPositiveNumber(amount))
+            {
+                Defense += amount;
+            }
         }
 
         public void IncreaseAgility(int amount)
         {
-            throw new NotImplementedException();
+            if (ValidUtils.CheckIfPositiveNumber(amount))
+            {
+                Agility += amount;
+            }
         }
     }
 }

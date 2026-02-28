@@ -1,115 +1,115 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
-  <Class Name="ProjetPOO.Model.Story.Scenario">
+  <Class Name="ProjetPOO.Model.Story.Scenario" Collapsed="true">
     <Position X="0.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAIAAAAAEAABAAAAAEAAAgAAAAAAAAAAAAEA=</HashCode>
+      <HashCode>AAACAAAgAYCgAEAEgABAAACAEAAQAAAAABgAUACAAAA=</HashCode>
       <FileName>Model\Story\Scenario.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Story.Scene">
+  <Class Name="ProjetPOO.Model.Story.Scene" Collapsed="true">
     <Position X="3.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>aAACAAAgAICQgEwiBABAAAgAAAAAAAAICQAACAUBAMA=</HashCode>
+      <HashCode>aACCAAAgAYCQgEwiBABAAAgAAAAAAAAICQAACAWBAMA=</HashCode>
       <FileName>Model\Story\Scene.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Combat.Character">
+  <Class Name="ProjetPOO.Model.Combat.Character" Collapsed="true">
     <Position X="12" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ARAAIAQAAAgAAACAAAQAAAAAAAAAAAAQBAAAAAAAAEA=</HashCode>
+      <HashCode>ARAAIBAAAAgQABCBAIQAADQAAIAAAAAQBMAAAgAAAEA=</HashCode>
       <FileName>Model\Combat\Character.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Combat.Combat">
+  <Class Name="ProjetPOO.Model.Combat.Combat" Collapsed="true">
     <Position X="5.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAQA=</HashCode>
       <FileName>Model\Combat\Combat.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Combat.CombatState">
+  <Class Name="ProjetPOO.Model.Combat.CombatState" Collapsed="true">
     <Position X="5.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>gAAgBggAAAAAAAACIAAFCAQAAAABAAABAEAAASAAIAA=</HashCode>
       <FileName>Model\Combat\CombatState.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Combat.Enemy">
-    <Position X="12.25" Y="3.5" Width="1.5" />
+  <Class Name="ProjetPOO.Model.Combat.Enemy" Collapsed="true">
+    <Position X="14.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAIAAAAAAAABAAABAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AACCAAAAAIAAAARAIABAAABAAAAAAAAAEQABBAAAAIA=</HashCode>
       <FileName>Model\Combat\Enemy.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Combat.PlayerCharacter">
+  <Class Name="ProjetPOO.Model.Combat.PlayerCharacter" Collapsed="true">
     <Position X="10.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAAAAAACAAAAAQABAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAACAAEAAAAAAAACAEBAAQABAAAAAEABAAAAAAAAQAA=</HashCode>
       <FileName>Model\Combat\PlayerCharacter.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Data.DataAccess">
+  <Class Name="ProjetPOO.Model.Data.DataAccess" Collapsed="true">
     <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AEAAAQAgAAAQAAAAAAAAAAAQgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\Data\DataAccess.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Game.GameState">
+  <Class Name="ProjetPOO.Model.Game.GameState" Collapsed="true">
     <Position X="10" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>CAAaDACBABAgAIgAChFGACAgAAAAAQAAQAAAoAAAAAE=</HashCode>
       <FileName>Model\Game\GameState.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Game.Loot">
-    <Position X="4" Y="6.5" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAAABAAAQAAAAAAAAACAAABAAAAAA=</HashCode>
-      <FileName>Model\Game\Loot.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="ProjetPOO.Model.Game.SaveGame">
+  <Class Name="ProjetPOO.Model.Game.SaveGame" Collapsed="true">
     <Position X="7.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAECIAAAAAAAABAAACBAChQAAAAAAABACAAABAAAAAA=</HashCode>
       <FileName>Model\Game\SaveGame.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Inventory.Inventory">
-    <Position X="0.75" Y="6.5" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>CAAAQAAAIAAIIAAAAABAAAAAAAEAAAAAAQAAAAAAAAE=</HashCode>
-      <FileName>Model\Inventory\Inventory.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="ProjetPOO.Model.Inventory.Shop">
-    <Position X="3.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Model\Inventory\Shop.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="ProjetPOO.Model.Story.Choice">
+  <Class Name="ProjetPOO.Model.Story.Choice" Collapsed="true">
     <Position X="1" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>RAACACAAEACASYAAABRAAABAACAAgAAAAAAAAIAEwAA=</HashCode>
       <FileName>Model\Story\Choice.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Story.Condition">
-    <Position X="8.75" Y="6.25" Width="1.5" />
+  <Class Name="ProjetPOO.Model.Story.Condition" Collapsed="true">
+    <Position X="9.75" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAACAAAAAACAAAwAAABAAgAAAAAAgAAAAQAAAAAAAAA=</HashCode>
       <FileName>Model\Story\Condition.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Story.Effect">
+  <Class Name="ProjetPOO.Model.Story.Effect" Collapsed="true">
     <Position X="11.75" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAACAAAAABKAAAQAAIBAAACAAAAAAQAAAQBBAAAAAAA=</HashCode>
       <FileName>Model\Story\Effect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjetPOO.Model.Gameplay.Inventory" Collapsed="true">
+    <Position X="6.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAACQAAAIAAIIABAAABAAAAAAAEAAgAAAQAAAAAAAAE=</HashCode>
+      <FileName>Model\Gameplay\Inventory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjetPOO.Model.Gameplay.Loot" Collapsed="true">
+    <Position X="6.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAQBAAAAAAICAAAAQAAAAAAAAACAAABABAAAA=</HashCode>
+      <FileName>Model\Gameplay\Loot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjetPOO.Model.Gameplay.Shop" Collapsed="true">
+    <Position X="2.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgGIAAAAAAAIBAAAADBABQAEAgAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Model\Gameplay\Shop.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Enum Name="ProjetPOO.Model.Combat.Enums.CombatActionType">

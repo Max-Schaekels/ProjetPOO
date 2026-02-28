@@ -58,32 +58,49 @@ namespace ProjetPOO.Model.Gameplay
 
         public bool HasPotion()
         {
-            throw new System.NotImplementedException();
+            return PotionsCount > 0;
         }
 
         public bool HasKey()
         {
-            throw new System.NotImplementedException();
+            return KeysCount > 0;
         }
 
         public void AddPotion(int amount)
         {
-            throw new System.NotImplementedException();
+            if (ValidUtils.CheckIfPositiveNumber(amount))
+            {
+                PotionsCount = PotionsCount + amount;
+            }
+
         }
 
         public bool ConsumePotion()
         {
-            throw new System.NotImplementedException();
+            if (HasPotion())
+            {
+                PotionsCount = PotionsCount - 1;
+                return true;
+            }
+            return false;
         }
 
         public void AddKey(int amount)
         {
-            throw new System.NotImplementedException();
+            if (ValidUtils.CheckIfPositiveNumber(amount))
+            {
+                KeysCount = KeysCount + amount;
+            }
         }
 
         public bool ConsumeKey()
         {
-            throw new System.NotImplementedException();
+            if (HasKey())
+            {
+                KeysCount = KeysCount - 1;
+                return true;
+            }
+            return false;
         }
     }
 }
