@@ -22,7 +22,7 @@ namespace ProjetPOO.Utilities.Randomization
 
         public static int GetPercentage()
         {
-            return _random.Next(0, 101); // 0 à 100 inclus
+            return _random.Next(0, 100); 
         }
 
         public static bool CheckChance(int percentage)
@@ -32,7 +32,7 @@ namespace ProjetPOO.Utilities.Randomization
                 throw new ArgumentOutOfRangeException(nameof(percentage), "Le pourcentage doit être compris entre 0 et 100.");
             }
 
-            return GetPercentage() <= percentage;
+            return GetPercentage() < percentage;
         }
     }
 }

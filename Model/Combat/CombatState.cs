@@ -81,28 +81,118 @@ namespace ProjetPOO.Model.Combat
 
         public void ResolvePlayerAction(CombatActionType action, GameState state)
         {
-            throw new NotImplementedException();
+            if (state == null)
+            {
+                throw new ArgumentNullException(nameof(state));
+            }
+
+            if (Result != CombatResult.InProgress)
+            {
+                return;
+            }
+
+            if (!IsPlayerTurn)
+            {
+                return;
+            }
+
+            if (action == CombatActionType.Attack)
+            {
+                int damage = Combat.CalculateDamage(Player, Enemy, false);
+                Enemy.ReceiveDamage(damage);
+            }
+            else if (action == CombatActionType.Defend)
+            {
+                IsDefendingThisTurn = true;
+            }
+            else if (action == CombatActionType.UseItem)
+            {
+                state.TryUsePotion();
+            }
+            else if (action == CombatActionType.Flee)
+            {
+                bool fled = Combat.TryFlee(Player, Enemy);
+                if (fled)
+                {
+                    Result = CombatResult.Fled;
+                }
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(action), "Action de combat inconnue.");
+            }
+
+            CheckEnd();
+
+            if (Result == CombatResult.InProgress)
+            {
+                EndTurn();
+            }
         }
 
         public void ResolveEnemyAction(GameState state)
         {
-            throw new NotImplementedException();
+            if (state == null)
+            {
+                throw new ArgumentNullException(nameof(state));
+            }
+
+            if (Result != CombatResult.InProgress)
+            {
+                return;
+            }
+
+            if (IsPlayerTurn)
+            {
+                return;
+            }
+
+            int damage = Combat.CalculateDamage(Enemy, Player, IsDefendingThisTurn);
+            Player.ReceiveDamage(damage);
+
+            ClearDefense();
+
+            CheckEnd();
+
+            if (Result == CombatResult.InProgress)
+            {
+                EndTurn();
+            }
         }
 
         public void CheckEnd()
         {
-            throw new NotImplementedException();
+            if (Result != CombatResult.InProgress)
+            {
+                return;
+            }
+
+            if (!Player.IsAlive())
+            {
+                Result = CombatResult.Defeat;
+                return;
+            }
+
+            if (!Enemy.IsAlive())
+            {
+                Result = CombatResult.Victory;
+                return;
+            }
         }
 
 
         public void ClearDefense()
         {
-            throw new NotImplementedException();
+            IsDefendingThisTurn = false;
         }
 
         public void EndTurn()
         {
-            throw new NotImplementedException();
+            if(IsPlayerTurn)
+            {
+                TurnCount++;
+            } 
+            IsPlayerTurn = !IsPlayerTurn;
 
         }
 
