@@ -14,6 +14,9 @@ namespace ProjetPOO.Model.Story
     {
         private const int MINIMUM_FLAG_KEY_LENGTH = 3;
         private const int MAXIMUM_FLAG_KEY_LENGTH = 100;
+
+        private static int _nextId = 1;
+
         private int _id;
         private EffectType _type;
         private int? _amount;
@@ -22,7 +25,7 @@ namespace ProjetPOO.Model.Story
         public int Id
         {
             get => _id;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
@@ -32,13 +35,13 @@ namespace ProjetPOO.Model.Story
         public EffectType Type
         {
             get => _type;
-            set => _type = value;
+            private set => _type = value;
         }
 
         public int? Amount
         {
             get => _amount;
-            set
+            private set
             {
                 if (value == null || ValidUtils.CheckIfNonNegativeNumber(value.Value))
                     _amount = value;
@@ -48,26 +51,27 @@ namespace ProjetPOO.Model.Story
         public string? FlagKey
         {
             get => _flagKey;
-            set
+            private set
             {
                 if (value == null || ValidUtils.CheckEntryName(value, MINIMUM_FLAG_KEY_LENGTH, MAXIMUM_FLAG_KEY_LENGTH))
                     _flagKey = value;
             }
         }
 
-        public Effect(int id, EffectType type, int? amount = null, string? flagKey = null)
+        public Effect(EffectType type, int? amount = null, string? flagKey = null)
         {
-            Id = id;
+            Id = GenerateId();
             Type = type;
             Amount = amount;
             FlagKey = flagKey;
         }
 
-        public Effect(EffectType type, int? amount = null, string? flagKey = null)
+        public Effect()
         {
-            Type = type;
-            Amount = amount;
-            FlagKey = flagKey;
+            Id = GenerateId();
+            Type = EffectType.AddGold;
+            Amount = 1;
+            FlagKey = null;
         }
 
         public void Apply(GameState state)
@@ -178,6 +182,46 @@ namespace ProjetPOO.Model.Story
             return errors.Count == 0;
         }
 
+        public void ChangeType(EffectType newType)
+        {
+            if (!Enum.IsDefined(typeof(EffectType), newType))
+            {
+                throw new ArgumentException("Type d'effet invalide.", nameof(newType));
+            }
+
+            Type = newType;
+        }
+
+        public void ChangeAmount(int? newAmount)
+        {
+            if (newAmount != null && !ValidUtils.CheckIfNonNegativeNumber(newAmount.Value))
+            {
+                throw new ArgumentException("Amount doit être >= 0.", nameof(newAmount));
+            }
+
+            Amount = newAmount;
+        }
+
+        public void ClearAmount()
+        {
+            Amount = null;
+        }
+
+        public void ChangeFlagKey(string? newFlagKey)
+        {
+            if (newFlagKey != null && !ValidUtils.CheckEntryName(newFlagKey, MINIMUM_FLAG_KEY_LENGTH, MAXIMUM_FLAG_KEY_LENGTH))
+            {
+                throw new ArgumentException($"FlagKey doit être compris entre {MINIMUM_FLAG_KEY_LENGTH} et {MAXIMUM_FLAG_KEY_LENGTH} caractères.", nameof(newFlagKey));
+            }
+
+            FlagKey = newFlagKey;
+        }
+
+        public void ClearFlagKey()
+        {
+            FlagKey = null;
+        }
+
         private void ValidateAmount(List<string> errors)
         {
             if (Amount == null)
@@ -218,6 +262,13 @@ namespace ProjetPOO.Model.Story
                     break;
                 }
             }
+        }
+
+        private static int GenerateId()
+        {
+            int newId = _nextId;
+            _nextId = _nextId + 1;
+            return newId;
         }
 
     }

@@ -11,6 +11,8 @@ namespace ProjetPOO.Model.Story
 {
     public class Condition
     {
+        private static int _nextId = 1;
+
         private int _id;
         private ConditionType _type;
         private int _minValue;
@@ -18,7 +20,7 @@ namespace ProjetPOO.Model.Story
         public int Id
         {
             get => _id;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
@@ -42,17 +44,18 @@ namespace ProjetPOO.Model.Story
             }
         }
 
-        public Condition( ConditionType type, int minValue = 1)
+        public Condition(ConditionType type, int minValue = 1)
         {
+            Id = GenerateId();
             Type = type;
             MinValue = minValue;
         }
-        
-        public Condition(int id, ConditionType type, int minValue = 1) 
+
+        public Condition()
         {
-            Id = id;
-            Type = type;
-            MinValue = minValue;
+            Id = GenerateId();
+            Type = ConditionType.MinGold;
+            MinValue = 1;
         }
 
         public bool Evaluate(GameState state)
@@ -119,6 +122,23 @@ namespace ProjetPOO.Model.Story
             }
 
             MinValue = newValue;
+        }
+
+        public void ChangeType(ConditionType newType)
+        {
+            if (!Enum.IsDefined(typeof(ConditionType), newType))
+            {
+                throw new ArgumentException("Type de condition invalide.", nameof(newType));
+            }
+
+            Type = newType;
+        }
+
+        private static int GenerateId()
+        {
+            int newId = _nextId;
+            _nextId = _nextId + 1;
+            return newId;
         }
 
     }

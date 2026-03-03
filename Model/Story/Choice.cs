@@ -12,6 +12,9 @@ namespace ProjetPOO.Model.Story
     {
         private const int MINIMUM_LABEL_LENGTH = 3;
         private const int MAX_LABEL_LENGTH = 200;
+
+        private static int _nextId = 1;
+
         private int _id;
         private string _label;
         private int _targetSceneId;
@@ -22,10 +25,13 @@ namespace ProjetPOO.Model.Story
         public int Id
         {
             get => _id;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
+                {
                     _id = value;
+                }
+                    
             }
         }
 
@@ -35,27 +41,36 @@ namespace ProjetPOO.Model.Story
             set
             {
                 if (ValidUtils.CheckEntryName(value, MINIMUM_LABEL_LENGTH, MAX_LABEL_LENGTH))
+                {
                     _label = value;
+                }
+                   
             }
         }
 
         public int TargetSceneId
         {
             get => _targetSceneId;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
+                {
                     _targetSceneId = value;
+                }
+                   
             }
         }
 
         public int SceneId
         {
             get => _sceneId;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
+                {
                     _sceneId = value;
+                }
+                   
             }
         }
 
@@ -63,34 +78,71 @@ namespace ProjetPOO.Model.Story
         public IReadOnlyList<Effect> Effects => _effects.AsReadOnly();
 
 
-        public Choice(int id, string label, int targetSceneId = 0, int sceneId = 0)
+        public Choice(string label)
         {
-            Id = id;
-            Label = label;
-            TargetSceneId = targetSceneId;
-            SceneId = sceneId;
             _conditions = new List<Condition>();
             _effects = new List<Effect>();
+
+            Id = GenerateId();
+            Label = label;
+
+            SceneId = 0;
+            TargetSceneId = 0;
         }
 
-        public Choice(string label, int targetSceneId = 0, int sceneId = 0)
+        public Choice(string label, int targetSceneId, int sceneId)
         {
-            Label = label;
-            TargetSceneId = targetSceneId;
-            SceneId = sceneId;
             _conditions = new List<Condition>();
             _effects = new List<Effect>();
+
+            Id = GenerateId();
+            Label = label;
+
+            TargetSceneId = targetSceneId;
+            SceneId = sceneId;
         }
 
         public Choice()
         {
-            _label = string.Empty;
             _conditions = new List<Condition>();
             _effects = new List<Effect>();
-            _targetSceneId = 0;
-            _sceneId = 0;
+
+            _label = string.Empty;
+
+            Id = GenerateId();
+            SceneId = 0;
+            TargetSceneId = 0;
         }
 
+        public void AssignToScene(int sceneId)
+        {
+            if (!ValidUtils.CheckIfNonNegativeNumber(sceneId))
+            {
+                throw new ArgumentException("sceneId doit être >= 0.", nameof(sceneId));
+            }
+
+            SceneId = sceneId;
+        }
+
+        public void ClearScene()
+        {
+            SceneId = 0;
+        }
+
+        public void SetTargetScene(int targetSceneId)
+        {
+            if (!ValidUtils.CheckIfNonNegativeNumber(targetSceneId))
+            {
+                throw new ArgumentException("targetSceneId doit être >= 0.", nameof(targetSceneId));
+            }
+
+            TargetSceneId = targetSceneId;
+        }
+
+        public void ClearTargetScene()
+        {
+            TargetSceneId = 0;
+        }
 
         public bool IsAvailable(GameState state)
         {
@@ -262,6 +314,13 @@ namespace ProjetPOO.Model.Story
         public void RemoveEffect(int effectId)
         {
             _effects.RemoveAll(e => e != null && e.Id == effectId);
+        }
+
+        private static int GenerateId()
+        {
+            int newId = _nextId;
+            _nextId = _nextId + 1;
+            return newId;
         }
 
         private string GetConditionDebugLabel(Condition condition)
