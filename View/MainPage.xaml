@@ -29,6 +29,12 @@
                  Clicked="buttonCreateInventory_Clicked"
                  Style="{StaticResource TestButton}" />
 
+            <Button
+                x:Name="buttonInitialiseAllClass"
+                Text="Initialiser toutes les classes"
+                Clicked="buttonInitialiseAllClass_Clicked"
+                Style="{StaticResource TestButton}" />
+
         </VerticalStackLayout>
     </ScrollView>
 
