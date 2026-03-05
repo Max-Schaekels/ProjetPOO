@@ -28,44 +28,7 @@ namespace ProjetPOO.Model.Story
         private int? _defeatTargetSceneId;
         private int? _victoryTargetSceneId;
 
-        public Scene(string title, string text, SceneType type)
-        {
-            _choices = new List<Choice>();
 
-            Id = GenerateId();
-            Title = title;
-            Text = text;
-            Type = type;
-
-            ScenarioId = 0;
-
-            PictureFileName = null;
-            ShopId = null;
-            EnemyId = null;
-            FleeTargetSceneId = null;
-            DefeatTargetSceneId = null;
-            VictoryTargetSceneId = null;
-        }
-
-        public Scene()
-        {
-            _choices = new List<Choice>();
-
-            _title = string.Empty;
-            _text = string.Empty;
-
-            Id = GenerateId();
-            Type = SceneType.Normal;
-
-            ScenarioId = 0;
-
-            PictureFileName = null;
-            ShopId = null;
-            EnemyId = null;
-            FleeTargetSceneId = null;
-            DefeatTargetSceneId = null;
-            VictoryTargetSceneId = null;
-        }
 
 
         public int Id
@@ -84,7 +47,7 @@ namespace ProjetPOO.Model.Story
         public string Title
         {
             get => _title;
-            set
+            private set
             {
                 if (ValidUtils.CheckEntryName(value, MINIMUM_TITLE_LENGTH, MAX_TITLE_LENGTH))
                 {
@@ -97,7 +60,7 @@ namespace ProjetPOO.Model.Story
         public string Text
         {
             get => _text;
-            set
+            private set
             {
                 if (ValidUtils.CheckEntryDescription(value, MINIMUM_TEXT_LENGTH))
                 {
@@ -212,6 +175,159 @@ namespace ProjetPOO.Model.Story
                 {
                     _victoryTargetSceneId = value;
                 }
+            }
+        }
+
+        public Scene(string title, string text, SceneType type)
+        {
+            _choices = new List<Choice>();
+
+            Id = GenerateId();
+            Title = title;
+            Text = text;
+            Type = type;
+
+            ScenarioId = 0;
+
+            PictureFileName = null;
+            ShopId = null;
+            EnemyId = null;
+            FleeTargetSceneId = null;
+            DefeatTargetSceneId = null;
+            VictoryTargetSceneId = null;
+        }
+
+        public Scene()
+        {
+            _choices = new List<Choice>();
+
+            _title = string.Empty;
+            _text = string.Empty;
+
+            Id = GenerateId();
+            Type = SceneType.Normal;
+
+            ScenarioId = 0;
+
+            PictureFileName = null;
+            ShopId = null;
+            EnemyId = null;
+            FleeTargetSceneId = null;
+            DefeatTargetSceneId = null;
+            VictoryTargetSceneId = null;
+        }
+
+        // Constructeur privé pour Load (évite de dupliquer l'init)
+        private Scene(int id)
+        {
+            _choices = new List<Choice>();
+
+            _title = string.Empty;
+            _text = string.Empty;
+
+            Id = id;
+            Type = SceneType.Normal;
+
+            ScenarioId = 0;
+
+            PictureFileName = null;
+            ShopId = null;
+            EnemyId = null;
+            FleeTargetSceneId = null;
+            DefeatTargetSceneId = null;
+            VictoryTargetSceneId = null;
+        }
+
+        // Constructeur pour Load (depuis la base de données) avec vérification de la cohérence des données chargées (ex: pas de choix attaché à une autre scène)
+        public static Scene Load( int id,string title, string text,SceneType type,int scenarioId, string? pictureFileName,int? shopId, int? enemyId,int? fleeTargetSceneId,int? defeatTargetSceneId, int? victoryTargetSceneId, List<Choice>? choices = null)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            Scene scene = new Scene(id);
+            EnsureNextIdIsAfterLoadedId(id);
+
+            scene.Title = title;
+            scene.Text = text;
+            scene.Type = type;
+
+            scene.ScenarioId = scenarioId;
+
+            scene.PictureFileName = pictureFileName;
+
+            scene.ShopId = shopId;
+
+            scene.EnemyId = enemyId;
+            scene.FleeTargetSceneId = fleeTargetSceneId;
+            scene.DefeatTargetSceneId = defeatTargetSceneId;
+            scene.VictoryTargetSceneId = victoryTargetSceneId;
+
+            if (choices != null)
+            {
+                scene._choices = new List<Choice>();
+
+                for (int i = 0; i < choices.Count; i++)
+                {
+                    Choice choice = choices[i];
+                    if (choice == null)
+                    {
+                        continue;
+                    }
+
+                    // Anti-doublon par Id (comme AddChoice)
+                    bool alreadyExists = scene._choices.Any(c => c != null && c.Id == choice.Id);
+                    if (alreadyExists)
+                    {
+                        continue;
+                    }
+
+                    // Cohérence SceneId
+                    if (choice.SceneId == 0)
+                    {
+                        // Cas "draft/partiel" : on rattache à la scène chargée
+                        choice.AssignToScene(scene.Id);
+                    }
+                    else if (choice.SceneId != scene.Id)
+                    {
+                        throw new InvalidOperationException(
+                            $"Load Scene incohérent : le choix \"{choice.Label}\" a SceneId={choice.SceneId} mais la scène chargée a Id={scene.Id}.");
+                    }
+
+                    scene._choices.Add(choice);
+                }
+            }
+
+            return scene;
+        }
+
+
+        public void Rename(string title)
+        {
+            if (!ValidUtils.CheckEntryName(title, MINIMUM_TITLE_LENGTH, MAX_TITLE_LENGTH))
+            {
+                throw new ArgumentException($"Title doit être compris entre {MINIMUM_TITLE_LENGTH} et {MAX_TITLE_LENGTH} caractères.", nameof(title));
+            }
+
+            Title = title;
+        }
+
+        public void UpdateText(string text)
+        {
+            if (!ValidUtils.CheckEntryDescription(text, MINIMUM_TEXT_LENGTH))
+            {
+                throw new ArgumentException($"Text doit contenir au moins {MINIMUM_TEXT_LENGTH} caractères.", nameof(text));
+            }
+
+            Text = text;
+        }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
             }
         }
 

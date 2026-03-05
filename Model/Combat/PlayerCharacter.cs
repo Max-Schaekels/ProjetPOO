@@ -14,6 +14,10 @@ namespace ProjetPOO.Model.Combat
         private const int HIGH_STAT_INCREASE = 3;
         private const int BASE_EXPERIENCE_REQUIREMENT = 50;
         private const int EXPERIENCE_INCREMENT = 25;
+
+        private static int _nextId = 1;
+
+
         private int _id;
         private int _experience;
         private int _level;
@@ -21,7 +25,7 @@ namespace ProjetPOO.Model.Combat
         public int Id
         {
             get => _id;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
@@ -48,11 +52,54 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
+        // Constructeur "normal" (en mémoire)
         public PlayerCharacter(string name, int maxHp, int attack, int defense, int agility, int experience = 0, int level = 1)
             : base(name, maxHp, attack, defense, agility)
         {
+            Id = GenerateId();
+
             Experience = experience;
             Level = level;
+        }
+
+        // Constructeur privé pour Load (futur DB)
+        private PlayerCharacter(int id, string name, int maxHp, int attack, int defense, int agility, int experience, int level)
+            : base(name, maxHp, attack, defense, agility)
+        {
+            Id = id;
+
+            Experience = experience;
+            Level = level;
+        }
+
+        private static int GenerateId()
+        {
+            int id = _nextId;
+            _nextId++;
+            return id;
+        }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
+            }
+        }
+
+        // Constructeur pour Load (depuis la base de données)
+        public static PlayerCharacter Load(int id, string name,int maxHp, int attack, int defense,int agility, int experience , int level )
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            PlayerCharacter player = new PlayerCharacter(id, name, maxHp, attack, defense, agility, experience, level);
+
+            EnsureNextIdIsAfterLoadedId(id);
+
+            return player;
         }
 
         public void GainExperience(int amount)

@@ -58,6 +58,32 @@ namespace ProjetPOO.Model.Story
             MinValue = 1;
         }
 
+        // Constructeur privé pour Load
+        private Condition(int id)
+        {
+            Id = id;
+            Type = ConditionType.MinGold;
+            MinValue = 1;
+        }
+
+        // Constructeur pour Load (depuis la base de données)
+        public static Condition Load(int id, ConditionType type, int minValue)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            Condition condition = new Condition(id);
+
+            EnsureNextIdIsAfterLoadedId(id);
+
+            condition.Type = type;
+            condition.MinValue = minValue;
+
+            return condition;
+        }
+
         public bool Evaluate(GameState state)
         {
             if(state == null)
@@ -139,6 +165,14 @@ namespace ProjetPOO.Model.Story
             int newId = _nextId;
             _nextId = _nextId + 1;
             return newId;
+        }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
+            }
         }
 
     }

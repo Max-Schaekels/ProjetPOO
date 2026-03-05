@@ -14,7 +14,12 @@ namespace ProjetPOO.Model.Combat
     {
         private const int LOW_DROP_CHANCE = 0;
         private const int HIGH_DROP_CHANCE = 100;
+
+        private static int _nextId = 1;
+
         private int _id;
+        private int _scenarioId;
+
         private EnemyType _type;
         private int _rewardExperience;
 
@@ -32,10 +37,22 @@ namespace ProjetPOO.Model.Combat
         public int Id
         {
             get => _id;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
+            }
+        }
+
+        public int ScenarioId
+        {
+            get => _scenarioId;
+            private set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                {
+                    _scenarioId = value;
+                }
             }
         }
 
@@ -153,9 +170,14 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
-        public Enemy( string name, int maxHp, int attack, int defense, int agility, EnemyType type, int rewardExperience, int rewardGoldMin,int rewardGoldMax, int potionDropChance, int potionAmountMin, int potionAmountMax, int keyDropChance,int keyAmountMin, 
+        // Constructeur "normal" (en mémoire)
+        public Enemy(string name,int maxHp, int attack, int defense,  int agility, EnemyType type, int rewardExperience, int rewardGoldMin, int rewardGoldMax, int potionDropChance,int potionAmountMin, int potionAmountMax, int keyDropChance, int keyAmountMin,
             int keyAmountMax) : base(name, maxHp, attack, defense, agility)
         {
+            Id = GenerateId();
+
+            ScenarioId = 0; // draft-friendly
+
             Type = type;
 
             RewardExperience = rewardExperience;
@@ -172,6 +194,82 @@ namespace ProjetPOO.Model.Combat
             KeyAmountMax = keyAmountMax;
 
             ValidateRewardRanges();
+        }
+
+        // Constructeur privé pour Load (évite de dupliquer la logique)
+        private Enemy( int id,int scenarioId, string name,int maxHp,int attack, int defense,int agility,EnemyType type,int rewardExperience,int rewardGoldMin,int rewardGoldMax,int potionDropChance,int potionAmountMin,int potionAmountMax,int keyDropChance,int keyAmountMin,
+            int keyAmountMax) : base(name, maxHp, attack, defense, agility)
+        {
+            Id = id;
+            ScenarioId = scenarioId;
+
+            Type = type;
+
+            RewardExperience = rewardExperience;
+
+            RewardGoldMin = rewardGoldMin;
+            RewardGoldMax = rewardGoldMax;
+
+            PotionDropChance = potionDropChance;
+            PotionAmountMin = potionAmountMin;
+            PotionAmountMax = potionAmountMax;
+
+            KeyDropChance = keyDropChance;
+            KeyAmountMin = keyAmountMin;
+            KeyAmountMax = keyAmountMax;
+
+            ValidateRewardRanges();
+        }
+
+        public void AssignToScenario(int scenarioId)
+        {
+            if (!ValidUtils.CheckIfNonNegativeNumber(scenarioId))
+            {
+                throw new ArgumentException("scenarioId doit être >= 0.", nameof(scenarioId));
+            }
+
+            ScenarioId = scenarioId;
+        }
+
+        public void ClearScenario()
+        {
+            ScenarioId = 0;
+        }
+
+        private static int GenerateId()
+        {
+            int id = _nextId;
+            _nextId++;
+            return id;
+        }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
+            }
+        }
+
+        // Constructeur pour Load (depuis la base de données)
+        public static Enemy Load( int id, int scenarioId, string name,int maxHp,int attack,int defense, int agility,EnemyType type, int rewardExperience,int rewardGoldMin, int rewardGoldMax,int potionDropChance,int potionAmountMin, int potionAmountMax, int keyDropChance,
+            int keyAmountMin, int keyAmountMax)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            if (!ValidUtils.CheckIfNonNegativeNumber(scenarioId))
+            {
+                throw new ArgumentException("scenarioId doit être >= 0.", nameof(scenarioId));
+            }
+
+            Enemy enemy = new Enemy(id,scenarioId,name,maxHp,attack, defense,agility, type,rewardExperience,rewardGoldMin,rewardGoldMax, potionDropChance,potionAmountMin, potionAmountMax,keyDropChance,keyAmountMin, keyAmountMax);
+
+            EnsureNextIdIsAfterLoadedId(id);
+
+            return enemy;
         }
 
         public Loot GetLoot()

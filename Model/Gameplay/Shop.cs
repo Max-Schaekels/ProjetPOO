@@ -12,6 +12,9 @@ namespace ProjetPOO.Model.Gameplay
     {
         private const int MINIMUM_NAME_LENGTH = 3;
         private const int MAXIMUM_NAME_LENGTH = 50;
+
+        private static int _nextId = 1;
+
         private int _id;
         private string _name;
         private int _potionPrice;
@@ -20,7 +23,7 @@ namespace ProjetPOO.Model.Gameplay
         public int Id
         {
             get => _id;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
@@ -30,7 +33,7 @@ namespace ProjetPOO.Model.Gameplay
         public string Name
         {
             get => _name;
-            set
+            private set
             {
                 if (ValidUtils.CheckEntryName(value, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
                     _name = value;
@@ -40,7 +43,7 @@ namespace ProjetPOO.Model.Gameplay
         public int PotionPrice
         {
             get => _potionPrice;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _potionPrice = value;
@@ -50,14 +53,24 @@ namespace ProjetPOO.Model.Gameplay
         public int KeyPrice
         {
             get => _keyPrice;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _keyPrice = value;
             }
         }
 
-        public Shop(int id, string name, int potionPrice, int keyPrice)
+        // Constructeur "normal" (en mémoire)
+        public Shop(string name, int potionPrice, int keyPrice)
+        {
+            Id = GenerateId();
+            Name = name;
+            PotionPrice = potionPrice;
+            KeyPrice = keyPrice;
+        }
+
+        // Constructeur privé pour Load
+        private Shop(int id, string name, int potionPrice, int keyPrice)
         {
             Id = id;
             Name = name;
@@ -65,10 +78,64 @@ namespace ProjetPOO.Model.Gameplay
             KeyPrice = keyPrice;
         }
 
-        public Shop(string name, int potionPrice, int keyPrice)
+        private static int GenerateId()
         {
+            int id = _nextId;
+            _nextId++;
+            return id;
+        }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
+            }
+        }
+
+        // Constructeur pour Load (depuis la base de données)
+        public static Shop Load(int id, string name, int potionPrice, int keyPrice)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            Shop shop = new Shop(id, name, potionPrice, keyPrice);
+
+            EnsureNextIdIsAfterLoadedId(id);
+
+            return shop;
+        }
+
+
+        public void Rename(string name)
+        {
+            if (!ValidUtils.CheckEntryName(name, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
+            {
+                throw new ArgumentException("Nom de shop invalide.", nameof(name));
+            }
+
             Name = name;
+        }
+
+        public void UpdatePotionPrice(int potionPrice)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(potionPrice))
+            {
+                throw new ArgumentException("potionPrice doit être un nombre positif.", nameof(potionPrice));
+            }
+
             PotionPrice = potionPrice;
+        }
+
+        public void UpdateKeyPrice(int keyPrice)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(keyPrice))
+            {
+                throw new ArgumentException("keyPrice doit être un nombre positif.", nameof(keyPrice));
+            }
+
             KeyPrice = keyPrice;
         }
 

@@ -38,7 +38,7 @@ namespace ProjetPOO.Model.Story
         public string Label
         {
             get => _label;
-            set
+            private set
             {
                 if (ValidUtils.CheckEntryName(value, MINIMUM_LABEL_LENGTH, MAX_LABEL_LENGTH))
                 {
@@ -112,6 +112,98 @@ namespace ProjetPOO.Model.Story
             Id = GenerateId();
             SceneId = 0;
             TargetSceneId = 0;
+        }
+
+        // Constructeur privé pour Load
+        private Choice(int id)
+        {
+            _conditions = new List<Condition>();
+            _effects = new List<Effect>();
+
+            _label = string.Empty;
+
+            Id = id;
+            SceneId = 0;
+            TargetSceneId = 0;
+        }
+
+        // Constructeur pour Load (depuis la base de données) avec vérification des données chargées
+        public static Choice Load(
+            int id,
+            string label,
+            int targetSceneId,
+            int sceneId,
+            List<Condition>? conditions = null,
+            List<Effect>? effects = null)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            Choice choice = new Choice(id);
+
+            EnsureNextIdIsAfterLoadedId(id);
+
+            choice.Label = label;
+            choice.TargetSceneId = targetSceneId;
+            choice.SceneId = sceneId;
+
+            if (conditions != null)
+            {
+                choice._conditions = new List<Condition>();
+
+                for (int i = 0; i < conditions.Count; i++)
+                {
+                    Condition condition = conditions[i];
+                    if (condition == null)
+                    {
+                        continue;
+                    }
+
+                    bool alreadyExists = choice._conditions.Any(c => c != null && c.Id == condition.Id);
+                    if (alreadyExists)
+                    {
+                        continue;
+                    }
+
+                    choice._conditions.Add(condition);
+                }
+            }
+
+            if (effects != null)
+            {
+                choice._effects = new List<Effect>();
+
+                for (int i = 0; i < effects.Count; i++)
+                {
+                    Effect effect = effects[i];
+                    if (effect == null)
+                    {
+                        continue;
+                    }
+
+                    bool alreadyExists = choice._effects.Any(e => e != null && e.Id == effect.Id);
+                    if (alreadyExists)
+                    {
+                        continue;
+                    }
+
+                    choice._effects.Add(effect);
+                }
+            }
+
+            return choice;
+        }
+
+        public void Rename(string label)
+        {
+            if (!ValidUtils.CheckEntryName(label, MINIMUM_LABEL_LENGTH, MAX_LABEL_LENGTH))
+            {
+                throw new ArgumentException($"Le label doit être compris entre {MINIMUM_LABEL_LENGTH} et {MAX_LABEL_LENGTH} caractères.", nameof(label));
+            }
+
+            Label = label;
         }
 
         public void AssignToScene(int sceneId)
@@ -321,6 +413,14 @@ namespace ProjetPOO.Model.Story
             int newId = _nextId;
             _nextId = _nextId + 1;
             return newId;
+        }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
+            }
         }
 
         private string GetConditionDebugLabel(Condition condition)

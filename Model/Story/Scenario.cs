@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjetPOO.Model.Combat;
 using ProjetPOO.Model.Story.Enums;
 using ProjetPOO.Utilities.EntriesValidation;
 
@@ -21,6 +22,7 @@ namespace ProjetPOO.Model.Story
         private string _description;
         private int _startSceneId;
         private List<Scene> _scenes;
+        private List<Enemy> _enemies;
 
 
 
@@ -72,10 +74,12 @@ namespace ProjetPOO.Model.Story
         }
 
         public IReadOnlyList<Scene> Scenes => _scenes.AsReadOnly();
+        public IReadOnlyList<Enemy> Enemies => _enemies.AsReadOnly();
 
         public Scenario(string title, string description)
         {
             _scenes = new List<Scene>();
+            _enemies = new List<Enemy>();
 
             Id = GenerateId();
             Title = title;
@@ -87,6 +91,7 @@ namespace ProjetPOO.Model.Story
         public Scenario()
         {
             _scenes = new List<Scene>();
+            _enemies = new List<Enemy>();
 
             Title = string.Empty;
             Description = string.Empty;
@@ -95,9 +100,14 @@ namespace ProjetPOO.Model.Story
             StartSceneId = 0;
         }
 
-        // Constructeur de chargement d'un scénario à partir de données existantes (ex: base de données)
-        public static Scenario Load(int id, string title, string description, int startSceneId, List<Scene> scenes)
+        // Constructeur pour Load (depuis la base de données) avec vérifications de cohérence (ex: les scènes rattachées ont bien le ScenarioId du scénario chargé, pas de scène dupliquée, etc.)
+        public static Scenario Load(int id, string title, string description, int startSceneId, List<Scene>? scenes, List<Enemy>? enemies = null)
         {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
             Scenario scenario = new Scenario();
 
             scenario.Id = id;
@@ -105,8 +115,75 @@ namespace ProjetPOO.Model.Story
 
             scenario.Title = title;
             scenario.Description = description;
+
+            scenario._scenes = new List<Scene>();
+
+            if (scenes != null)
+            {
+                for (int i = 0; i < scenes.Count; i++)
+                {
+                    Scene scene = scenes[i];
+                    if (scene == null)
+                    {
+                        continue;
+                    }
+
+                    bool alreadyExists = scenario._scenes.Any(s => s != null && s.Id == scene.Id);
+                    if (alreadyExists)
+                    {
+                        continue;
+                    }
+
+                    // Cohérence ScenarioId
+                    if (scene.ScenarioId == 0)
+                    {
+                        // Draft/partiel : on rattache
+                        scene.AssignToScenario(scenario.Id);
+                    }
+                    else if (scene.ScenarioId != scenario.Id)
+                    {
+                        throw new InvalidOperationException(
+                            $"Load Scenario incohérent : la scène \"{scene.Title}\" a ScenarioId={scene.ScenarioId} mais le scénario chargé a Id={scenario.Id}.");
+                    }
+
+                    scenario._scenes.Add(scene);
+                }
+            }
+
+            scenario._enemies = new List<Enemy>();
+
+            if (enemies != null)
+            {
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    Enemy enemy = enemies[i];
+                    if (enemy == null)
+                    {
+                        continue;
+                    }
+
+                    bool alreadyExists = scenario._enemies.Any(e => e != null && e.Id == enemy.Id);
+                    if (alreadyExists)
+                    {
+                        continue;
+                    }
+
+                    // Cohérence ScenarioId 
+                    if (enemy.ScenarioId == 0)
+                    {
+                        enemy.AssignToScenario(scenario.Id);
+                    }
+                    else if (enemy.ScenarioId != scenario.Id)
+                    {
+                        throw new InvalidOperationException(
+                            $"Load Scenario incohérent : l'ennemi \"{enemy.Name}\" a ScenarioId={enemy.ScenarioId} mais le scénario chargé a Id={scenario.Id}.");
+                    }
+
+                    scenario._enemies.Add(enemy);
+                }
+            }
+
             scenario.AssignStartScene(startSceneId);
-            scenario._scenes = scenes ?? new List<Scene>();
 
             return scenario;
         }
@@ -129,6 +206,32 @@ namespace ProjetPOO.Model.Story
             }
 
             Description = description;
+        }
+
+        public void AddEnemy(Enemy enemy)
+        {
+            if (enemy == null)
+            {
+                throw new ArgumentNullException(nameof(enemy));
+            }
+
+            bool alreadyExists = _enemies.Any(e => e != null && e.Id == enemy.Id);
+            if (alreadyExists)
+            {
+                return;
+            }
+
+            if (enemy.ScenarioId == 0)
+            {
+                enemy.AssignToScenario(Id);
+            }
+            else if (enemy.ScenarioId != Id)
+            {
+                throw new InvalidOperationException(
+                    $"AddEnemy incohérent : l'ennemi \"{enemy.Name}\" a ScenarioId={enemy.ScenarioId} mais le scénario courant a Id={Id}.");
+            }
+
+            _enemies.Add(enemy);
         }
 
         public void AssignStartScene(int startSceneId)
@@ -205,6 +308,13 @@ namespace ProjetPOO.Model.Story
         }
 
 
+        public Enemy? GetEnemyById(int enemyId)
+        {
+            Enemy? enemy = _enemies.FirstOrDefault(e => e != null && e.Id == enemyId);
+            return enemy;
+        }
+
+
         public bool ValidateSafe(out List<string> errors)
         {
             errors = new List<string>();
@@ -218,7 +328,6 @@ namespace ProjetPOO.Model.Story
                 errors.Add($"La description doit comporter au moins {MINIMUM_DESCRIPTION_LENGTH} caractères.");
             }
 
-
             if (!ValidUtils.CheckIfNonNegativeNumber(StartSceneId))
             {
                 errors.Add("StartSceneId doit être un nombre >= 0.");
@@ -227,6 +336,12 @@ namespace ProjetPOO.Model.Story
             if (_scenes == null)
             {
                 errors.Add("Scenario : la liste des scènes est null (liste corrompue).");
+                return false;
+            }
+
+            if (_enemies == null)
+            {
+                errors.Add("Scenario : la liste des ennemis est null (liste corromue).");
                 return false;
             }
 
@@ -259,6 +374,29 @@ namespace ProjetPOO.Model.Story
                 }
             }
 
+            // vérifier null + ids dupliqués pour les ennemis (validation légère)
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                Enemy enemy = _enemies[i];
+
+                if (enemy == null)
+                {
+                    errors.Add("Scenario : un ennemi est null (liste corrompue).");
+                    continue;
+                }
+
+                bool duplicate = _enemies.Any(e => e != null && e.Id == enemy.Id && !ReferenceEquals(e, enemy));
+                if (duplicate)
+                {
+                    errors.Add($"Scenario : Id d'ennemi dupliqué ({enemy.Id}).");
+                }
+
+                if (!ValidUtils.CheckIfNonNegativeNumber(enemy.ScenarioId))
+                {
+                    errors.Add($"Scenario : EnemyId={enemy.Id} a un ScenarioId invalide (<0).");
+                }
+            }
+
             return errors.Count == 0;
         }
 
@@ -280,6 +418,25 @@ namespace ProjetPOO.Model.Story
                 if (!_scenes.Any(s => s != null && s.Id == StartSceneId))
                 {
                     errors.Add($"StartSceneId={StartSceneId} n'existe pas dans le scénario.");
+                }
+            }
+
+            // En jouable : tous les ennemis doivent être rattachés au scénario (ScenarioId == Id et > 0)
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                Enemy enemy = _enemies[i];
+                if (enemy == null)
+                {
+                    continue;
+                }
+
+                if (!ValidUtils.CheckIfPositiveNumber(enemy.ScenarioId))
+                {
+                    errors.Add($"Enemy \"{enemy.Name}\" : en jouable, ScenarioId doit être > 0.");
+                }
+                else if (enemy.ScenarioId != Id)
+                {
+                    errors.Add($"Enemy \"{enemy.Name}\" : ScenarioId doit valoir {Id} (actuel={enemy.ScenarioId}).");
                 }
             }
 
@@ -342,9 +499,26 @@ namespace ProjetPOO.Model.Story
                     }
                 }
 
-                // Combat targets
+                // Combat targets + existence EnemyId dans le scénario
                 if (scene.Type == SceneType.Combat)
                 {
+                    if (scene.EnemyId == null)
+                    {
+                        errors.Add($"Scene \"{scene.Title}\" : EnemyId est requis pour une scène Combat.");
+                    }
+                    else
+                    {
+                        Enemy? enemy = GetEnemyById(scene.EnemyId.Value);
+                        if (enemy == null)
+                        {
+                            errors.Add($"Scene \"{scene.Title}\" : EnemyId={scene.EnemyId.Value} n'existe pas dans la liste d'ennemis du scénario.");
+                        }
+                        else if (enemy.ScenarioId != Id)
+                        {
+                            errors.Add($"Scene \"{scene.Title}\" : EnemyId={enemy.Id} a ScenarioId={enemy.ScenarioId} (attendu={Id}).");
+                        }
+                    }
+
                     if (scene.VictoryTargetSceneId == null || !existingSceneIds.Contains(scene.VictoryTargetSceneId.Value))
                     {
                         errors.Add($"Scene \"{scene.Title}\" : VictoryTargetSceneId invalide ou inexistant.");
@@ -362,7 +536,7 @@ namespace ProjetPOO.Model.Story
                 }
             }
 
-            return errors.Count == 0;
+            return baseOk && errors.Count == 0;
         }
 
         private static int GenerateId()

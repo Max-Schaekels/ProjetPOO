@@ -9,6 +9,8 @@ namespace ProjetPOO.Model.Gameplay
 {
     public class Inventory
     {
+        private static int _nextId = 1;
+
         private int _id;
         private int _potionsCount;
         private int _keysCount;
@@ -16,7 +18,7 @@ namespace ProjetPOO.Model.Gameplay
         public int Id
         {
             get => _id;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
@@ -26,7 +28,7 @@ namespace ProjetPOO.Model.Gameplay
         public int PotionsCount
         {
             get => _potionsCount;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
                     _potionsCount = value;
@@ -36,25 +38,59 @@ namespace ProjetPOO.Model.Gameplay
         public int KeysCount
         {
             get => _keysCount;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
                     _keysCount = value;
             }
         }
 
-        public Inventory(int id, int potionsCount, int keysCount)
+        // Constructeur "normal" (en mémoire)
+        public Inventory(int potionsCount, int keysCount)
+        {
+            Id = GenerateId();
+            PotionsCount = potionsCount;
+            KeysCount = keysCount;
+        }
+
+        // Constructeur privé pour Load
+        private Inventory(int id, int potionsCount, int keysCount)
         {
             Id = id;
             PotionsCount = potionsCount;
             KeysCount = keysCount;
         }
 
-        public Inventory(int potionsCount, int keysCount)
+        private static int GenerateId()
         {
-            PotionsCount = potionsCount;
-            KeysCount = keysCount;
+            int id = _nextId;
+            _nextId++;
+            return id;
         }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
+            }
+        }
+
+        // Constructeur pour Load (depuis la base de données)
+        public static Inventory Load(int id, int potionsCount, int keysCount)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            Inventory inventory = new Inventory(id, potionsCount, keysCount);
+
+            EnsureNextIdIsAfterLoadedId(id);
+
+            return inventory;
+        }
+
 
         public bool HasPotion()
         {

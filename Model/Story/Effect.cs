@@ -74,6 +74,34 @@ namespace ProjetPOO.Model.Story
             FlagKey = null;
         }
 
+        // Constructeur privé pour Load
+        private Effect(int id)
+        {
+            Id = id;
+            Type = EffectType.AddGold;
+            Amount = null;
+            FlagKey = null;
+        }
+
+        // Constructeur pour Load (depuis la base de données)
+        public static Effect Load(int id, EffectType type, int? amount, string? flagKey)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            Effect effect = new Effect(id);
+
+            EnsureNextIdIsAfterLoadedId(id);
+
+            effect.Type = type;
+            effect.Amount = amount;
+            effect.FlagKey = flagKey;
+
+            return effect;
+        }
+
         public void Apply(GameState state)
         {
             if (state == null)
@@ -92,11 +120,11 @@ namespace ProjetPOO.Model.Story
 
                     if (goldToRemove >= state.Gold)
                     {
-                        state.Gold = 0;
+                        state.SetGold(0);
                     }
                     else
                     {
-                        state.Gold = state.Gold - goldToRemove;
+                        state.SetGold(state.Gold - goldToRemove);
                     }
                     break;
 
@@ -270,6 +298,15 @@ namespace ProjetPOO.Model.Story
             _nextId = _nextId + 1;
             return newId;
         }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
+            }
+        }
+
 
     }
 }

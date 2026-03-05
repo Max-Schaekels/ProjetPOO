@@ -13,6 +13,9 @@ namespace ProjetPOO.Model.Game
     public class GameState
     {
         private const int POTION_HEAL_AMOUNT = 5;
+
+        private static int _nextId = 1;
+
         private int _id;
         private int _currentSceneId;
         private int _scenarioId;
@@ -25,7 +28,7 @@ namespace ProjetPOO.Model.Game
         public int Id
         {
             get => _id;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
@@ -35,7 +38,7 @@ namespace ProjetPOO.Model.Game
         public int CurrentSceneId
         {
             get => _currentSceneId;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _currentSceneId = value;
@@ -45,7 +48,7 @@ namespace ProjetPOO.Model.Game
         public int ScenarioId
         {
             get => _scenarioId;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _scenarioId = value;
@@ -56,7 +59,7 @@ namespace ProjetPOO.Model.Game
         public int Gold
         {
             get => _gold;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
                     _gold = value;
@@ -66,7 +69,7 @@ namespace ProjetPOO.Model.Game
         public Inventory PlayerInventory
         {
             get => _playerInventory;
-            set
+            private set
             {
                 if(ValidUtils.CheckIfNotNull(value))
                     _playerInventory = value;
@@ -76,7 +79,7 @@ namespace ProjetPOO.Model.Game
         public PlayerCharacter PlayerCharacter
         {
             get => _playerCharacter;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNotNull(value))
                     _playerCharacter = value;
@@ -86,32 +89,81 @@ namespace ProjetPOO.Model.Game
         public CombatState? CurrentCombat
         {
             get => _currentCombat;
-            set => _currentCombat = value;
+            private set => _currentCombat = value;
         }
 
         public IReadOnlyList<string> Flags => _flags.AsReadOnly();
 
 
 
-        public GameState(int id, int currentSceneId, int scenarioId, int gold, Inventory playerInventory, PlayerCharacter playerCharacter)
+        // Constructeur "normal" (en mémoire)
+        public GameState(int currentSceneId, int scenarioId, int gold, Inventory playerInventory, PlayerCharacter playerCharacter)
         {
-            Id = id;
-            CurrentSceneId = currentSceneId;
+            Id = GenerateId();
+
+            _flags = new List<string>();
+
             ScenarioId = scenarioId;
+            CurrentSceneId = currentSceneId;
             Gold = gold;
             PlayerInventory = playerInventory;
             PlayerCharacter = playerCharacter;
-            _flags = new List<string>();
+
+            CurrentCombat = null;
         }
 
-        public GameState( int currentSceneId, int scenarioId, int gold, Inventory playerInventory, PlayerCharacter playerCharacter)
+        // Constructeur privé pour Load (évite de dupliquer l'init)
+        private GameState()
         {
-            CurrentSceneId = currentSceneId;
-            ScenarioId = scenarioId;
-            Gold = gold;
-            PlayerInventory = playerInventory;
-            PlayerCharacter = playerCharacter;
             _flags = new List<string>();
+            _playerInventory = null!;
+            _playerCharacter = null!;
+            _currentCombat = null;
+        }
+
+        private static int GenerateId()
+        {
+            int id = _nextId;
+            _nextId++;
+            return id;
+        }
+
+        private static void EnsureNextIdIsAfterLoadedId(int loadedId)
+        {
+            if (loadedId >= _nextId)
+            {
+                _nextId = loadedId + 1;
+            }
+        }
+
+        // Constructeur pour Load (depuis la base de données)
+        public static GameState Load( int id, int currentSceneId, int scenarioId, int gold,Inventory playerInventory,  PlayerCharacter playerCharacter, List<string>? flags = null, CombatState? currentCombat = null)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
+            GameState state = new GameState();
+
+            state.Id = id;
+            EnsureNextIdIsAfterLoadedId(id);
+
+            state.ScenarioId = scenarioId;
+            state.CurrentSceneId = currentSceneId;
+            state.Gold = gold;
+
+            state.PlayerInventory = playerInventory;
+            state.PlayerCharacter = playerCharacter;
+
+            state.CurrentCombat = currentCombat;
+
+            if (flags != null)
+            {
+                state._flags = new List<string>(flags);
+            }
+
+            return state;
         }
 
 
@@ -188,6 +240,36 @@ namespace ProjetPOO.Model.Game
             Gold = Gold - amount;
         }
 
+        public void SetGold(int gold)
+        {
+            if (!ValidUtils.CheckIfNonNegativeNumber(gold))
+            {
+                throw new ArgumentException("gold doit être >= 0.", nameof(gold));
+            }
+
+            Gold = gold;
+        }
+
+        public void SetPlayerInventory(Inventory playerInventory)
+        {
+            if (!ValidUtils.CheckIfNotNull(playerInventory))
+            {
+                throw new ArgumentNullException(nameof(playerInventory));
+            }
+
+            PlayerInventory = playerInventory;
+        }
+
+        public void SetPlayerCharacter(PlayerCharacter playerCharacter)
+        {
+            if (!ValidUtils.CheckIfNotNull(playerCharacter))
+            {
+                throw new ArgumentNullException(nameof(playerCharacter));
+            }
+
+            PlayerCharacter = playerCharacter;
+        }
+
 
         public void TakeDamage(int damage)
         {
@@ -241,9 +323,34 @@ namespace ProjetPOO.Model.Game
             CurrentSceneId = sceneId;
         }
 
+        public void SetScenario(int scenarioId)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(scenarioId))
+            {
+                throw new ArgumentException("scenarioId doit être un nombre positif.", nameof(scenarioId));
+            }
+
+            ScenarioId = scenarioId;
+        }
+
         public bool IsInCombat()
         {
             return CurrentCombat != null;
+        }
+
+        public void StartCombat(CombatState combatState)
+        {
+            if (combatState == null)
+            {
+                throw new ArgumentNullException(nameof(combatState));
+            }
+
+            CurrentCombat = combatState;
+        }
+
+        public void EndCombat()
+        {
+            CurrentCombat = null;
         }
     }
 }
