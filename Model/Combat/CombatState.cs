@@ -21,7 +21,7 @@ namespace ProjetPOO.Model.Combat
         public PlayerCharacter Player
         {
             get => _player;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNotNull(value))
                     _player = value;
@@ -31,7 +31,7 @@ namespace ProjetPOO.Model.Combat
         public Enemy Enemy
         {
             get => _enemy;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNotNull(value))
                     _enemy = value;
@@ -41,13 +41,13 @@ namespace ProjetPOO.Model.Combat
         public bool IsPlayerTurn
         {
             get => _isPlayerTurn;
-            set => _isPlayerTurn = value;
+            private set => _isPlayerTurn = value;
         }
 
         public int TurnCount
         {
             get => _turnCount;
-            set
+            private set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
                     _turnCount = value;
@@ -57,7 +57,7 @@ namespace ProjetPOO.Model.Combat
         public bool IsDefendingThisTurn
         {
             get => _isDefendingThisTurn;
-            set => _isDefendingThisTurn = value;
+            private set => _isDefendingThisTurn = value;
         }
 
         public CombatResult Result
@@ -107,7 +107,12 @@ namespace ProjetPOO.Model.Combat
             }
             else if (action == CombatActionType.UseItem)
             {
-                state.TryUsePotion();
+                bool used = state.TryUsePotion();
+
+                if (!used)
+                {
+                    throw new InvalidOperationException("Le joueur ne possède aucune potion.");
+                }
             }
             else if (action == CombatActionType.Flee)
             {
