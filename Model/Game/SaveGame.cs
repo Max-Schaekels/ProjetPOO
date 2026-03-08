@@ -86,24 +86,40 @@ namespace ProjetPOO.Model.Game
             State = state;
         }
 
-        // Load (DB plus tard ) : Id fourni + dates fournies + state fourni
+        // Constructeur privé pour Load
+        private SaveGame()
+        {
+            _name = string.Empty;
+            _state = null!;
+        }
+
+
+        // Chargement depuis stockage / DB plus tard
         public static SaveGame Load(int id, string name, DateTime createdAt, DateTime lastSavedAt, GameState state)
         {
+            if (!ValidUtils.CheckIfPositiveNumber(id))
+            {
+                throw new ArgumentException("id doit être un nombre positif.", nameof(id));
+            }
+
             if (state == null)
             {
                 throw new ArgumentNullException(nameof(state));
             }
 
-            SaveGame save = new SaveGame(name, state);
+            SaveGame save = new SaveGame();
 
             save.Id = id;
             EnsureNextIdIsAfterLoadedId(id);
 
+            save.Name = name;
             save.CreatedAt = createdAt;
             save.LastSavedAt = lastSavedAt;
+            save.State = state;
 
             return save;
         }
+
 
         public void Rename(string name)
         {
