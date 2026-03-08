@@ -62,15 +62,16 @@ namespace ProjetPOO.Model.Combat
             Level = level;
         }
 
-        // Constructeur privé pour Load (futur DB)
-        private PlayerCharacter(int id, string name, int maxHp, int attack, int defense, int agility, int experience, int level)
+        // Constructeur privé pour Load
+        private PlayerCharacter(int id, string name, int maxHp, int currentHp, int attack, int defense, int agility, int experience, int level)
             : base(name, maxHp, attack, defense, agility)
         {
             Id = id;
-
+            CurrentHp = currentHp;
             Experience = experience;
             Level = level;
         }
+
 
         private static int GenerateId()
         {
@@ -88,14 +89,14 @@ namespace ProjetPOO.Model.Combat
         }
 
         // Constructeur pour Load (depuis la base de données)
-        public static PlayerCharacter Load(int id, string name,int maxHp, int attack, int defense,int agility, int experience , int level )
+        public static PlayerCharacter Load(int id, string name,int maxHp,int currentHp, int attack, int defense,int agility, int experience , int level )
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
                 throw new ArgumentException("id doit être un nombre positif.", nameof(id));
             }
 
-            PlayerCharacter player = new PlayerCharacter(id, name, maxHp, attack, defense, agility, experience, level);
+            PlayerCharacter player = new PlayerCharacter(id, name, maxHp,currentHp, attack, defense, agility, experience, level);
 
             EnsureNextIdIsAfterLoadedId(id);
 

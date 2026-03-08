@@ -23,7 +23,7 @@ namespace ProjetPOO.Model.Combat
         public string Name
         {
             get => _name;
-            set
+            private set
             {
                 if (ValidUtils.CheckEntryName(value, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
                     _name = value;
@@ -33,7 +33,7 @@ namespace ProjetPOO.Model.Combat
         public int MaxHp
         {
             get => _maxHp;
-            private set
+            protected set
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                 {
@@ -51,7 +51,7 @@ namespace ProjetPOO.Model.Combat
         public int CurrentHp
         {
             get => _currentHp;
-            private set
+            protected set
             {
                 if (ValidUtils.IsInRange(value, MINIMUM_HP, _maxHp))
                 {
@@ -63,7 +63,7 @@ namespace ProjetPOO.Model.Combat
         public int Attack
         {
             get => _attack;
-            private set
+            protected set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
                     _attack = value;
@@ -73,7 +73,7 @@ namespace ProjetPOO.Model.Combat
         public int Defense
         {
             get => _defense;
-            private set
+            protected set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
                     _defense = value;
@@ -83,7 +83,7 @@ namespace ProjetPOO.Model.Combat
         public int Agility
         {
             get => _agility;
-            private set
+            protected set
             {
                 if (ValidUtils.CheckIfNonNegativeNumber(value))
                     _agility = value;
@@ -172,6 +172,18 @@ namespace ProjetPOO.Model.Combat
             {
                 Agility += amount;
             }
+        }
+
+        public void Rename(string name)
+        {
+            if (!ValidUtils.CheckEntryName(name, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
+            {
+                throw new ArgumentException(
+                    $"Name doit être compris entre {MINIMUM_NAME_LENGTH} et {MAXIMUM_NAME_LENGTH} caractères.",
+                    nameof(name));
+            }
+
+            Name = name;
         }
     }
 }
