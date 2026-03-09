@@ -169,6 +169,20 @@ namespace ProjetPOO.Model.Game
                     StartCombat(enemy);
                 }
             }
+            else if (scene.Type == SceneType.Shop)
+            {
+                if (scene.ShopId == null)
+                {
+                    throw new InvalidOperationException("Scène Shop invalide : ShopId est null.");
+                }
+
+                ResolveShop(scenario, scene.ShopId.Value);
+
+                if (State.IsInCombat())
+                {
+                    State.EndCombat();
+                }
+            }
             else
             {
                 // Si on entre dans une scène non-combat, on s'assure d'être hors combat
@@ -369,6 +383,75 @@ namespace ProjetPOO.Model.Game
             }
 
             return enemy;
+        }
+
+        // Shop
+
+        public Shop GetCurrentShop(Scenario scenario)
+        {
+            if (scenario == null)
+            {
+                throw new ArgumentNullException(nameof(scenario));
+            }
+
+            Scene scene = GetCurrentScene(scenario);
+
+            if (scene.Type != SceneType.Shop)
+            {
+                throw new InvalidOperationException("La scène courante n'est pas une scène Shop.");
+            }
+
+            if (scene.ShopId == null)
+            {
+                throw new InvalidOperationException("La scène Shop courante n'a pas de ShopId.");
+            }
+
+            return ResolveShop(scenario, scene.ShopId.Value);
+        }
+
+        public bool BuyPotionInCurrentShop(Scenario scenario)
+        {
+            if (scenario == null)
+            {
+                throw new ArgumentNullException(nameof(scenario));
+            }
+
+            if (State.IsInCombat())
+            {
+                throw new InvalidOperationException("Impossible d'acheter dans une boutique pendant un combat.");
+            }
+
+            Shop shop = GetCurrentShop(scenario);
+
+            return shop.BuyPotion(State);
+        }
+
+        public bool BuyKeyInCurrentShop(Scenario scenario)
+        {
+            if (scenario == null)
+            {
+                throw new ArgumentNullException(nameof(scenario));
+            }
+
+            if (State.IsInCombat())
+            {
+                throw new InvalidOperationException("Impossible d'acheter dans une boutique pendant un combat.");
+            }
+
+            Shop shop = GetCurrentShop(scenario);
+
+            return shop.BuyKey(State);
+        }
+
+        private Shop ResolveShop(Scenario scenario, int shopId)
+        {
+            Shop? shop = scenario.GetShopById(shopId);
+            if (shop == null)
+            {
+                throw new InvalidOperationException($"ShopId={shopId} introuvable dans le scénario.");
+            }
+
+            return shop;
         }
     }
 }

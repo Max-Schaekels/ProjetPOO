@@ -346,6 +346,11 @@ namespace ProjetPOO.Model.Story
             ScenarioId = 0;
         }
 
+        public void ClearShop()
+        {
+            ShopId = null;
+        }
+
         public void ChangeType(SceneType newType)
         {
             if (!Enum.IsDefined(typeof(SceneType), newType))
@@ -544,12 +549,57 @@ namespace ProjetPOO.Model.Story
                 {
                     errors.Add($"Scene \"{Title}\" : une scène Normal doit contenir au moins un choix.");
                 }
+
+                if (ShopId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Normal ne doit pas avoir de ShopId.");
+                }
+
+                if (EnemyId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Normal ne doit pas avoir de EnemyId.");
+                }
+
+                if (VictoryTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Normal ne doit pas avoir de VictoryTargetSceneId.");
+                }
+
+                if (DefeatTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Normal ne doit pas avoir de DefeatTargetSceneId.");
+                }
+
+                if (FleeTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Normal ne doit pas avoir de FleeTargetSceneId.");
+                }
             }
             else if (Type == SceneType.Shop)
             {
                 if (ShopId == null)
                 {
                     errors.Add($"Scene \"{Title}\" : ShopId est requis pour une scène Shop.");
+                }
+
+                if (EnemyId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Shop ne doit pas avoir de EnemyId.");
+                }
+
+                if (VictoryTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Shop ne doit pas avoir de VictoryTargetSceneId.");
+                }
+
+                if (DefeatTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Shop ne doit pas avoir de DefeatTargetSceneId.");
+                }
+
+                if (FleeTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Shop ne doit pas avoir de FleeTargetSceneId.");
                 }
             }
             else if (Type == SceneType.Combat)
@@ -573,12 +623,42 @@ namespace ProjetPOO.Model.Story
                 {
                     errors.Add($"Scene \"{Title}\" : FleeTargetSceneId est requis pour une scène Combat.");
                 }
+
+                if (ShopId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène Combat ne doit pas avoir de ShopId.");
+                }
             }
             else if (Type == SceneType.End)
             {
                 if (_choices.Count > 0)
                 {
                     errors.Add($"Scene \"{Title}\" : une scène End ne doit pas contenir de choix.");
+                }
+
+                if (ShopId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène End ne doit pas avoir de ShopId.");
+                }
+
+                if (EnemyId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène End ne doit pas avoir de EnemyId.");
+                }
+
+                if (VictoryTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène End ne doit pas avoir de VictoryTargetSceneId.");
+                }
+
+                if (DefeatTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène End ne doit pas avoir de DefeatTargetSceneId.");
+                }
+
+                if (FleeTargetSceneId != null)
+                {
+                    errors.Add($"Scene \"{Title}\" : une scène End ne doit pas avoir de FleeTargetSceneId.");
                 }
             }
 

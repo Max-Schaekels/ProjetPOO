@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story.Enums;
 using ProjetPOO.Utilities.EntriesValidation;
 
@@ -23,6 +24,7 @@ namespace ProjetPOO.Model.Story
         private int _startSceneId;
         private List<Scene> _scenes;
         private List<Enemy> _enemies;
+        private List<Shop> _shops;
 
 
 
@@ -75,11 +77,13 @@ namespace ProjetPOO.Model.Story
 
         public IReadOnlyList<Scene> Scenes => _scenes.AsReadOnly();
         public IReadOnlyList<Enemy> Enemies => _enemies.AsReadOnly();
+        public IReadOnlyList<Shop> Shops => _shops.AsReadOnly();
 
         public Scenario(string title, string description)
         {
             _scenes = new List<Scene>();
             _enemies = new List<Enemy>();
+            _shops = new List<Shop>();
 
             Id = GenerateId();
             Title = title;
@@ -92,6 +96,7 @@ namespace ProjetPOO.Model.Story
         {
             _scenes = new List<Scene>();
             _enemies = new List<Enemy>();
+            _shops = new List<Shop>();
 
             Title = string.Empty;
             Description = string.Empty;
@@ -101,7 +106,7 @@ namespace ProjetPOO.Model.Story
         }
 
         // Constructeur pour Load (depuis la base de données) avec vérifications de cohérence (ex: les scènes rattachées ont bien le ScenarioId du scénario chargé, pas de scène dupliquée, etc.)
-        public static Scenario Load(int id, string title, string description, int startSceneId, List<Scene>? scenes, List<Enemy>? enemies = null)
+        public static Scenario Load(int id, string title, string description, int startSceneId, List<Scene>? scenes, List<Enemy>? enemies = null, List<Shop>? shops = null)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -183,6 +188,28 @@ namespace ProjetPOO.Model.Story
                 }
             }
 
+            scenario._shops = new List<Shop>();
+
+               if (shops != null)
+                {
+                    for (int i = 0; i < shops.Count; i++)
+                    {
+                        Shop store = shops[i];
+                        if (store == null)
+                        {
+                            continue;
+                        }
+    
+                        bool alreadyExists = scenario._shops.Any(sh => sh != null && sh.Id == store.Id);
+                        if (alreadyExists)
+                        {
+                            continue;
+                        }
+    
+                        scenario._shops.Add(store);
+                    }
+            }
+
             scenario.AssignStartScene(startSceneId);
 
             return scenario;
@@ -232,6 +259,50 @@ namespace ProjetPOO.Model.Story
             }
 
             _enemies.Add(enemy);
+        }
+
+        public void RemoveEnemy(int enemyId)
+        {
+            Enemy? toRemove = _enemies.FirstOrDefault(e => e != null && e.Id == enemyId);
+            if (toRemove == null)
+            {
+                return;
+            }
+            _enemies.Remove(toRemove);
+            toRemove.ClearScenario();
+        }
+
+        public void AddShop(Shop store)
+        {
+            if (store == null)
+            {
+                throw new ArgumentNullException(nameof(store));
+            }
+            bool alreadyExists = _shops.Any(s => s != null && s.Id == store.Id);
+            if (alreadyExists)
+            {
+                return;
+            }
+            _shops.Add(store);
+        }
+
+        public void RemoveShop(int shopId)
+        {
+            Shop? toRemove = _shops.FirstOrDefault(s => s != null && s.Id == shopId);
+            if (toRemove == null)
+            {
+                return;
+            }
+            _shops.Remove(toRemove);
+            
+            for (int i = 0; i < _scenes.Count; i++)
+            {
+                Scene scene = _scenes[i];
+                if (scene != null && scene.Type == SceneType.Shop && scene.ShopId == shopId)
+                {
+                    scene.ClearShop();
+                }
+            }
         }
 
         public void AssignStartScene(int startSceneId)
@@ -314,6 +385,12 @@ namespace ProjetPOO.Model.Story
             return enemy;
         }
 
+        public Shop? GetShopById(int shopId)
+        {
+            Shop? store = _shops.FirstOrDefault(s => s != null && s.Id == shopId);
+            return store;
+        }
+
 
         public bool ValidateSafe(out List<string> errors)
         {
@@ -342,6 +419,12 @@ namespace ProjetPOO.Model.Story
             if (_enemies == null)
             {
                 errors.Add("Scenario : la liste des ennemis est null (liste corromue).");
+                return false;
+            }
+
+            if (_shops == null)
+            {
+                errors.Add("Scenario : la liste des boutiques est null (liste corrompue).");
                 return false;
             }
 
@@ -394,6 +477,22 @@ namespace ProjetPOO.Model.Story
                 if (!ValidUtils.CheckIfNonNegativeNumber(enemy.ScenarioId))
                 {
                     errors.Add($"Scenario : EnemyId={enemy.Id} a un ScenarioId invalide (<0).");
+                }
+            }
+
+            // vérifier null + ids dupliqués pour les boutiques (validation légère)
+            for (int i = 0; i < _shops.Count; i++)
+            {
+                Shop store = _shops[i];
+                if (store == null)
+                {
+                    errors.Add("Scenario : une boutique est null (liste corrompue).");
+                    continue;
+                }
+                bool duplicate = _shops.Any(s => s != null && s.Id == store.Id && !ReferenceEquals(s, store));
+                if (duplicate)
+                {
+                    errors.Add($"Scenario : Id de boutique dupliqué ({store.Id}).");
                 }
             }
 
@@ -532,6 +631,22 @@ namespace ProjetPOO.Model.Story
                     if (scene.FleeTargetSceneId == null || !existingSceneIds.Contains(scene.FleeTargetSceneId.Value))
                     {
                         errors.Add($"Scene \"{scene.Title}\" : FleeTargetSceneId invalide ou inexistant.");
+                    }
+                }
+
+                if(scene.Type == SceneType.Shop)
+                {
+                    if (scene.ShopId == null)
+                    {
+                        errors.Add($"Scene \"{scene.Title}\" : ShopId est requis pour une scène Shop.");
+                    }
+                    else
+                    {
+                        Shop? store = GetShopById(scene.ShopId.Value);
+                        if (store == null)
+                        {
+                            errors.Add($"Scene \"{scene.Title}\" : ShopId={scene.ShopId.Value} n'existe pas dans la liste de boutiques du scénario.");
+                        }
                     }
                 }
             }
