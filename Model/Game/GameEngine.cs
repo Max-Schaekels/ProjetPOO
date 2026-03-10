@@ -313,7 +313,6 @@ namespace ProjetPOO.Model.Game
 
                 ResolveCombatExit(scenario, combat.Result);
 
-                State.EndCombat();
             }
 
             return report;
@@ -322,6 +321,8 @@ namespace ProjetPOO.Model.Game
         private void ResolveCombatExit(Scenario scenario, CombatResult result)
         {
             Scene scene = GetCurrentScene(scenario);
+
+            State.EndCombat();
 
             if (scene.Type != SceneType.Combat)
             {
