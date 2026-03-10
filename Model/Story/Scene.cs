@@ -349,6 +349,33 @@ namespace ProjetPOO.Model.Story
         public void ClearShop()
         {
             ShopId = null;
+            Type = SceneType.Normal;
+        }
+
+        public void ClearReferencesToScene(int sceneId)
+        {
+            foreach (Choice choice in _choices)
+            {
+                if (choice.TargetSceneId == sceneId)
+                {
+                    choice.ClearTargetScene();
+                }
+            }
+
+            if (VictoryTargetSceneId == sceneId)
+            {
+                VictoryTargetSceneId = null;
+            }
+
+            if (DefeatTargetSceneId == sceneId)
+            {
+                DefeatTargetSceneId = null;
+            }
+
+            if (FleeTargetSceneId == sceneId)
+            {
+                FleeTargetSceneId = null;
+            }
         }
 
         public void ChangeType(SceneType newType)

@@ -360,21 +360,32 @@ namespace ProjetPOO.Model.Story
 
         }
 
-        public void RemoveScene(int sceneId)
+        public void RemoveScene(Scene scene)
         {
-            Scene? toRemove = _scenes.FirstOrDefault(s => s != null && s.Id == sceneId);
-            if (toRemove == null)
+            if (scene == null)
             {
-                return; // La scène n'existe pas dans le scénario, rien à faire
+                throw new ArgumentNullException(nameof(scene));
             }
 
-            _scenes.Remove(toRemove);
+            Scene? existingScene = GetSceneById(scene.Id);
 
-            toRemove.ClearScenario();
+            if (existingScene == null)
+            {
+                return;
+            }
 
-            if (StartSceneId == sceneId)
+            int removedSceneId = existingScene.Id;
+
+            _scenes.Remove(existingScene);
+
+            if (StartSceneId == removedSceneId)
             {
                 StartSceneId = 0;
+            }
+
+            foreach (Scene currentScene in _scenes)
+            {
+                currentScene.ClearReferencesToScene(removedSceneId);
             }
         }
 
