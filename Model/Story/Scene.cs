@@ -349,7 +349,7 @@ namespace ProjetPOO.Model.Story
         public void ClearShop()
         {
             ShopId = null;
-            Type = SceneType.Normal;
+            ChangeType(SceneType.Normal);
         }
 
         public void ClearReferencesToScene(int sceneId)
@@ -375,6 +375,14 @@ namespace ProjetPOO.Model.Story
             if (FleeTargetSceneId == sceneId)
             {
                 FleeTargetSceneId = null;
+            }
+        }
+
+        public void ClearEnemyIfMatches(int enemyId)
+        {
+            if (EnemyId == enemyId)
+            {
+                EnemyId = null;
             }
         }
 

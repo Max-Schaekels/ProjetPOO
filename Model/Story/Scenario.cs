@@ -263,13 +263,20 @@ namespace ProjetPOO.Model.Story
 
         public void RemoveEnemy(int enemyId)
         {
-            Enemy? toRemove = _enemies.FirstOrDefault(e => e != null && e.Id == enemyId);
-            if (toRemove == null)
+            Enemy? enemy = GetEnemyById(enemyId);
+
+            if (enemy == null)
             {
                 return;
             }
-            _enemies.Remove(toRemove);
-            toRemove.ClearScenario();
+
+            enemy.ClearScenario();
+            _enemies.Remove(enemy);
+
+            foreach (Scene scene in _scenes)
+            {
+                scene.ClearEnemyIfMatches(enemyId);
+            }
         }
 
         public void AddShop(Shop store)
