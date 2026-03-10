@@ -101,11 +101,13 @@ namespace ProjetPOO.Model.Game
             get => _lootDescription;
             private set
             {
-                
-                if (ValidUtils.CheckIfNotNullOrEmpty(value))
+
+                if (value == null)
                 {
-                    _lootDescription = value;
+                    throw new ArgumentNullException(nameof(LootDescription));
                 }
+
+                _lootDescription = value;
             }
         }
 
