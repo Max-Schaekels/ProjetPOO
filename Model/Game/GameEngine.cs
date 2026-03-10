@@ -279,7 +279,6 @@ namespace ProjetPOO.Model.Game
 
                 ResolveCombatExit(scenario, combat.Result);
 
-                State.EndCombat();
                 return report;
             }
 
