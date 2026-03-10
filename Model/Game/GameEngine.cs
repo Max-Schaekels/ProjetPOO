@@ -4,6 +4,7 @@ using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Model.Story.Enums;
 using System;
+using System.Net;
 
 namespace ProjetPOO.Model.Game
 {
@@ -153,45 +154,76 @@ namespace ProjetPOO.Model.Game
         /// </summary>
         public void EnterCurrentScene(Scenario scenario)
         {
+            if (scenario == null)
+            {
+                throw new ArgumentNullException(nameof(scenario));
+            }
+
             Scene scene = GetCurrentScene(scenario);
 
             if (scene.Type == SceneType.Combat)
             {
-                if (scene.EnemyId == null)
-                {
-                    throw new InvalidOperationException("Scène Combat invalide : EnemyId est null.");
-                }
-
-                Enemy enemy = ResolveEnemy(scenario, scene.EnemyId.Value);
-
-                if (!State.IsInCombat())
-                {
-                    StartCombat(enemy);
-                }
+                HandleCombatScene(scenario, scene);
             }
             else if (scene.Type == SceneType.Shop)
             {
-                if (scene.ShopId == null)
-                {
-                    throw new InvalidOperationException("Scène Shop invalide : ShopId est null.");
-                }
-
-                ResolveShop(scenario, scene.ShopId.Value);
-
-                if (State.IsInCombat())
-                {
-                    State.EndCombat();
-                }
+                HandleShopScene(scenario, scene);
             }
             else
             {
-                // Si on entre dans une scène non-combat, on s'assure d'être hors combat
-                if (State.IsInCombat())
-                {
-                    State.EndCombat();
-                }
+                HandleNonCombatScene();
             }
 
+        }
+
+        // Handle pour Enter current scene
+
+        private void HandleCombatScene(Scenario scenario, Scene scene)
+        {
+            if (scene == null)
+            {
+                throw new ArgumentNullException(nameof(scene));
+            }
+
+            if (scene.EnemyId == null)
+            {
+                throw new InvalidOperationException("Scène Combat invalide : EnemyId est null.");
+            }
+
+            Enemy enemy = ResolveEnemy(scenario, scene.EnemyId.Value);
+
+            if (!State.IsInCombat())
+            {
+                StartCombat(enemy);
+            }
+        }
+
+        private void HandleShopScene(Scenario scenario, Scene scene)
+        {
+            if (scene == null)
+            {
+                throw new ArgumentNullException(nameof(scene));
+            }
+
+            if (scene.ShopId == null)
+            {
+                throw new InvalidOperationException("Scène Shop invalide : ShopId est null.");
+            }
+
+            ResolveShop(scenario, scene.ShopId.Value);
+
+            if (State.IsInCombat())
+            {
+                State.EndCombat();
+            }
+        }
+
+        private void HandleNonCombatScene()
+        {
+            if (State.IsInCombat())
+            {
+                State.EndCombat();
+            }
         }
 
         // Combat
