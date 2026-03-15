@@ -25,6 +25,7 @@ namespace ProjetPOO.Model.Story
         private List<Scene> _scenes;
         private List<Enemy> _enemies;
         private List<Shop> _shops;
+        private PlayerCharactersCollection _playerCharacters;
 
 
 
@@ -79,11 +80,25 @@ namespace ProjetPOO.Model.Story
         public IReadOnlyList<Enemy> Enemies => _enemies.AsReadOnly();
         public IReadOnlyList<Shop> Shops => _shops.AsReadOnly();
 
+        public PlayerCharactersCollection PlayerCharacters
+        {
+            get => _playerCharacters;
+            private set
+            {
+                if (value != null)
+                {
+                    _playerCharacters = value;
+                }
+            }
+        }
+
         public Scenario(string title, string description)
         {
             _scenes = new List<Scene>();
             _enemies = new List<Enemy>();
             _shops = new List<Shop>();
+
+            PlayerCharacters = new PlayerCharactersCollection();
 
             Id = GenerateId();
             Title = title;
@@ -98,6 +113,8 @@ namespace ProjetPOO.Model.Story
             _enemies = new List<Enemy>();
             _shops = new List<Shop>();
 
+            PlayerCharacters = new PlayerCharactersCollection();
+
             Title = string.Empty;
             Description = string.Empty;
 
@@ -106,7 +123,7 @@ namespace ProjetPOO.Model.Story
         }
 
         // Constructeur pour Load (depuis la base de données) avec vérifications de cohérence (ex: les scènes rattachées ont bien le ScenarioId du scénario chargé, pas de scène dupliquée, etc.)
-        public static Scenario Load(int id, string title, string description, int startSceneId, List<Scene>? scenes, List<Enemy>? enemies = null, List<Shop>? shops = null)
+        public static Scenario Load(int id, string title, string description, int startSceneId, List<Scene>? scenes, List<Enemy>? enemies = null, List<Shop>? shops = null, PlayerCharactersCollection? playerCharacters = null)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -121,7 +138,6 @@ namespace ProjetPOO.Model.Story
             scenario.Title = title;
             scenario.Description = description;
 
-            scenario._scenes = new List<Scene>();
 
             if (scenes != null)
             {
@@ -155,7 +171,6 @@ namespace ProjetPOO.Model.Story
                 }
             }
 
-            scenario._enemies = new List<Enemy>();
 
             if (enemies != null)
             {
@@ -188,26 +203,46 @@ namespace ProjetPOO.Model.Story
                 }
             }
 
-            scenario._shops = new List<Shop>();
 
-               if (shops != null)
+            if (shops != null)
+            {
+                for (int i = 0; i < shops.Count; i++)
                 {
-                    for (int i = 0; i < shops.Count; i++)
+                    Shop store = shops[i];
+                    if (store == null)
                     {
-                        Shop store = shops[i];
-                        if (store == null)
-                        {
-                            continue;
-                        }
-    
-                        bool alreadyExists = scenario._shops.Any(sh => sh != null && sh.Id == store.Id);
-                        if (alreadyExists)
-                        {
-                            continue;
-                        }
-    
-                        scenario._shops.Add(store);
+                        continue;
                     }
+
+                    bool alreadyExists = scenario._shops.Any(sh => sh != null && sh.Id == store.Id);
+                    if (alreadyExists)
+                    {
+                        continue;
+                    }
+
+                    scenario._shops.Add(store);
+                }
+            }
+            
+
+            if (playerCharacters != null)
+            {
+                for (int i = 0; i < playerCharacters.Count; i++)
+                {
+                    PlayerCharacterTemplate playerTemplate = playerCharacters[i];
+
+                    if (playerTemplate == null)
+                    {
+                        continue;
+                    }
+
+                    if (scenario.PlayerCharacters.ContainsId(playerTemplate.Id))
+                    {
+                        continue;
+                    }
+
+                    scenario.PlayerCharacters.AddPlayer(playerTemplate);
+                }
             }
 
             scenario.AssignStartScene(startSceneId);
@@ -301,7 +336,7 @@ namespace ProjetPOO.Model.Story
                 return;
             }
             _shops.Remove(toRemove);
-            
+
             for (int i = 0; i < _scenes.Count; i++)
             {
                 Scene scene = _scenes[i];
@@ -446,6 +481,18 @@ namespace ProjetPOO.Model.Story
                 return false;
             }
 
+            if (PlayerCharacters == null)
+            {
+                errors.Add("Scenario : la liste des personnages est null (liste corrompue).");
+                return false;
+            }
+
+            if (HasInvalidPlayerCharacters())
+            {
+                errors.Add("Scenario : le contenu de la liste des personnages est null (liste corrompue).");
+                return false;
+            }
+
             // vérifier null + ids dupliqués + valider les scènes
             for (int i = 0; i < _scenes.Count; i++)
             {
@@ -536,6 +583,11 @@ namespace ProjetPOO.Model.Story
                 {
                     errors.Add($"StartSceneId={StartSceneId} n'existe pas dans le scénario.");
                 }
+            }
+
+            if (!HasPlayablePlayerCharacter())
+            {
+                errors.Add("Pour jouer, Il faut au minimum un personnage.");
             }
 
             // En jouable : tous les ennemis doivent être rattachés au scénario (ScenarioId == Id et > 0)
@@ -652,7 +704,7 @@ namespace ProjetPOO.Model.Story
                     }
                 }
 
-                if(scene.Type == SceneType.Shop)
+                if (scene.Type == SceneType.Shop)
                 {
                     if (scene.ShopId == null)
                     {
@@ -687,5 +739,39 @@ namespace ProjetPOO.Model.Story
             }
         }
 
+        private bool HasInvalidPlayerCharacters()
+        {
+            foreach (PlayerCharacterTemplate? playerTemplate in PlayerCharacters)
+            {
+                if (playerTemplate == null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool HasPlayablePlayerCharacter()
+        {
+            return PlayerCharacters.Count > 0;
+        }
+
+        public PlayerCharacterTemplate GetDefaultPlayerCharacterTemplate()
+        {
+            if (PlayerCharacters == null || PlayerCharacters.Count == 0)
+            {
+                throw new InvalidOperationException("Aucun personnage jouable n'est défini dans le scénario.");
+            }
+
+            PlayerCharacterTemplate? template = PlayerCharacters.GetDefault();
+
+            if (template == null)
+            {
+                throw new InvalidOperationException("Le personnage jouable par défaut est introuvable.");
+            }
+
+            return template;
+        }
     }
 }

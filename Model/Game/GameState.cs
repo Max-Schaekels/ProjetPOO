@@ -367,5 +367,24 @@ namespace ProjetPOO.Model.Game
         {
             CurrentCombat = null;
         }
+
+        //implémentation futur
+        //public void InitializePlayerFromTemplate(PlayerCharacterTemplate template)
+        //{
+        //    if (template == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(template));
+        //    }
+
+        //    if (PlayerCharacter != null)
+        //    {
+        //        throw new InvalidOperationException("Le joueur de la partie est déjà initialisé.");
+        //    }
+
+        //    PlayerCharacterInstance instance = template.CreateInstance();
+
+        //    PlayerCharacter = instance;
+        //    SelectedPlayerCharacterTemplateId = instance.TemplateId;
+        //}
     }
 }
