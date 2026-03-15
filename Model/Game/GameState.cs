@@ -168,6 +168,7 @@ namespace ProjetPOO.Model.Game
 
             state.PlayerInventory = playerInventory;
             state.PlayerCharacter = playerCharacter;
+            state.SelectedPlayerCharacterTemplateId = playerCharacter.TemplateId;
 
             state.CurrentCombat = currentCombat;
 
@@ -281,6 +282,7 @@ namespace ProjetPOO.Model.Game
             }
 
             PlayerCharacter = playerCharacter;
+            SelectedPlayerCharacterTemplateId = playerCharacter.TemplateId;
         }
 
 
