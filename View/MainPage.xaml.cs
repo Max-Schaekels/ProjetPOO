@@ -40,7 +40,8 @@ namespace ProjetPOO.View
             Condition condition = new Condition(ConditionType.HasPotion, 1);
             Effect effect = new Effect(EffectType.AddGold, 100);
             Scenario scenario = new Scenario("Scénario numéro 1", "Description du scénario numéro 1");
-            PlayerCharacter player = new PlayerCharacter("Héros", 100, 20, 10, 5, 0, 1);
+            PlayerCharacterTemplate template = new PlayerCharacterTemplate("Héros", 100, 20, 10, 5, 0, 1);
+            PlayerCharacterInstance player = new PlayerCharacterInstance(1,"Héros", 100, 20, 10, 5, 0, 1);
             Enemy enemy = new Enemy("Gobelin 1", 50, 15, 5, 3, EnemyType.Goblin, 50, 0,25, 50,0,2,10,0,3);
             CombatState combatState = new CombatState(player, enemy);
             DataAccess dataAccess = new DataAccess();

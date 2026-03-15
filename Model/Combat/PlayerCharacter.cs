@@ -8,7 +8,7 @@ using ProjetPOO.Utilities.Randomization;
 
 namespace ProjetPOO.Model.Combat
 {
-    public class PlayerCharacter : Character
+    public class PlayerCharacterInstance : Character
     {
         private const int LOW_STAT_INCREASE = 1;
         private const int HIGH_STAT_INCREASE = 3;
@@ -19,6 +19,7 @@ namespace ProjetPOO.Model.Combat
 
 
         private int _id;
+        private int _templateId;
         private int _experience;
         private int _level;
 
@@ -29,6 +30,18 @@ namespace ProjetPOO.Model.Combat
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
+            }
+        }
+
+        public int TemplateId
+        {
+            get => _templateId;
+            private set
+            {
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                {
+                    _templateId = value;
+                }
             }
         }
 
@@ -53,20 +66,22 @@ namespace ProjetPOO.Model.Combat
         }
 
         // Constructeur "normal" (en mémoire)
-        public PlayerCharacter(string name, int maxHp, int attack, int defense, int agility, int experience = 0, int level = 1)
+        public PlayerCharacterInstance(int templateId, string name, int maxHp, int attack, int defense, int agility, int experience = 0, int level = 1)
             : base(name, maxHp, attack, defense, agility)
         {
             Id = GenerateId();
+            TemplateId = templateId;
 
             Experience = experience;
             Level = level;
         }
 
         // Constructeur privé pour Load
-        private PlayerCharacter(int id, string name, int maxHp, int currentHp, int attack, int defense, int agility, int experience, int level)
+        private PlayerCharacterInstance(int id, int templateId, string name, int maxHp, int currentHp, int attack, int defense, int agility, int experience, int level)
             : base(name, maxHp, attack, defense, agility)
         {
             Id = id;
+            TemplateId = templateId;
             CurrentHp = currentHp;
             Experience = experience;
             Level = level;
@@ -89,14 +104,19 @@ namespace ProjetPOO.Model.Combat
         }
 
         // Constructeur pour Load (depuis la base de données)
-        public static PlayerCharacter Load(int id, string name,int maxHp,int currentHp, int attack, int defense,int agility, int experience , int level )
+        public static PlayerCharacterInstance Load(int id,int templateId, string name,int maxHp,int currentHp, int attack, int defense,int agility, int experience , int level )
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
                 throw new ArgumentException("id doit être un nombre positif.", nameof(id));
             }
 
-            PlayerCharacter player = new PlayerCharacter(id, name, maxHp,currentHp, attack, defense, agility, experience, level);
+            if (!ValidUtils.CheckIfPositiveNumber(templateId))
+            {
+                throw new ArgumentException("templateId doit être un nombre positif.", nameof(templateId));
+            }
+
+            PlayerCharacterInstance player = new PlayerCharacterInstance(id,templateId, name, maxHp,currentHp, attack, defense, agility, experience, level);
 
             EnsureNextIdIsAfterLoadedId(id);
 

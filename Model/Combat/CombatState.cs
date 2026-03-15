@@ -11,14 +11,14 @@ namespace ProjetPOO.Model.Combat
 {
     public class CombatState
     {
-        private PlayerCharacter _player;
+        private PlayerCharacterInstance _player;
         private Enemy _enemy;
         private bool _isPlayerTurn;
         private int _turnCount;
         private bool _isDefendingThisTurn;
         private CombatResult _result;
 
-        public PlayerCharacter Player
+        public PlayerCharacterInstance Player
         {
             get => _player;
             private set
@@ -66,7 +66,7 @@ namespace ProjetPOO.Model.Combat
             private set => _result = value;
         }
 
-        public CombatState(PlayerCharacter player, Enemy enemy)
+        public CombatState(PlayerCharacterInstance player, Enemy enemy)
         {
             Player = player;
             Enemy = enemy;

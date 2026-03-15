@@ -21,8 +21,9 @@ namespace ProjetPOO.Model.Game
         private int _scenarioId;
         private int _gold;
         private List<string> _flags;
-        private Inventory _playerInventory; 
-        private PlayerCharacter _playerCharacter;
+        private Inventory _playerInventory;
+        private int _selectedPlayerCharacterTemplateId;
+        private PlayerCharacterInstance _playerCharacter;
         private CombatState? _currentCombat;
 
         public int Id
@@ -76,7 +77,18 @@ namespace ProjetPOO.Model.Game
             }
         }
 
-        public PlayerCharacter PlayerCharacter
+        public int SelectedPlayerCharacterTemplateId
+        {
+            get => _selectedPlayerCharacterTemplateId;
+            private set
+            {
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                {
+                    _selectedPlayerCharacterTemplateId = value;
+                }
+            }
+        }
+        public PlayerCharacterInstance PlayerCharacter
         {
             get => _playerCharacter;
             private set
@@ -97,7 +109,7 @@ namespace ProjetPOO.Model.Game
 
 
         // Constructeur "normal" (en mémoire)
-        public GameState(int currentSceneId, int scenarioId, int gold, Inventory playerInventory, PlayerCharacter playerCharacter)
+        public GameState(int currentSceneId, int scenarioId, int gold, Inventory playerInventory, PlayerCharacterInstance playerCharacter)
         {
             Id = GenerateId();
 
@@ -108,6 +120,7 @@ namespace ProjetPOO.Model.Game
             Gold = gold;
             PlayerInventory = playerInventory;
             PlayerCharacter = playerCharacter;
+            SelectedPlayerCharacterTemplateId = playerCharacter.TemplateId;
 
             CurrentCombat = null;
         }
@@ -137,7 +150,7 @@ namespace ProjetPOO.Model.Game
         }
 
         // Constructeur pour Load (depuis la base de données)
-        public static GameState Load( int id, int currentSceneId, int scenarioId, int gold,Inventory playerInventory,  PlayerCharacter playerCharacter, List<string>? flags = null, CombatState? currentCombat = null)
+        public static GameState Load( int id, int currentSceneId, int scenarioId, int gold,Inventory playerInventory,  PlayerCharacterInstance playerCharacter, List<string>? flags = null, CombatState? currentCombat = null)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -260,7 +273,7 @@ namespace ProjetPOO.Model.Game
             PlayerInventory = playerInventory;
         }
 
-        public void SetPlayerCharacter(PlayerCharacter playerCharacter)
+        public void SetPlayerCharacter(PlayerCharacterInstance playerCharacter)
         {
             if (!ValidUtils.CheckIfNotNull(playerCharacter))
             {

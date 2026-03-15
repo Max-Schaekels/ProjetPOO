@@ -240,7 +240,7 @@ namespace ProjetPOO.Model.Game
                 throw new InvalidOperationException("Un combat est déjà en cours.");
             }
 
-            PlayerCharacter playerCharacter = State.PlayerCharacter;
+            PlayerCharacterInstance playerCharacter = State.PlayerCharacter;
             CombatState combat = new CombatState(playerCharacter, enemy);
 
             State.StartCombat(combat);
