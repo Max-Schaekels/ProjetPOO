@@ -16,6 +16,7 @@ namespace ProjetPOO.Model.Gameplay
         private static int _nextId = 1;
 
         private int _id;
+        private int _scenarioId;
         private string _name;
         private int _potionPrice;
         private int _keyPrice;
@@ -27,6 +28,18 @@ namespace ProjetPOO.Model.Gameplay
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
+            }
+        }
+
+        public int ScenarioId
+        {
+            get => _scenarioId;
+            private set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                {
+                    _scenarioId = value;
+                }
             }
         }
 
@@ -64,18 +77,37 @@ namespace ProjetPOO.Model.Gameplay
         public Shop(string name, int potionPrice, int keyPrice)
         {
             Id = GenerateId();
+            ScenarioId = 0;
             Name = name;
             PotionPrice = potionPrice;
             KeyPrice = keyPrice;
+            
         }
 
         // Constructeur privé pour Load
-        private Shop(int id, string name, int potionPrice, int keyPrice)
+        private Shop(int id, int scenarioId, string name, int potionPrice, int keyPrice)
         {
             Id = id;
+            ScenarioId = scenarioId;
             Name = name;
             PotionPrice = potionPrice;
             KeyPrice = keyPrice;
+            
+        }
+
+        public void AssignToScenario(int scenarioId)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(scenarioId))
+            {
+                throw new ArgumentException("scenarioId doit être > 0.", nameof(scenarioId));
+            }
+
+            ScenarioId = scenarioId;
+        }
+
+        public void ClearScenario()
+        {
+            ScenarioId = 0;
         }
 
         private static int GenerateId()
@@ -94,14 +126,19 @@ namespace ProjetPOO.Model.Gameplay
         }
 
         // Constructeur pour Load (depuis la base de données)
-        public static Shop Load(int id, string name, int potionPrice, int keyPrice)
+        public static Shop Load(int id, int scenarioId, string name, int potionPrice, int keyPrice)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
                 throw new ArgumentException("id doit être un nombre positif.", nameof(id));
             }
 
-            Shop shop = new Shop(id, name, potionPrice, keyPrice);
+            if (!ValidUtils.CheckIfNonNegativeNumber(scenarioId))
+            {
+                throw new ArgumentException("scenarioId doit être >= 0.", nameof(scenarioId));
+            }
+
+            Shop shop = new Shop(id, scenarioId, name, potionPrice, keyPrice);
 
             EnsureNextIdIsAfterLoadedId(id);
 

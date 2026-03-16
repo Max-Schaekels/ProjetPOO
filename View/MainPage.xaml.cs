@@ -56,7 +56,7 @@ namespace ProjetPOO.View
 
             Inventory inventory = new Inventory(5, 5);
             Shop shop = new Shop("La boutique de Loïc", 10, 5);
-            scenario.AddShop(shop);
+            scenario.Shops.AddShop(shop);
 
             Loot loot = new Loot(100, 2, 1);
 
