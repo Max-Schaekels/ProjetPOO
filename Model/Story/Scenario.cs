@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Gameplay;
+using ProjetPOO.Model.Story.Enums;
+using ProjetPOO.Utilities.EntriesValidation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProjetPOO.Model.Combat;
-using ProjetPOO.Model.Gameplay;
-using ProjetPOO.Model.Story.Enums;
-using ProjetPOO.Utilities.EntriesValidation;
 
 namespace ProjetPOO.Model.Story
 {
@@ -23,7 +23,7 @@ namespace ProjetPOO.Model.Story
         private string _description;
         private int _startSceneId;
         private ScenesCollection _scenes;
-        private List<Enemy> _enemies;
+        private EnemiesCollection _enemies;
         private List<Shop> _shops;
         private PlayerCharactersCollection _playerCharacters;
 
@@ -87,7 +87,17 @@ namespace ProjetPOO.Model.Story
                 }
             }
         }
-        public IReadOnlyList<Enemy> Enemies => _enemies.AsReadOnly();
+        public EnemiesCollection Enemies
+        {
+            get => _enemies;
+            private set
+            {
+                if (value != null)
+                {
+                    _enemies = value;
+                }
+            }
+        }
         public IReadOnlyList<Shop> Shops => _shops.AsReadOnly();
 
         public PlayerCharactersCollection PlayerCharacters
@@ -103,14 +113,14 @@ namespace ProjetPOO.Model.Story
         }
 
         public Scenario(string title, string description)
-        {
-            _enemies = new List<Enemy>();
+        {            
             _shops = new List<Shop>();
 
             PlayerCharacters = new PlayerCharactersCollection();
 
             Id = GenerateId();
             Scenes = new ScenesCollection(Id);
+            Enemies = new EnemiesCollection(Id);
             Title = title;
             Description = description;
 
@@ -118,8 +128,7 @@ namespace ProjetPOO.Model.Story
         }
 
         public Scenario()
-        {
-            _enemies = new List<Enemy>();
+        {          
             _shops = new List<Shop>();
 
             PlayerCharacters = new PlayerCharactersCollection();
@@ -129,11 +138,12 @@ namespace ProjetPOO.Model.Story
 
             Id = GenerateId();
             Scenes = new ScenesCollection(Id);
+            Enemies = new EnemiesCollection(Id);
             StartSceneId = 0;
         }
 
         // Constructeur pour Load (depuis la base de données) avec vérifications de cohérence (ex: les scènes rattachées ont bien le ScenarioId du scénario chargé, pas de scène dupliquée, etc.)
-        public static Scenario Load(int id, string title, string description, int startSceneId, ScenesCollection? scenes, List<Enemy>? enemies = null, List<Shop>? shops = null, PlayerCharactersCollection? playerCharacters = null)
+        public static Scenario Load(int id, string title, string description, int startSceneId, ScenesCollection? scenes, EnemiesCollection? enemies = null, List<Shop>? shops = null, PlayerCharactersCollection? playerCharacters = null)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -144,6 +154,7 @@ namespace ProjetPOO.Model.Story
 
             scenario.Id = id;
             scenario.Scenes = new ScenesCollection(scenario.Id);
+            scenario.Enemies = new EnemiesCollection(scenario.Id);
             EnsureNextIdIsAfterLoadedId(id);
 
             scenario.Title = title;
@@ -206,11 +217,10 @@ namespace ProjetPOO.Model.Story
                     }
                     else if (enemy.ScenarioId != scenario.Id)
                     {
-                        throw new InvalidOperationException(
-                            $"Load Scenario incohérent : l'ennemi \"{enemy.Name}\" a ScenarioId={enemy.ScenarioId} mais le scénario chargé a Id={scenario.Id}.");
+                        throw new InvalidOperationException( $"Load Scenario incohérent : l'ennemi \"{enemy.Name}\" a ScenarioId={enemy.ScenarioId} mais le scénario chargé a Id={scenario.Id}.");
                     }
 
-                    scenario._enemies.Add(enemy);
+                    scenario.Enemies.AddEnemy(enemy);
                 }
             }
 
@@ -281,47 +291,21 @@ namespace ProjetPOO.Model.Story
             Description = description;
         }
 
-        public void AddEnemy(Enemy enemy)
-        {
-            if (enemy == null)
-            {
-                throw new ArgumentNullException(nameof(enemy));
-            }
-
-            bool alreadyExists = _enemies.Any(e => e != null && e.Id == enemy.Id);
-            if (alreadyExists)
-            {
-                return;
-            }
-
-            if (enemy.ScenarioId == 0)
-            {
-                enemy.AssignToScenario(Id);
-            }
-            else if (enemy.ScenarioId != Id)
-            {
-                throw new InvalidOperationException(
-                    $"AddEnemy incohérent : l'ennemi \"{enemy.Name}\" a ScenarioId={enemy.ScenarioId} mais le scénario courant a Id={Id}.");
-            }
-
-            _enemies.Add(enemy);
-        }
-
         public void RemoveEnemy(int enemyId)
         {
-            Enemy? enemy = GetEnemyById(enemyId);
+            bool removed = Enemies.RemoveById(enemyId);
 
-            if (enemy == null)
+            if (!removed)
             {
                 return;
             }
 
-            enemy.ClearScenario();
-            _enemies.Remove(enemy);
-
-            foreach (Scene scene in _scenes)
+            foreach (Scene scene in Scenes)
             {
-                scene.ClearEnemyIfMatches(enemyId);
+                if (scene != null)
+                {
+                    scene.ClearEnemyIfMatches(enemyId);
+                }
             }
         }
 
@@ -415,7 +399,7 @@ namespace ProjetPOO.Model.Story
 
         public Enemy? GetEnemyById(int enemyId)
         {
-            Enemy? enemy = _enemies.FirstOrDefault(e => e != null && e.Id == enemyId);
+            Enemy? enemy = Enemies.GetById(enemyId);
             return enemy;
         }
 
@@ -475,9 +459,9 @@ namespace ProjetPOO.Model.Story
             }
 
             // vérifier null + ids dupliqués + valider les scènes
-            for (int i = 0; i < _scenes.Count; i++)
+            for (int i = 0; i < Scenes.Count; i++)
             {
-                Scene scene = _scenes[i];
+                Scene scene = Scenes[i];
 
                 if (scene == null)
                 {
@@ -485,7 +469,7 @@ namespace ProjetPOO.Model.Story
                     continue;
                 }
 
-                bool duplicate = _scenes.Any(s => s != null && s.Id == scene.Id && !ReferenceEquals(s, scene));
+                bool duplicate = Scenes.Any(s => s != null && s.Id == scene.Id && !ReferenceEquals(s, scene));
                 if (duplicate)
                 {
                     errors.Add($"Scenario : Id de scène dupliqué ({scene.Id}).");
@@ -504,9 +488,9 @@ namespace ProjetPOO.Model.Story
             }
 
             // vérifier null + ids dupliqués pour les ennemis (validation légère)
-            for (int i = 0; i < _enemies.Count; i++)
+            for (int i = 0; i < Enemies.Count; i++)
             {
-                Enemy enemy = _enemies[i];
+                Enemy enemy = Enemies[i];
 
                 if (enemy == null)
                 {
@@ -514,7 +498,7 @@ namespace ProjetPOO.Model.Story
                     continue;
                 }
 
-                bool duplicate = _enemies.Any(e => e != null && e.Id == enemy.Id && !ReferenceEquals(e, enemy));
+                bool duplicate = Enemies.Any(e => e != null && e.Id == enemy.Id && !ReferenceEquals(e, enemy));
                 if (duplicate)
                 {
                     errors.Add($"Scenario : Id d'ennemi dupliqué ({enemy.Id}).");
@@ -549,7 +533,7 @@ namespace ProjetPOO.Model.Story
         {
             bool baseOk = ValidateSafe(out errors);
 
-            if (_scenes.Count == 0)
+            if (Scenes.Count == 0)
             {
                 errors.Add("Pour jouer, le scénario doit contenir au moins une scène.");
             }
@@ -560,7 +544,7 @@ namespace ProjetPOO.Model.Story
             }
             else
             {
-                if (!_scenes.Any(s => s != null && s.Id == StartSceneId))
+                if (!Scenes.Any(s => s != null && s.Id == StartSceneId))
                 {
                     errors.Add($"StartSceneId={StartSceneId} n'existe pas dans le scénario.");
                 }
@@ -572,9 +556,9 @@ namespace ProjetPOO.Model.Story
             }
 
             // En jouable : tous les ennemis doivent être rattachés au scénario (ScenarioId == Id et > 0)
-            for (int i = 0; i < _enemies.Count; i++)
+            for (int i = 0; i < Enemies.Count; i++)
             {
-                Enemy enemy = _enemies[i];
+                Enemy enemy = Enemies[i];
                 if (enemy == null)
                 {
                     continue;
@@ -591,9 +575,9 @@ namespace ProjetPOO.Model.Story
             }
 
             // Vérifier ScenarioId des scènes + ValidatePlayable des scènes
-            for (int i = 0; i < _scenes.Count; i++)
+            for (int i = 0; i < Scenes.Count; i++)
             {
-                Scene scene = _scenes[i];
+                Scene scene = Scenes[i];
                 if (scene == null)
                 {
                     continue;
@@ -616,11 +600,11 @@ namespace ProjetPOO.Model.Story
             }
 
             // Vérifier que tous les TargetSceneId existent (Choices + Combat targets)
-            List<int> existingSceneIds = _scenes.Where(s => s != null).Select(s => s.Id).ToList();
+            List<int> existingSceneIds = Scenes.Where(s => s != null).Select(s => s.Id).ToList();
 
-            for (int i = 0; i < _scenes.Count; i++)
+            for (int i = 0; i < Scenes.Count; i++)
             {
-                Scene scene = _scenes[i];
+                Scene scene = Scenes[i];
                 if (scene == null)
                 {
                     continue;

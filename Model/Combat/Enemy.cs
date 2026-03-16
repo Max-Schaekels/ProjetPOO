@@ -223,7 +223,7 @@ namespace ProjetPOO.Model.Combat
 
         public void AssignToScenario(int scenarioId)
         {
-            if (!ValidUtils.CheckIfNonNegativeNumber(scenarioId))
+            if (!ValidUtils.CheckIfPositiveNumber(scenarioId))
             {
                 throw new ArgumentException("scenarioId doit être >= 0.", nameof(scenarioId));
             }

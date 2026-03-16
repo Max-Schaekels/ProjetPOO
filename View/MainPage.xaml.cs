@@ -52,7 +52,7 @@ namespace ProjetPOO.View
             PlayerCharacterInstance player = selectedTemplate.CreateInstance();
 
             Enemy enemy = new Enemy("Gobelin 1", 50, 15, 5, 3, EnemyType.Goblin, 50, 0, 25, 50, 0, 2, 10, 0, 3);
-            scenario.AddEnemy(enemy);
+            scenario.Enemies.AddEnemy(enemy);
 
             Inventory inventory = new Inventory(5, 5);
             Shop shop = new Shop("La boutique de Loïc", 10, 5);
