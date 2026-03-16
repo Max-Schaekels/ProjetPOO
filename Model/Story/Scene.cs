@@ -18,7 +18,7 @@ namespace ProjetPOO.Model.Story
         private string _text;
         private SceneType _type;
         private int _scenarioId;
-        private List<Choice> _choices;
+        private ChoicesCollection _choices;
 
         private string? _pictureFileName;
 
@@ -116,7 +116,17 @@ namespace ProjetPOO.Model.Story
             }
         }
 
-        public IReadOnlyList<Choice> Choices => _choices.AsReadOnly();
+        public ChoicesCollection Choices
+        {
+            get => _choices;
+            private set
+            {
+                if (value != null)
+                {
+                    _choices = value;
+                }
+            }
+        }
 
         public int? ShopId
         {
@@ -180,9 +190,10 @@ namespace ProjetPOO.Model.Story
 
         public Scene(string title, string text, SceneType type)
         {
-            _choices = new List<Choice>();
-
+            
             Id = GenerateId();
+            Choices = new ChoicesCollection(Id);
+
             Title = title;
             Text = text;
             Type = type;
@@ -199,12 +210,13 @@ namespace ProjetPOO.Model.Story
 
         public Scene()
         {
-            _choices = new List<Choice>();
+           
 
             _title = string.Empty;
             _text = string.Empty;
 
             Id = GenerateId();
+            Choices = new ChoicesCollection(Id);
             Type = SceneType.Normal;
 
             ScenarioId = 0;
@@ -220,12 +232,13 @@ namespace ProjetPOO.Model.Story
         // Constructeur privé pour Load (évite de dupliquer l'init)
         private Scene(int id)
         {
-            _choices = new List<Choice>();
 
             _title = string.Empty;
             _text = string.Empty;
 
             Id = id;
+            Choices = new ChoicesCollection(Id);
+
             Type = SceneType.Normal;
 
             ScenarioId = 0;
@@ -266,7 +279,7 @@ namespace ProjetPOO.Model.Story
 
             if (choices != null)
             {
-                scene._choices = new List<Choice>();
+                scene.Choices = new ChoicesCollection(scene.Id);
 
                 for (int i = 0; i < choices.Count; i++)
                 {
@@ -276,26 +289,12 @@ namespace ProjetPOO.Model.Story
                         continue;
                     }
 
-                    // Anti-doublon par Id (comme AddChoice)
-                    bool alreadyExists = scene._choices.Any(c => c != null && c.Id == choice.Id);
-                    if (alreadyExists)
+                    if (scene.Choices.ContainsId(choice.Id))
                     {
                         continue;
                     }
 
-                    // Cohérence SceneId
-                    if (choice.SceneId == 0)
-                    {
-                        // Cas "draft/partiel" : on rattache à la scène chargée
-                        choice.AssignToScene(scene.Id);
-                    }
-                    else if (choice.SceneId != scene.Id)
-                    {
-                        throw new InvalidOperationException(
-                            $"Load Scene incohérent : le choix \"{choice.Label}\" a SceneId={choice.SceneId} mais la scène chargée a Id={scene.Id}.");
-                    }
-
-                    scene._choices.Add(choice);
+                    scene.Choices.AddChoice(choice);
                 }
             }
 
@@ -354,13 +353,7 @@ namespace ProjetPOO.Model.Story
 
         public void ClearReferencesToScene(int sceneId)
         {
-            foreach (Choice choice in _choices)
-            {
-                if (choice.TargetSceneId == sceneId)
-                {
-                    choice.ClearTargetScene();
-                }
-            }
+            Choices.ClearReferencesToScene(sceneId);
 
             if (VictoryTargetSceneId == sceneId)
             {
@@ -437,36 +430,6 @@ namespace ProjetPOO.Model.Story
             VictoryTargetSceneId = null;
         }
 
-        public void AddChoice(Choice choice)
-        {
-            if (choice == null)
-            {
-                throw new ArgumentNullException(nameof(choice));
-            }
-
-            bool alreadyExists = _choices.Any(c => c != null && c.Id == choice.Id);
-            if (alreadyExists)
-            {
-                return;
-            }
-
-            _choices.Add(choice);
-
-            choice.AssignToScene(Id);
-        }
-
-        public void RemoveChoice(int choiceId)
-        {
-            Choice? toRemove = _choices.FirstOrDefault(c => c != null && c.Id == choiceId);
-            if (toRemove == null)
-            {
-                return;
-            }
-
-            _choices.Remove(toRemove);
-
-            toRemove.ClearScene();
-        }
 
         public List<Choice> GetAvailableChoices(GameState state)
         {
@@ -475,29 +438,12 @@ namespace ProjetPOO.Model.Story
                 throw new ArgumentNullException(nameof(state));
             }
 
-            List<Choice> available = new List<Choice>();
-
             if (Type == SceneType.End)
             {
-                return available;
+                return new List<Choice>();
             }
 
-            for (int i = 0; i < _choices.Count; i++)
-            {
-                Choice choice = _choices[i];
-
-                if (choice == null)
-                {
-                    continue;
-                }
-
-                if (choice.IsAvailable(state))
-                {
-                    available.Add(choice);
-                }
-            }
-
-            return available;
+            return Choices.GetAvailableChoices(state);
         }
 
         public bool IsTerminal()
@@ -536,9 +482,9 @@ namespace ProjetPOO.Model.Story
             }
 
             // Validation des choix (safe)
-            for (int i = 0; i < _choices.Count; i++)
+            for (int i = 0; i < Choices.Count; i++)
             {
-                Choice choice = _choices[i];
+                Choice choice = Choices[i];
 
                 if (choice == null)
                 {
@@ -580,7 +526,7 @@ namespace ProjetPOO.Model.Story
             // Règles strictes par type
             if (Type == SceneType.Normal)
             {
-                if (_choices.Count == 0)
+                if (Choices.Count == 0)
                 {
                     errors.Add($"Scene \"{Title}\" : une scène Normal doit contenir au moins un choix.");
                 }
@@ -666,7 +612,7 @@ namespace ProjetPOO.Model.Story
             }
             else if (Type == SceneType.End)
             {
-                if (_choices.Count > 0)
+                if (Choices.Count > 0)
                 {
                     errors.Add($"Scene \"{Title}\" : une scène End ne doit pas contenir de choix.");
                 }
@@ -698,9 +644,9 @@ namespace ProjetPOO.Model.Story
             }
 
             // En jouable, chaque choix doit être jouable et bien attaché à cette scène
-            for (int i = 0; i < _choices.Count; i++)
+            for (int i = 0; i < Choices.Count; i++)
             {
-                Choice choice = _choices[i];
+                Choice choice = Choices[i];
                 if (choice == null)
                 {
                     continue;
