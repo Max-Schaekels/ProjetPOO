@@ -22,7 +22,7 @@ namespace ProjetPOO.Model.Story
         private string _title;
         private string _description;
         private int _startSceneId;
-        private List<Scene> _scenes;
+        private ScenesCollection _scenes;
         private List<Enemy> _enemies;
         private List<Shop> _shops;
         private PlayerCharactersCollection _playerCharacters;
@@ -76,7 +76,17 @@ namespace ProjetPOO.Model.Story
             }
         }
 
-        public IReadOnlyList<Scene> Scenes => _scenes.AsReadOnly();
+        public ScenesCollection Scenes
+        {
+            get => _scenes;
+            private set
+            {
+                if(value != null)
+                {
+                    _scenes = value;
+                }
+            }
+        }
         public IReadOnlyList<Enemy> Enemies => _enemies.AsReadOnly();
         public IReadOnlyList<Shop> Shops => _shops.AsReadOnly();
 
@@ -94,13 +104,13 @@ namespace ProjetPOO.Model.Story
 
         public Scenario(string title, string description)
         {
-            _scenes = new List<Scene>();
             _enemies = new List<Enemy>();
             _shops = new List<Shop>();
 
             PlayerCharacters = new PlayerCharactersCollection();
 
             Id = GenerateId();
+            Scenes = new ScenesCollection(Id);
             Title = title;
             Description = description;
 
@@ -109,7 +119,6 @@ namespace ProjetPOO.Model.Story
 
         public Scenario()
         {
-            _scenes = new List<Scene>();
             _enemies = new List<Enemy>();
             _shops = new List<Shop>();
 
@@ -119,11 +128,12 @@ namespace ProjetPOO.Model.Story
             Description = string.Empty;
 
             Id = GenerateId();
+            Scenes = new ScenesCollection(Id);
             StartSceneId = 0;
         }
 
         // Constructeur pour Load (depuis la base de données) avec vérifications de cohérence (ex: les scènes rattachées ont bien le ScenarioId du scénario chargé, pas de scène dupliquée, etc.)
-        public static Scenario Load(int id, string title, string description, int startSceneId, List<Scene>? scenes, List<Enemy>? enemies = null, List<Shop>? shops = null, PlayerCharactersCollection? playerCharacters = null)
+        public static Scenario Load(int id, string title, string description, int startSceneId, ScenesCollection? scenes, List<Enemy>? enemies = null, List<Shop>? shops = null, PlayerCharactersCollection? playerCharacters = null)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -133,6 +143,7 @@ namespace ProjetPOO.Model.Story
             Scenario scenario = new Scenario();
 
             scenario.Id = id;
+            scenario.Scenes = new ScenesCollection(scenario.Id);
             EnsureNextIdIsAfterLoadedId(id);
 
             scenario.Title = title;
@@ -167,7 +178,7 @@ namespace ProjetPOO.Model.Story
                             $"Load Scenario incohérent : la scène \"{scene.Title}\" a ScenarioId={scene.ScenarioId} mais le scénario chargé a Id={scenario.Id}.");
                     }
 
-                    scenario._scenes.Add(scene);
+                    scenario.Scenes.AddScene(scene);
                 }
             }
 
@@ -379,56 +390,26 @@ namespace ProjetPOO.Model.Story
 
         public Scene? GetSceneById(int sceneId)
         {
-            Scene? scene = _scenes.FirstOrDefault(s => s != null && s.Id == sceneId);
+            Scene? scene = Scenes.GetById(sceneId);
             return scene;
         }
 
-        public void AddScene(Scene scene)
+
+        public bool RemoveSceneById(int id)
         {
-            if (scene == null)
+            bool removed = Scenes.RemoveById(id);
+
+            if (!removed)
             {
-                throw new ArgumentNullException(nameof(scene));
+                return false;
             }
 
-            bool alreadyExists = _scenes.Any(s => s != null && s.Id == scene.Id);
-            if (alreadyExists)
-            {
-                return; // La scène est déjà dans le scénario, on ne l'ajoute pas une seconde fois
-            }
-
-            _scenes.Add(scene);
-
-            scene.AssignToScenario(Id);
-
-        }
-
-        public void RemoveScene(Scene scene)
-        {
-            if (scene == null)
-            {
-                throw new ArgumentNullException(nameof(scene));
-            }
-
-            Scene? existingScene = GetSceneById(scene.Id);
-
-            if (existingScene == null)
-            {
-                return;
-            }
-
-            int removedSceneId = existingScene.Id;
-
-            _scenes.Remove(existingScene);
-
-            if (StartSceneId == removedSceneId)
+            if (StartSceneId == id)
             {
                 StartSceneId = 0;
             }
 
-            foreach (Scene currentScene in _scenes)
-            {
-                currentScene.ClearReferencesToScene(removedSceneId);
-            }
+            return true;
         }
 
 

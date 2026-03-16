@@ -45,7 +45,7 @@ namespace ProjetPOO.View
             scenario.PlayerCharacters.AddPlayer(template);
 
             Scene scene = new Scene("Scène numéro 1", "Description de la scène numéro 1", SceneType.Normal);
-            scenario.AddScene(scene);
+            scenario.Scenes.AddScene(scene);
             scenario.AssignStartScene(scene.Id);
 
             PlayerCharacterTemplate selectedTemplate = scenario.GetDefaultPlayerCharacterTemplate();
