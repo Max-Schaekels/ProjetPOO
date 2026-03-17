@@ -190,11 +190,11 @@ namespace ProjetPOO.Model.Game
                 throw new InvalidOperationException("Scène Combat invalide : EnemyId est null.");
             }
 
-            Enemy enemy = ResolveEnemy(scenario, scene.EnemyId.Value);
+            Enemy enemyTemplate = ResolveEnemy(scenario, scene.EnemyId.Value);
 
             if (!State.IsInCombat())
             {
-                StartCombat(enemy);
+                StartCombat(enemyTemplate);
             }
         }
 
@@ -228,11 +228,11 @@ namespace ProjetPOO.Model.Game
 
         // Combat
 
-        public void StartCombat(Enemy enemy)
+        public void StartCombat(Enemy enemyTemplate)
         {
-            if (enemy == null)
+            if (enemyTemplate == null)
             {
-                throw new ArgumentNullException(nameof(enemy));
+                throw new ArgumentNullException(nameof(enemyTemplate));
             }
 
             if (State.IsInCombat())
@@ -241,7 +241,8 @@ namespace ProjetPOO.Model.Game
             }
 
             PlayerCharacterInstance playerCharacter = State.PlayerCharacter;
-            CombatState combat = new CombatState(playerCharacter, enemy);
+            EnemyInstance enemyInstance = new EnemyInstance(enemyTemplate);
+            CombatState combat = new CombatState(playerCharacter, enemyInstance);
 
             State.StartCombat(combat);
         }
@@ -394,7 +395,7 @@ namespace ProjetPOO.Model.Game
 
         private void ApplyVictoryRewards(CombatState combat, RoundReport report)
         {
-            Enemy enemy = combat.Enemy;
+            EnemyInstance enemy = combat.Enemy;
 
             int experience = enemy.GetExperienceReward();
             State.PlayerCharacter.GainExperience(experience);

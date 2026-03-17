@@ -51,7 +51,7 @@ namespace ProjetPOO.Model.Combat
 
         }
 
-        public static bool TryFlee(PlayerCharacterInstance player, Enemy enemy)
+        public static bool TryFlee(PlayerCharacterInstance player, EnemyInstance enemy)
         {
             if (player == null)
             {
