@@ -111,7 +111,7 @@ namespace ProjetPOO.Model.Combat
 
                 if (!used)
                 {
-                    throw new InvalidOperationException("Le joueur ne possède aucune potion.");
+                    return;
                 }
             }
             else if (action == CombatActionType.Flee)
