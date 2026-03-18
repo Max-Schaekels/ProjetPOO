@@ -35,36 +35,72 @@ namespace ProjetPOO.View
 
         private void buttonInitialiseAllClass_Clicked(object sender, EventArgs e)
         {
-            Choice choice = new Choice("Choix numéro 1", 0, 0);
-            Condition condition = new Condition(ConditionType.HasPotion, 1);
-            Effect effect = new Effect(EffectType.AddGold, 100);
+            Scenario scenario = new Scenario( "Scénario de test","Description du scénario de test suffisamment longue pour être valide." );
 
-            Scenario scenario = new Scenario("Scénario numéro 1", "Description du scénario numéro 1 assez longue pour être valide.");
+            ScenesCollection scenesCollection = scenario.Scenes;
+            EnemiesCollection enemiesCollection = scenario.Enemies;
+            ShopsCollection shopsCollection = scenario.Shops;
+            PlayerCharactersCollection playerCharactersCollection = scenario.PlayerCharacters;
 
-            PlayerCharacterTemplate template = new PlayerCharacterTemplate("Héros", 100, 20, 10, 5, 0, 1);
-            scenario.PlayerCharacters.AddPlayer(template);
+            Scene introScene = new Scene("Introduction", "Le héros arrive à l'entrée d'un ancien donjon mystérieux.", SceneType.Normal );
 
-            Scene scene = new Scene("Scène numéro 1", "Description de la scène numéro 1", SceneType.Normal);
-            scenario.Scenes.AddScene(scene);
-            scenario.AssignStartScene(scene.Id);
+            Scene combatScene = new Scene( "Salle du gobelin", "Un gobelin surgit devant le héros et bloque le passage.", SceneType.Combat );
 
-            PlayerCharacterTemplate selectedTemplate = scenario.GetDefaultPlayerCharacterTemplate();
-            PlayerCharacterInstance player = selectedTemplate.CreateInstance();
+            Scene shopScene = new Scene( "Marchand ambulant", "Un étrange marchand propose potions et clés au voyageur.", SceneType.Shop);
 
-            Enemy enemy = new Enemy("Gobelin 1", 50, 15, 5, 3, EnemyType.Goblin, 50, 0, 25, 50, 0, 2, 10, 0, 3);
+            Scene endScene = new Scene("Fin de test", "Cette scène sert uniquement à terminer le petit test.", SceneType.End);
+
+            scenario.Scenes.AddScene(introScene);
+            scenario.Scenes.AddScene(combatScene);
+            scenario.Scenes.AddScene(shopScene);
+            scenario.Scenes.AddScene(endScene);
+
+            scenario.AssignStartScene(introScene.Id);
+
+            ChoicesCollection introChoicesCollection = introScene.Choices;
+
+            Choice introChoice = new Choice("Entrer dans le donjon", combatScene.Id, introScene.Id);
+            introScene.Choices.AddChoice(introChoice);
+
+            ConditionsCollection conditionsCollection = introChoice.Conditions;
+            EffectsCollection effectsCollection = introChoice.Effects;
+
+            Condition introCondition = new Condition(ConditionType.MinGold, 5);
+            Effect introEffect = new Effect(EffectType.RemoveGold, 5);
+
+            introChoice.Conditions.AddCondition(introCondition);
+            introChoice.Effects.AddEffect(introEffect);
+
+            PlayerCharacterTemplate playerTemplate = new PlayerCharacterTemplate( "Héros", 100, 20,10, 5, 0, 1 );
+            scenario.PlayerCharacters.AddPlayer(playerTemplate);
+
+            PlayerCharacterInstance playerInstance = playerTemplate.CreateInstance();
+
+            Enemy enemy = new Enemy( "Gobelin test",50, 15,5,3, EnemyType.Goblin,50, 10, 25, 50, 0,2, 10, 0, 1 );
             scenario.Enemies.AddEnemy(enemy);
 
-            Inventory inventory = new Inventory(5, 5);
-            Shop shop = new Shop("La boutique de Loïc", 10, 5);
+            EnemyInstance enemyInstance = new EnemyInstance(enemy);
+
+            Shop shop = new Shop("Boutique de test", 10, 5);
             scenario.Shops.AddShop(shop);
 
-            Loot loot = new Loot(100, 2, 1);
+            combatScene.SetCombat(enemy.Id, introScene.Id, endScene.Id, shopScene.Id);
+            combatScene.ChangeType(SceneType.Combat);
 
-            GameState gameState = new GameState( scenario.GetStartScene().Id, scenario.Id, 10, inventory, player);
+            shopScene.SetShop(shop.Id);
+            shopScene.ChangeType(SceneType.Shop);
 
-            CombatState combatState = new CombatState(player, enemy);
+            Inventory inventory = new Inventory(2, 1);
+            Loot loot = new Loot(25, 1, 0);
+
+            GameState gameState = new GameState( scenario.GetStartScene().Id,scenario.Id, 20, inventory, playerInstance);
+
+            CombatState combatState = new CombatState(playerInstance, enemyInstance);
+            SaveGame saveGame = new SaveGame("Sauvegarde de test", gameState);
 
             DataAccess dataAccess = new DataAccess();
+            dataAccess.SaveScenario(scenario);
+            dataAccess.SaveGame(saveGame);
         }
     }
 
