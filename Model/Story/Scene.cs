@@ -252,7 +252,7 @@ namespace ProjetPOO.Model.Story
         }
 
         // Constructeur pour Load (depuis la base de données) avec vérification de la cohérence des données chargées (ex: pas de choix attaché à une autre scène)
-        public static Scene Load( int id,string title, string text,SceneType type,int scenarioId, string? pictureFileName,int? shopId, int? enemyId,int? fleeTargetSceneId,int? defeatTargetSceneId, int? victoryTargetSceneId, List<Choice>? choices = null)
+        public static Scene Load( int id,string title, string text,SceneType type,int scenarioId, string? pictureFileName,int? shopId, int? enemyId,int? fleeTargetSceneId,int? defeatTargetSceneId, int? victoryTargetSceneId, ChoicesCollection? choices = null)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {

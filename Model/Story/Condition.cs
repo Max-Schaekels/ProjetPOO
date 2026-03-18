@@ -14,6 +14,7 @@ namespace ProjetPOO.Model.Story
         private static int _nextId = 1;
 
         private int _id;
+        private int _choiceId;
         private ConditionType _type;
         private int _minValue;
 
@@ -24,6 +25,16 @@ namespace ProjetPOO.Model.Story
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
+            }
+        }
+
+        public int ChoiceId
+        {
+            get => _choiceId;
+            private set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                    _choiceId = value;
             }
         }
 
@@ -47,6 +58,7 @@ namespace ProjetPOO.Model.Story
         public Condition(ConditionType type, int minValue = 1)
         {
             Id = GenerateId();
+            ChoiceId = 0;
             Type = type;
             MinValue = minValue;
         }
@@ -54,27 +66,34 @@ namespace ProjetPOO.Model.Story
         public Condition()
         {
             Id = GenerateId();
+            ChoiceId = 0;
             Type = ConditionType.MinGold;
             MinValue = 1;
         }
 
         // Constructeur privé pour Load
-        private Condition(int id)
+        private Condition(int id, int choiceId)
         {
             Id = id;
+            ChoiceId = choiceId;
             Type = ConditionType.MinGold;
             MinValue = 1;
         }
 
         // Constructeur pour Load (depuis la base de données)
-        public static Condition Load(int id, ConditionType type, int minValue)
+        public static Condition Load(int id,int choiceId, ConditionType type, int minValue)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
                 throw new ArgumentException("id doit être un nombre positif.", nameof(id));
             }
 
-            Condition condition = new Condition(id);
+            if (!ValidUtils.CheckIfNonNegativeNumber(choiceId))
+            {
+                throw new ArgumentException("choiceId doit être un nombre non négatif.", nameof(choiceId));
+            }
+
+            Condition condition = new Condition(id, choiceId);
 
             EnsureNextIdIsAfterLoadedId(id);
 
@@ -158,6 +177,27 @@ namespace ProjetPOO.Model.Story
             }
 
             Type = newType;
+        }
+
+        public void SetChoice(int choiceId)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(choiceId))
+            {
+                throw new ArgumentException("choiceId doit être un nombre positif.", nameof(choiceId));
+            }
+
+            if (ChoiceId != 0 && ChoiceId != choiceId)
+            {
+                throw new InvalidOperationException(
+                    $"La condition appartient déjà à un autre choix (ChoiceId={ChoiceId}, nouveau={choiceId}).");
+            }
+
+            ChoiceId = choiceId;
+        }
+
+        public void ClearChoice()
+        {
+            ChoiceId = 0;
         }
 
         private static int GenerateId()

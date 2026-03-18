@@ -125,9 +125,8 @@ namespace ProjetPOO.Model.Story
         public Scenario(string title, string description)
         {            
 
-            PlayerCharacters = new PlayerCharactersCollection();
-
             Id = GenerateId();
+            PlayerCharacters = new PlayerCharactersCollection(Id);
             Scenes = new ScenesCollection(Id);
             Enemies = new EnemiesCollection(Id);
             Shops = new ShopsCollection(Id);
@@ -138,14 +137,12 @@ namespace ProjetPOO.Model.Story
         }
 
         public Scenario()
-        {          
-
-            PlayerCharacters = new PlayerCharactersCollection();
-
+        {              
             Title = string.Empty;
             Description = string.Empty;
 
             Id = GenerateId();
+            PlayerCharacters = new PlayerCharactersCollection(Id);
             Scenes = new ScenesCollection(Id);
             Enemies = new EnemiesCollection(Id);
             Shops = new ShopsCollection(Id);
@@ -166,6 +163,7 @@ namespace ProjetPOO.Model.Story
             scenario.Scenes = new ScenesCollection(scenario.Id);
             scenario.Enemies = new EnemiesCollection(scenario.Id);
             scenario.Shops = new ShopsCollection(scenario.Id);
+            scenario.PlayerCharacters = new PlayerCharactersCollection(scenario.Id);
             EnsureNextIdIsAfterLoadedId(id);
 
             scenario.Title = title;

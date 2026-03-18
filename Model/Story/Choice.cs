@@ -19,8 +19,8 @@ namespace ProjetPOO.Model.Story
         private string _label;
         private int _targetSceneId;
         private int _sceneId;
-        private List<Condition> _conditions;
-        private List<Effect> _effects;
+        private ConditionsCollection _conditions;
+        private EffectsCollection _effects;
 
         public int Id
         {
@@ -74,16 +74,37 @@ namespace ProjetPOO.Model.Story
             }
         }
 
-        public IReadOnlyList<Condition> Conditions => _conditions.AsReadOnly();
-        public IReadOnlyList<Effect> Effects => _effects.AsReadOnly();
+        public ConditionsCollection Conditions
+        {
+            get => _conditions;
+            private set
+            {
+                if(value != null)
+                {
+                    _conditions = value;
+                }
+            }
+        }
+        public EffectsCollection Effects
+        {
+            get => _effects;
+            private set
+            {
+                if(value != null)
+                {
+                    _effects = value;
+                }
+            }
+        }
 
 
         public Choice(string label)
         {
-            _conditions = new List<Condition>();
-            _effects = new List<Effect>();
+            
 
             Id = GenerateId();
+            Conditions = new ConditionsCollection(Id);
+            Effects = new EffectsCollection(Id);
             Label = label;
 
             SceneId = 0;
@@ -92,10 +113,11 @@ namespace ProjetPOO.Model.Story
 
         public Choice(string label, int targetSceneId, int sceneId)
         {
-            _conditions = new List<Condition>();
-            _effects = new List<Effect>();
+
 
             Id = GenerateId();
+            Conditions = new ConditionsCollection(Id);
+            Effects = new EffectsCollection(Id);
             Label = label;
 
             TargetSceneId = targetSceneId;
@@ -104,12 +126,12 @@ namespace ProjetPOO.Model.Story
 
         public Choice()
         {
-            _conditions = new List<Condition>();
-            _effects = new List<Effect>();
 
             _label = string.Empty;
 
             Id = GenerateId();
+            Conditions = new ConditionsCollection(Id);
+            Effects = new EffectsCollection(Id);
             SceneId = 0;
             TargetSceneId = 0;
         }
@@ -117,24 +139,18 @@ namespace ProjetPOO.Model.Story
         // Constructeur privé pour Load
         private Choice(int id)
         {
-            _conditions = new List<Condition>();
-            _effects = new List<Effect>();
 
             _label = string.Empty;
 
             Id = id;
+            Conditions = new ConditionsCollection(Id);
+            Effects = new EffectsCollection(Id);
             SceneId = 0;
             TargetSceneId = 0;
         }
 
         // Constructeur pour Load (depuis la base de données) avec vérification des données chargées
-        public static Choice Load(
-            int id,
-            string label,
-            int targetSceneId,
-            int sceneId,
-            List<Condition>? conditions = null,
-            List<Effect>? effects = null)
+        public static Choice Load( int id, string label, int targetSceneId, int sceneId,ConditionsCollection? conditions = null, EffectsCollection? effects = null)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -151,7 +167,7 @@ namespace ProjetPOO.Model.Story
 
             if (conditions != null)
             {
-                choice._conditions = new List<Condition>();
+                choice.Conditions = new ConditionsCollection(choice.Id);
 
                 for (int i = 0; i < conditions.Count; i++)
                 {
@@ -161,19 +177,18 @@ namespace ProjetPOO.Model.Story
                         continue;
                     }
 
-                    bool alreadyExists = choice._conditions.Any(c => c != null && c.Id == condition.Id);
-                    if (alreadyExists)
+                    if (choice.Conditions.ContainsId(condition.Id))
                     {
                         continue;
                     }
 
-                    choice._conditions.Add(condition);
+                    choice.Conditions.AddCondition(condition);
                 }
             }
 
             if (effects != null)
             {
-                choice._effects = new List<Effect>();
+                choice.Effects = new EffectsCollection(choice.Id);
 
                 for (int i = 0; i < effects.Count; i++)
                 {
@@ -183,13 +198,12 @@ namespace ProjetPOO.Model.Story
                         continue;
                     }
 
-                    bool alreadyExists = choice._effects.Any(e => e != null && e.Id == effect.Id);
-                    if (alreadyExists)
+                    if (choice.Effects.ContainsId(effect.Id))
                     {
                         continue;
                     }
 
-                    choice._effects.Add(effect);
+                    choice.Effects.AddEffect(effect);
                 }
             }
 
@@ -243,13 +257,13 @@ namespace ProjetPOO.Model.Story
                 throw new ArgumentNullException(nameof(state));
             }
 
-            if (_conditions.Count == 0)
+            if (Conditions.Count == 0)
             {
                 return true;
             }
             else
             {
-                foreach (Condition condition in _conditions)
+                foreach (Condition condition in Conditions)
                 {
                     if (condition == null)
                     {
@@ -272,7 +286,7 @@ namespace ProjetPOO.Model.Story
                 throw new ArgumentNullException(nameof(state));
             }
 
-            foreach (Effect effect in _effects)
+            foreach (Effect effect in Effects)
             {
                 if (effect != null)
                 {
@@ -305,9 +319,9 @@ namespace ProjetPOO.Model.Story
                 errors.Add("Le TargetSceneId doit être différent du SceneId.");
             }
 
-            for (int i = 0; i < _conditions.Count; i++)
+            for (int i = 0; i < Conditions.Count; i++)
             {
-                Condition condition = _conditions[i];
+                Condition condition = Conditions[i];
 
                 if (condition == null)
                 {
@@ -329,9 +343,9 @@ namespace ProjetPOO.Model.Story
                 }
             }
 
-            for (int i = 0; i < _effects.Count; i++)
+            for (int i = 0; i < Effects.Count; i++)
             {
-                Effect effect = _effects[i];
+                Effect effect = Effects[i];
 
                 if (effect == null)
                 {
@@ -380,33 +394,7 @@ namespace ProjetPOO.Model.Story
             return baseOk && errors.Count == 0;
         }
 
-        public void AddCondition(Condition condition)
-        {
-            if (condition == null)
-            {
-                throw new ArgumentNullException(nameof(condition));
-            }
-            _conditions.Add(condition);
-        }
 
-        public void RemoveCondition(int conditionId)
-        {
-            _conditions.RemoveAll(c => c != null && c.Id == conditionId);
-        }
-
-        public void AddEffect(Effect effect)
-        {
-            if (effect == null)
-            {
-                throw new ArgumentNullException(nameof(effect));
-            }
-            _effects.Add(effect);
-        }
-
-        public void RemoveEffect(int effectId)
-        {
-            _effects.RemoveAll(e => e != null && e.Id == effectId);
-        }
 
         private static int GenerateId()
         {

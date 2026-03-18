@@ -18,6 +18,7 @@ namespace ProjetPOO.Model.Story
         private static int _nextId = 1;
 
         private int _id;
+        private int _choiceId;
         private EffectType _type;
         private int? _amount;
         private string? _flagKey;
@@ -29,6 +30,16 @@ namespace ProjetPOO.Model.Story
             {
                 if (ValidUtils.CheckIfPositiveNumber(value))
                     _id = value;
+            }
+        }
+
+        public int ChoiceId
+        {
+            get => _choiceId;
+            private set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                    _choiceId = value;
             }
         }
 
@@ -61,6 +72,7 @@ namespace ProjetPOO.Model.Story
         public Effect(EffectType type, int? amount = null, string? flagKey = null)
         {
             Id = GenerateId();
+            ChoiceId = 0;
             Type = type;
             Amount = amount;
             FlagKey = flagKey;
@@ -69,29 +81,37 @@ namespace ProjetPOO.Model.Story
         public Effect()
         {
             Id = GenerateId();
+            ChoiceId = 0;
             Type = EffectType.AddGold;
             Amount = 1;
             FlagKey = null;
         }
 
         // Constructeur privé pour Load
-        private Effect(int id)
+        private Effect(int id, int choiceId)
         {
             Id = id;
+            ChoiceId = choiceId;
             Type = EffectType.AddGold;
             Amount = null;
             FlagKey = null;
         }
 
         // Constructeur pour Load (depuis la base de données)
-        public static Effect Load(int id, EffectType type, int? amount, string? flagKey)
+        public static Effect Load(int id,int choiceId, EffectType type, int? amount, string? flagKey)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
                 throw new ArgumentException("id doit être un nombre positif.", nameof(id));
             }
 
-            Effect effect = new Effect(id);
+            if (!ValidUtils.CheckIfNonNegativeNumber(choiceId))
+            {
+                throw new ArgumentException("choiceId doit être un nombre non négatif.", nameof(choiceId));
+            }
+
+
+            Effect effect = new Effect(id, choiceId);
 
             EnsureNextIdIsAfterLoadedId(id);
 
@@ -248,6 +268,27 @@ namespace ProjetPOO.Model.Story
         public void ClearFlagKey()
         {
             FlagKey = null;
+        }
+
+        public void SetChoice(int choiceId)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(choiceId))
+            {
+                throw new ArgumentException("choiceId doit être un nombre positif.", nameof(choiceId));
+            }
+
+            if (ChoiceId != 0 && ChoiceId != choiceId)
+            {
+                throw new InvalidOperationException(
+                    $"L'effet appartient déjà à un autre choix (ChoiceId={ChoiceId}, nouveau={choiceId}).");
+            }
+
+            ChoiceId = choiceId;
+        }
+
+        public void ClearChoice()
+        {
+            ChoiceId = 0;
         }
 
         private void ValidateAmount(List<string> errors)
