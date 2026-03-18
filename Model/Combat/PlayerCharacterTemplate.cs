@@ -15,6 +15,7 @@ namespace ProjetPOO.Model.Combat
         private static int _nextId = 1;
 
         private int _id;
+        private int _scenarioId;
         private string _name;
         private int _maxHp;
         private int _attack;
@@ -31,6 +32,18 @@ namespace ProjetPOO.Model.Combat
                 if (ValidUtils.CheckIfPositiveNumber(value))
                 {
                     _id = value;
+                }
+            }
+        }
+
+        public int ScenarioId
+        {
+            get => _scenarioId;
+            private set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                {
+                    _scenarioId = value;
                 }
             }
         }
@@ -131,9 +144,10 @@ namespace ProjetPOO.Model.Combat
             StartingLevel = startingLevel;
         }
 
-        private PlayerCharacterTemplate(int id, string name, int maxHp, int attack, int defense, int agility, int startingExperience,int startingLevel)
+        private PlayerCharacterTemplate(int id, int scenarioId, string name, int maxHp, int attack, int defense, int agility, int startingExperience,int startingLevel)
         {
             Id = id;
+            ScenarioId = scenarioId;
             Name = name;
             MaxHp = maxHp;
             Attack = attack;
@@ -158,14 +172,19 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
-        public static PlayerCharacterTemplate Load( int id,string name, int maxHp, int attack, int defense, int agility, int startingExperience, int startingLevel)
+        public static PlayerCharacterTemplate Load( int id,int scenarioId,string name, int maxHp, int attack, int defense, int agility, int startingExperience, int startingLevel)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
                 throw new ArgumentException("id doit être un nombre positif.", nameof(id));
             }
 
-            PlayerCharacterTemplate template = new PlayerCharacterTemplate( id,name,maxHp, attack,defense,agility,startingExperience,startingLevel);
+            if (!ValidUtils.CheckIfNonNegativeNumber(scenarioId))
+            {
+                throw new ArgumentException("scenarioId doit être un nombre non négatif.", nameof(scenarioId));
+            }
+
+            PlayerCharacterTemplate template = new PlayerCharacterTemplate( id,scenarioId,name,maxHp, attack,defense,agility,startingExperience,startingLevel);
 
             EnsureNextIdIsAfterLoadedId(id);
 
@@ -187,6 +206,27 @@ namespace ProjetPOO.Model.Combat
             }
 
             Name = name;
+        }
+
+        public void SetScenario(int scenarioId)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(scenarioId))
+            {
+                throw new ArgumentException("Le scénario doit être valide.", nameof(scenarioId));
+            }
+
+            if (ScenarioId != 0 && ScenarioId != scenarioId)
+            {
+                throw new InvalidOperationException(
+                    $"Le template appartient déjà à un autre scénario (ScenarioId={ScenarioId}, nouveau={scenarioId}).");
+            }
+
+            ScenarioId = scenarioId;
+        }
+
+        public void ClearScenario()
+        {
+            ScenarioId = 0;
         }
     }
 }

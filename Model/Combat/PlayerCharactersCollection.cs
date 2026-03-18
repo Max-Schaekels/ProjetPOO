@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjetPOO.Utilities.EntriesValidation;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,6 +10,30 @@ namespace ProjetPOO.Model.Combat
 {
     public class PlayerCharactersCollection : ObservableCollection<PlayerCharacterTemplate>
     {
+        private int _ownerScenarioId;
+
+        public int OwnerScenarioId
+        {
+            get => _ownerScenarioId;
+            private set
+            {
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                {
+                    _ownerScenarioId = value;
+                }
+            }
+        }
+
+        public PlayerCharactersCollection(int ownerScenarioId)
+        {
+            if (ownerScenarioId <= 0)
+            {
+                throw new ArgumentException("ownerScenarioId doit être un nombre positif.", nameof(ownerScenarioId));
+            }
+
+            OwnerScenarioId = ownerScenarioId;
+        }
+
         public PlayerCharacterTemplate? GetById(int id)
         {
             return this.FirstOrDefault(player => player != null && player.Id == id);
@@ -31,6 +56,17 @@ namespace ProjetPOO.Model.Combat
                 throw new InvalidOperationException($"Un personnage template avec l'id {playerTemplate.Id} existe déjà.");
             }
 
+            if (playerTemplate.ScenarioId == 0)
+            {
+                playerTemplate.SetScenario(OwnerScenarioId);
+            }
+            else if (playerTemplate.ScenarioId != OwnerScenarioId)
+            {
+                throw new InvalidOperationException(
+                    $"Le template de personnage \"{playerTemplate.Name}\" appartient déjà à un autre scénario (ScenarioId={playerTemplate.ScenarioId}, attendu={OwnerScenarioId}).");
+            }
+
+
             Add(playerTemplate);
         }
 
@@ -43,7 +79,14 @@ namespace ProjetPOO.Model.Combat
                 return false;
             }
 
-            return Remove(template);
+            bool removed = Remove(template);
+
+            if (removed)
+            {
+                template.ClearScenario();
+            }
+
+            return removed;
         }
 
         public PlayerCharacterTemplate GetDefault()
