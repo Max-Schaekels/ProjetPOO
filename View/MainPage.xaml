@@ -17,6 +17,12 @@
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
+
+            <Label
+            x:Name="lblDebug"
+            Text="debug Text"
+            />
+
             <Button
                 x:Name="buttonCreateLoot"
                 Text="Créer un loot"
@@ -33,6 +39,12 @@
                 x:Name="buttonInitialiseAllClass"
                 Text="Initialiser toutes les classes"
                 Clicked="buttonInitialiseAllClass_Clicked"
+                Style="{StaticResource TestButton}" />
+            
+            <Button
+                x:Name="buttonTestDataAccess"
+                Text="Test Data Access"
+                Clicked="buttonTestDataAccess_Clicked"
                 Style="{StaticResource TestButton}" />
 
         </VerticalStackLayout>

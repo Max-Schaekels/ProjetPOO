@@ -1,0 +1,3 @@
+Type;Id;ScenarioId;Name;PotionPrice;KeyPrice
+SHOP;1;1;Marchand du village;10;25
+SHOP;2;1;Vieil alchimiste;15;40

@@ -1,0 +1,4 @@
+Type;Id;ScenarioId;Name;MaxHp;Attack;Defense;Agility;StartingExperience;StartingLevel
+PLAYERCHARACTERTEMPLATE;1;1;Guerrier;30;8;6;4;0;1
+PLAYERCHARACTERTEMPLATE;2;1;Mage;20;10;3;6;0;1
+PLAYERCHARACTERTEMPLATE;3;2;Voleur;24;7;4;9;0;1

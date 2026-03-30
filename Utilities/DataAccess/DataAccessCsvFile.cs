@@ -1,6 +1,8 @@
 ﻿using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Combat.Enums;
 using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story;
+using ProjetPOO.Model.Story.Enums;
 using ProjetPOO.Utilities.DataAccess.Files;
 using ProjetPOO.Utilities.Interfaces;
 using System;
@@ -8,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Condition = ProjetPOO.Model.Story.Condition;
 using Effect = ProjetPOO.Model.Story.Effect;
 
@@ -75,6 +78,21 @@ namespace ProjetPOO.Utilities.DataAccess
 
             return null;
         }
+        private static Scenario GetScenario(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("SCENARIO"))
+            {
+                Scenario scenario = Scenario.Load(int.Parse(fields[1]), fields[2], fields[3], int.Parse(fields[4]),null, null,null, null);
+
+                return scenario;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         public override ScenesCollection GetAllScenes()
         {
@@ -125,6 +143,30 @@ namespace ProjetPOO.Utilities.DataAccess
                 }
 
                 return scenes;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private static Scene GetScene(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("SCENE"))
+            {
+                SceneType sceneType;
+                Enum.TryParse(fields[4], out sceneType);
+
+                string? pictureFileName = string.IsNullOrWhiteSpace(fields[6]) ? null : fields[6];
+                int? shopId = string.IsNullOrWhiteSpace(fields[7]) ? null : int.Parse(fields[7]);
+                int? enemyId = string.IsNullOrWhiteSpace(fields[8]) ? null : int.Parse(fields[8]);
+                int? fleeTargetSceneId = string.IsNullOrWhiteSpace(fields[9]) ? null : int.Parse(fields[9]);
+                int? defeatTargetSceneId = string.IsNullOrWhiteSpace(fields[10]) ? null : int.Parse(fields[10]);
+                int? victoryTargetSceneId = string.IsNullOrWhiteSpace(fields[11]) ? null : int.Parse(fields[11]);
+
+                Scene scene = Scene.Load( int.Parse(fields[1]), fields[2], fields[3], sceneType, int.Parse(fields[5]), pictureFileName,shopId, enemyId,fleeTargetSceneId,defeatTargetSceneId,victoryTargetSceneId, null);
+
+                return scene;
             }
             else
             {
@@ -201,6 +243,20 @@ namespace ProjetPOO.Utilities.DataAccess
                 }
 
                 return choices;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private Choice GetChoice(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("CHOICE"))
+            {
+                Choice choice = Choice.Load( int.Parse(fields[1]), fields[2], int.Parse(fields[3]), int.Parse(fields[4]), null, null);
+
+                return choice;
             }
             else
             {
@@ -304,6 +360,24 @@ namespace ProjetPOO.Utilities.DataAccess
             return null;
         }
 
+        private static Condition GetCondition(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("CONDITION"))
+            {
+                ConditionType conditionType;
+                Enum.TryParse(fields[3], out conditionType);
+
+                Condition condition = Condition.Load(int.Parse(fields[1]), int.Parse(fields[2]), conditionType, int.Parse(fields[4]));
+
+                return condition;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public override EffectsCollection GetAllEffects()
         {
             List<string> listToRead = new List<string>();
@@ -359,6 +433,27 @@ namespace ProjetPOO.Utilities.DataAccess
                 return null;
             }
         }
+        private static Effect GetEffect(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("EFFECT"))
+            {
+                EffectType effectType;
+                Enum.TryParse(fields[3], out effectType);
+
+                int? amount = string.IsNullOrWhiteSpace(fields[4]) ? null : int.Parse(fields[4]);
+                string? flagKey = string.IsNullOrWhiteSpace(fields[5]) ? null : fields[5];
+
+                Effect effect = Effect.Load(int.Parse(fields[1]), int.Parse(fields[2]), effectType,amount, flagKey);
+
+                return effect;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         public override Effect? GetEffectById(int effectId)
         {
@@ -429,6 +524,23 @@ namespace ProjetPOO.Utilities.DataAccess
                 }
 
                 return enemies;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private static Enemy GetEnemy(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("ENEMY"))
+            {
+                EnemyType enemyType;
+                Enum.TryParse(fields[8], out enemyType);
+
+                Enemy enemy = Enemy.Load( int.Parse(fields[1]), int.Parse(fields[2]), fields[3], int.Parse(fields[4]), int.Parse(fields[5]),int.Parse(fields[6]), int.Parse(fields[7]), enemyType, int.Parse(fields[9]), int.Parse(fields[10]), int.Parse(fields[11]), int.Parse(fields[12]), int.Parse(fields[13]), int.Parse(fields[14]),int.Parse(fields[15]), int.Parse(fields[16]),int.Parse(fields[17]));
+
+                return enemy;
             }
             else
             {
@@ -511,6 +623,20 @@ namespace ProjetPOO.Utilities.DataAccess
                 return null;
             }
         }
+        private static Shop GetShop(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("SHOP"))
+            {
+                Shop shop = Shop.Load( int.Parse(fields[1]),int.Parse(fields[2]), fields[3], int.Parse(fields[4]), int.Parse(fields[5]));
+
+                return shop;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public override Shop? GetShopById(int shopId)
         {
@@ -581,6 +707,20 @@ namespace ProjetPOO.Utilities.DataAccess
                 }
 
                 return playerCharacters;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private PlayerCharacterTemplate GetPlayerCharacterTemplate(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("PLAYERCHARACTERTEMPLATE"))
+            {
+                PlayerCharacterTemplate playerCharacterTemplate = PlayerCharacterTemplate.Load( int.Parse(fields[1]), int.Parse(fields[2]), fields[3],int.Parse(fields[4]),int.Parse(fields[5]), int.Parse(fields[6]),int.Parse(fields[7]), int.Parse(fields[8]),int.Parse(fields[9]));
+
+                return playerCharacterTemplate;
             }
             else
             {
@@ -738,44 +878,5 @@ namespace ProjetPOO.Utilities.DataAccess
             throw new NotImplementedException();
         }
 
-        private Scenario GetScenario(string csvLine)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Scene GetScene(string csvLine)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Choice GetChoice(string csvLine)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Condition GetCondition(string csvLine)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Effect GetEffect(string csvLine)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Enemy GetEnemy(string csvLine)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Shop GetShop(string csvLine)
-        {
-            throw new NotImplementedException();
-        }
-
-        private PlayerCharacterTemplate GetPlayerCharacterTemplate(string csvLine)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -1,0 +1,5 @@
+Type;Id;Title;Text;SceneType;ScenarioId;PictureFileName;ShopId;EnemyId;FleeTargetSceneId;DefeatTargetSceneId;VictoryTargetSceneId
+SCENE;1;Entrée de la grotte;Vous êtes devant une grotte sombre.;Normal;1;grotte.jpg;;;;;;
+SCENE;2;Marchand;Un marchand vous observe en silence.;Shop;1;;1;;;;;
+SCENE;3;Combat contre le gobelin;Un gobelin surgit des ombres et attaque.;Combat;1;;;4;5;6;7
+SCENE;4;Fin heureuse;Vous avez gagné le combat et trouvé la sortie.;End;1;;;;;;

@@ -1,0 +1,4 @@
+Type;Id;Label;TargetSceneId;SceneId
+CHOICE;1;Entrer dans la grotte;2;1
+CHOICE;2;Fuir;3;1
+CHOICE;3;Acheter une potion;4;2
