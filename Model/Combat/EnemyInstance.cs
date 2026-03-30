@@ -1,7 +1,5 @@
 ﻿using ProjetPOO.Model.Combat.Enums;
-using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Utilities.EntriesValidation;
-using ProjetPOO.Utilities.Randomization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +34,6 @@ namespace ProjetPOO.Model.Combat
         public EnemyInstance(Enemy template)
             : base(template.Name, template.MaxHp, template.Attack, template.Defense, template.Agility)
         {
-            if (template == null)
-            {
-                throw new ArgumentNullException(nameof(template));
-            }
-
             TemplateId = template.Id;
             Type = template.Type;
         }

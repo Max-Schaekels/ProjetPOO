@@ -1,0 +1,10 @@
+﻿FOLDER,Adresse du folder de données
+
+SCENARIOS,Scenarios.csv
+SCENES,Scenes.csv
+CHOICES,Choices.csv
+CONDITIONS,Conditions.csv
+EFFECTS,Effects.csv
+ENEMIES,Enemies.csv
+SHOPS,Shops.csv
+PLAYERCHARACTERS,PlayerCharacters.csv

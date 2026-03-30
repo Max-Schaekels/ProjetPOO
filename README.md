@@ -37,6 +37,18 @@ Certaines scènes permettent également :
 
 ---
 
+⚙️ Configuration locale requise
+
+Ce projet utilise un fichier de configuration local pour accéder aux données.
+
+Après avoir cloné le dépôt, vous devez créer le fichier suivant :
+
+Configuration/Datas/Config.local.txt
+
+Vous pouvez vous baser sur le fichier Config.txt présent dans le projet, puis adapter le chemin FOLDER en fonction de votre environnement local.
+
+---
+
 ## 🧱 Architecture
 
 Le projet est structuré en deux parties principales :
