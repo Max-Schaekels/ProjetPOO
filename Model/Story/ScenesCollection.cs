@@ -34,6 +34,10 @@ namespace ProjetPOO.Model.Story
             OwnerScenarioId = ownerScenarioId;
         }
 
+        public ScenesCollection()
+        {
+        }
+
         public Scene? GetById(int id)
         {
             Scene? scene = this.FirstOrDefault(s => s != null && s.Id == id);

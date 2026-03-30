@@ -35,6 +35,10 @@ namespace ProjetPOO.Model.Story
             OwnerSceneId = ownerSceneId;
         }
 
+        public ChoicesCollection()
+        {
+        }
+
         public Choice? GetById(int id)
         {
             Choice? choice = this.FirstOrDefault(c => c != null && c.Id == id);

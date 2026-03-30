@@ -34,6 +34,10 @@ namespace ProjetPOO.Model.Combat
             OwnerScenarioId = ownerScenarioId;
         }
 
+        public EnemiesCollection()
+        {
+        }
+
         public Enemy? GetById(int id)
         {
             Enemy? enemy = this.FirstOrDefault(e => e != null && e.Id == id);

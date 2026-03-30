@@ -34,6 +34,10 @@ namespace ProjetPOO.Model.Story
             OwnerChoiceId = ownerChoiceId;
         }
 
+        public EffectsCollection()
+        {
+        }
+
         public Effect? GetById(int id)
         {
             Effect? effect = this.FirstOrDefault(e => e != null && e.Id == id);

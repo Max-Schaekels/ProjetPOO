@@ -34,6 +34,10 @@ namespace ProjetPOO.Model.Story
             OwnerChoiceId = ownerChoiceId;
         }
 
+        public ConditionsCollection()
+        {
+        }
+
         public Condition? GetById(int id)
         {
             Condition? condition = this.FirstOrDefault(c => c != null && c.Id == id);

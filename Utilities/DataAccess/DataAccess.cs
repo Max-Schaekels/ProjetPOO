@@ -81,42 +81,49 @@ namespace ProjetPOO.Utilities.DataAccess
         public abstract void SaveScenario(Scenario scenario);
 
         public abstract ScenesCollection GetAllScenes();
+        public abstract ScenesCollection GetScenesByScenarioId(int scenarioId);
         public abstract Scene? GetSceneById(int sceneId);
         public abstract void AddScene(Scene scene);
         public abstract void UpdateScene(Scene scene);
         public abstract void DeleteScene(int sceneId);
 
         public abstract ChoicesCollection GetAllChoices();
+        public abstract ChoicesCollection GetChoicesBySceneId(int sceneId);
         public abstract Choice? GetChoiceById(int choiceId);
         public abstract void AddChoice(Choice choice);
         public abstract void UpdateChoice(Choice choice);
         public abstract void DeleteChoice(int choiceId);
 
         public abstract ConditionsCollection GetAllConditions();
+        public abstract ConditionsCollection GetConditionsByChoiceId(int choiceId);
         public abstract Condition? GetConditionById(int conditionId);
         public abstract void AddCondition(Condition condition);
         public abstract void UpdateCondition(Condition condition);
         public abstract void DeleteCondition(int conditionId);
 
         public abstract EffectsCollection GetAllEffects();
+        public abstract EffectsCollection GetEffectsByChoiceId(int choiceId);
         public abstract Effect? GetEffectById(int effectId);
         public abstract void AddEffect(Effect effect);
         public abstract void UpdateEffect(Effect effect);
         public abstract void DeleteEffect(int effectId);
 
         public abstract EnemiesCollection GetAllEnemies();
+        public abstract EnemiesCollection GetEnemiesByScenarioId(int scenarioId);
         public abstract Enemy? GetEnemyById(int enemyId);
         public abstract void AddEnemy(Enemy enemy);
         public abstract void UpdateEnemy(Enemy enemy);
         public abstract void DeleteEnemy(int enemyId);
 
         public abstract ShopsCollection GetAllShops();
+        public abstract ShopsCollection GetShopsByScenarioId(int scenarioId);
         public abstract Shop? GetShopById(int shopId);
         public abstract void AddShop(Shop shop);
         public abstract void UpdateShop(Shop shop);
         public abstract void DeleteShop(int shopId);
 
         public abstract PlayerCharactersCollection GetAllPlayerCharacterTemplates();
+        public abstract PlayerCharactersCollection GetPlayerCharacterTemplatesByScenarioId(int scenarioId);
         public abstract PlayerCharacterTemplate? GetPlayerCharacterTemplateById(int playerCharacterTemplateId);
         public abstract void AddPlayerCharacterTemplate(PlayerCharacterTemplate playerCharacterTemplate);
         public abstract void UpdatePlayerCharacterTemplate(PlayerCharacterTemplate playerCharacterTemplate);

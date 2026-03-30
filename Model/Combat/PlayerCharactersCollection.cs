@@ -34,6 +34,10 @@ namespace ProjetPOO.Model.Combat
             OwnerScenarioId = ownerScenarioId;
         }
 
+        public PlayerCharactersCollection()
+        {
+        }
+
         public PlayerCharacterTemplate? GetById(int id)
         {
             return this.FirstOrDefault(player => player != null && player.Id == id);

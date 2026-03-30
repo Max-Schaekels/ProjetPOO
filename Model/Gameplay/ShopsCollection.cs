@@ -34,6 +34,10 @@ namespace ProjetPOO.Model.Gameplay
             OwnerScenarioId = ownerScenarioId;
         }
 
+        public ShopsCollection()
+        {
+        }
+
         public Shop? GetById(int id)
         {
             Shop? shop = this.FirstOrDefault(s => s != null && s.Id == id);

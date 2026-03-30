@@ -30,31 +30,40 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override List<Scenario> GetAllScenarios()
         {
+            List<string> listToRead = new List<string>();
             List<Scenario> scenarios = new List<Scenario>();
 
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("SCENARIOS");
-
             if (IsValidAccessPath)
             {
-                List<string> listToRead = File.ReadAllLines(AccessPath).ToList();
-
-                if (listToRead.Any())
-                {
-                    listToRead.RemoveAt(0);
-                }
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
 
                 foreach (string s in listToRead)
                 {
-                    scenarios.Add(GetScenario(s));
+                    Scenario scenario = GetScenario(s);
+                    if (scenario != null)
+                    {
+                        scenarios.Add(scenario);
+                    }
                 }
-            }
 
-            return scenarios;
+                return scenarios;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Scenario? GetScenarioById(int scenarioId)
         {
             List<Scenario> scenarios = GetAllScenarios();
+
+            if (scenarios == null)
+            {
+                return null;
+            }
 
             foreach (Scenario scenario in scenarios)
             {
@@ -69,31 +78,68 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override ScenesCollection GetAllScenes()
         {
+            List<string> listToRead = new List<string>();
             ScenesCollection scenes = new ScenesCollection();
 
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("SCENES");
-
             if (IsValidAccessPath)
             {
-                List<string> listToRead = File.ReadAllLines(AccessPath).ToList();
-
-                if (listToRead.Any())
-                {
-                    listToRead.RemoveAt(0);
-                }
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
 
                 foreach (string s in listToRead)
                 {
-                    scenes.Add(GetScene(s));
+                    Scene scene = GetScene(s);
+                    if (scene != null)
+                    {
+                        scenes.Add(scene);
+                    }
                 }
-            }
 
-            return scenes;
+                return scenes;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override ScenesCollection GetScenesByScenarioId(int scenarioId)
+        {
+            List<string> listToRead = new List<string>();
+            ScenesCollection scenes = new ScenesCollection(scenarioId);
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("SCENES");
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    Scene scene = GetScene(s);
+                    if (scene != null && scene.ScenarioId == scenarioId)
+                    {
+                        scenes.AddScene(scene);
+                    }
+                }
+
+                return scenes;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Scene? GetSceneById(int sceneId)
         {
             ScenesCollection scenes = GetAllScenes();
+
+            if (scenes == null)
+            {
+                return null;
+            }
 
             foreach (Scene scene in scenes)
             {
@@ -108,31 +154,68 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override ChoicesCollection GetAllChoices()
         {
+            List<string> listToRead = new List<string>();
             ChoicesCollection choices = new ChoicesCollection();
 
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("CHOICES");
-
             if (IsValidAccessPath)
             {
-                List<string> listToRead = File.ReadAllLines(AccessPath).ToList();
-
-                if (listToRead.Any())
-                {
-                    listToRead.RemoveAt(0);
-                }
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
 
                 foreach (string s in listToRead)
                 {
-                    choices.Add(GetChoice(s));
+                    Choice choice = GetChoice(s);
+                    if (choice != null)
+                    {
+                        choices.Add(choice);
+                    }
                 }
-            }
 
-            return choices;
+                return choices;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override ChoicesCollection GetChoicesBySceneId(int sceneId)
+        {
+            List<string> listToRead = new List<string>();
+            ChoicesCollection choices = new ChoicesCollection(sceneId);
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("CHOICES");
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    Choice choice = GetChoice(s);
+                    if (choice != null && choice.SceneId == sceneId)
+                    {
+                        choices.AddChoice(choice);
+                    }
+                }
+
+                return choices;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Choice? GetChoiceById(int choiceId)
         {
             ChoicesCollection choices = GetAllChoices();
+
+            if (choices == null)
+            {
+                return null;
+            }
 
             foreach (Choice choice in choices)
             {
@@ -147,31 +230,68 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override ConditionsCollection GetAllConditions()
         {
+            List<string> listToRead = new List<string>();
             ConditionsCollection conditions = new ConditionsCollection();
 
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("CONDITIONS");
-
             if (IsValidAccessPath)
             {
-                List<string> listToRead = File.ReadAllLines(AccessPath).ToList();
-
-                if (listToRead.Any())
-                {
-                    listToRead.RemoveAt(0);
-                }
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
 
                 foreach (string s in listToRead)
                 {
-                    conditions.Add(GetCondition(s));
+                    Condition condition = GetCondition(s);
+                    if (condition != null)
+                    {
+                        conditions.Add(condition);
+                    }
                 }
-            }
 
-            return conditions;
+                return conditions;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override ConditionsCollection GetConditionsByChoiceId(int choiceId)
+        {
+            List<string> listToRead = new List<string>();
+            ConditionsCollection conditions = new ConditionsCollection(choiceId);
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("CONDITIONS");
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    Condition condition = GetCondition(s);
+                    if (condition != null && condition.ChoiceId == choiceId)
+                    {
+                        conditions.AddCondition(condition);
+                    }
+                }
+
+                return conditions;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Condition? GetConditionById(int conditionId)
         {
             ConditionsCollection conditions = GetAllConditions();
+
+            if (conditions == null)
+            {
+                return null;
+            }
 
             foreach (Condition condition in conditions)
             {
@@ -186,31 +306,68 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override EffectsCollection GetAllEffects()
         {
+            List<string> listToRead = new List<string>();
             EffectsCollection effects = new EffectsCollection();
 
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("EFFECTS");
-
             if (IsValidAccessPath)
             {
-                List<string> listToRead = File.ReadAllLines(AccessPath).ToList();
-
-                if (listToRead.Any())
-                {
-                    listToRead.RemoveAt(0);
-                }
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
 
                 foreach (string s in listToRead)
                 {
-                    effects.Add(GetEffect(s));
+                    Effect effect = GetEffect(s);
+                    if (effect != null)
+                    {
+                        effects.Add(effect);
+                    }
                 }
-            }
 
-            return effects;
+                return effects;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override EffectsCollection GetEffectsByChoiceId(int choiceId)
+        {
+            List<string> listToRead = new List<string>();
+            EffectsCollection effects = new EffectsCollection(choiceId);
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("EFFECTS");
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    Effect effect = GetEffect(s);
+                    if (effect != null && effect.ChoiceId == choiceId)
+                    {
+                        effects.AddEffect(effect);
+                    }
+                }
+
+                return effects;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Effect? GetEffectById(int effectId)
         {
             EffectsCollection effects = GetAllEffects();
+
+            if (effects == null)
+            {
+                return null;
+            }
 
             foreach (Effect effect in effects)
             {
@@ -225,31 +382,68 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override EnemiesCollection GetAllEnemies()
         {
+            List<string> listToRead = new List<string>();
             EnemiesCollection enemies = new EnemiesCollection();
 
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("ENEMIES");
-
             if (IsValidAccessPath)
             {
-                List<string> listToRead = File.ReadAllLines(AccessPath).ToList();
-
-                if (listToRead.Any())
-                {
-                    listToRead.RemoveAt(0);
-                }
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
 
                 foreach (string s in listToRead)
                 {
-                    enemies.Add(GetEnemy(s));
+                    Enemy enemy = GetEnemy(s);
+                    if (enemy != null)
+                    {
+                        enemies.Add(enemy);
+                    }
                 }
-            }
 
-            return enemies;
+                return enemies;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override EnemiesCollection GetEnemiesByScenarioId(int scenarioId)
+        {
+            List<string> listToRead = new List<string>();
+            EnemiesCollection enemies = new EnemiesCollection(scenarioId);
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("ENEMIES");
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    Enemy enemy = GetEnemy(s);
+                    if (enemy != null && enemy.ScenarioId == scenarioId)
+                    {
+                        enemies.AddEnemy(enemy);
+                    }
+                }
+
+                return enemies;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Enemy? GetEnemyById(int enemyId)
         {
             EnemiesCollection enemies = GetAllEnemies();
+
+            if (enemies == null)
+            {
+                return null;
+            }
 
             foreach (Enemy enemy in enemies)
             {
@@ -264,31 +458,68 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override ShopsCollection GetAllShops()
         {
+            List<string> listToRead = new List<string>();
             ShopsCollection shops = new ShopsCollection();
 
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("SHOPS");
-
             if (IsValidAccessPath)
             {
-                List<string> listToRead = File.ReadAllLines(AccessPath).ToList();
-
-                if (listToRead.Any())
-                {
-                    listToRead.RemoveAt(0);
-                }
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
 
                 foreach (string s in listToRead)
                 {
-                    shops.Add(GetShop(s));
+                    Shop shop = GetShop(s);
+                    if (shop != null)
+                    {
+                        shops.Add(shop);
+                    }
                 }
-            }
 
-            return shops;
+                return shops;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override ShopsCollection GetShopsByScenarioId(int scenarioId)
+        {
+            List<string> listToRead = new List<string>();
+            ShopsCollection shops = new ShopsCollection(scenarioId);
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("SHOPS");
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    Shop shop = GetShop(s);
+                    if (shop != null && shop.ScenarioId == scenarioId)
+                    {
+                        shops.AddShop(shop);
+                    }
+                }
+
+                return shops;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Shop? GetShopById(int shopId)
         {
             ShopsCollection shops = GetAllShops();
+
+            if (shops == null)
+            {
+                return null;
+            }
 
             foreach (Shop shop in shops)
             {
@@ -303,31 +534,68 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override PlayerCharactersCollection GetAllPlayerCharacterTemplates()
         {
+            List<string> listToRead = new List<string>();
             PlayerCharactersCollection playerCharacters = new PlayerCharactersCollection();
 
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("PLAYERCHARACTERS");
-
             if (IsValidAccessPath)
             {
-                List<string> listToRead = File.ReadAllLines(AccessPath).ToList();
-
-                if (listToRead.Any())
-                {
-                    listToRead.RemoveAt(0);
-                }
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
 
                 foreach (string s in listToRead)
                 {
-                    playerCharacters.Add(GetPlayerCharacterTemplate(s));
+                    PlayerCharacterTemplate playerCharacter = GetPlayerCharacterTemplate(s);
+                    if (playerCharacter != null)
+                    {
+                        playerCharacters.Add(playerCharacter);
+                    }
                 }
-            }
 
-            return playerCharacters;
+                return playerCharacters;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override PlayerCharactersCollection GetPlayerCharacterTemplatesByScenarioId(int scenarioId)
+        {
+            List<string> listToRead = new List<string>();
+            PlayerCharactersCollection playerCharacters = new PlayerCharactersCollection(scenarioId);
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("PLAYERCHARACTERS");
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    PlayerCharacterTemplate playerCharacter = GetPlayerCharacterTemplate(s);
+                    if (playerCharacter != null && playerCharacter.ScenarioId == scenarioId)
+                    {
+                        playerCharacters.AddPlayer(playerCharacter);
+                    }
+                }
+
+                return playerCharacters;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override PlayerCharacterTemplate? GetPlayerCharacterTemplateById(int playerCharacterTemplateId)
         {
             PlayerCharactersCollection playerCharacters = GetAllPlayerCharacterTemplates();
+
+            if (playerCharacters == null)
+            {
+                return null;
+            }
 
             foreach (PlayerCharacterTemplate playerCharacter in playerCharacters)
             {
@@ -342,78 +610,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override Scenario? LoadScenario(int scenarioId)
         {
-            Scenario? scenario = GetScenarioById(scenarioId);
-
-            if (scenario == null)
-            {
-                return null;
-            }
-
-            ScenesCollection scenes = GetAllScenes();
-            ChoicesCollection choices = GetAllChoices();
-            ConditionsCollection conditions = GetAllConditions();
-            EffectsCollection effects = GetAllEffects();
-            EnemiesCollection enemies = GetAllEnemies();
-            ShopsCollection shops = GetAllShops();
-            PlayerCharactersCollection playerCharacters = GetAllPlayerCharacterTemplates();
-
-            foreach (Enemy enemy in enemies)
-            {
-                if (enemy.ScenarioId == scenario.Id)
-                {
-                    scenario.Enemies.Add(enemy);
-                }
-            }
-
-            foreach (Shop shop in shops)
-            {
-                if (shop.ScenarioId == scenario.Id)
-                {
-                    scenario.Shops.Add(shop);
-                }
-            }
-
-            foreach (PlayerCharacterTemplate playerCharacter in playerCharacters)
-            {
-                if (playerCharacter.ScenarioId == scenario.Id)
-                {
-                    scenario.PlayerCharacters.Add(playerCharacter);
-                }
-            }
-
-            foreach (Scene scene in scenes)
-            {
-                if (scene.ScenarioId == scenario.Id)
-                {
-                    foreach (Choice choice in choices)
-                    {
-                        if (choice.SceneId == scene.Id)
-                        {
-                            foreach (Condition condition in conditions)
-                            {
-                                if (condition.ChoiceId == choice.Id)
-                                {
-                                    choice.Conditions.Add(condition);
-                                }
-                            }
-
-                            foreach (Effect effect in effects)
-                            {
-                                if (effect.ChoiceId == choice.Id)
-                                {
-                                    choice.Effects.Add(effect);
-                                }
-                            }
-
-                            scene.Choices.Add(choice);
-                        }
-                    }
-
-                    scenario.Scenes.Add(scene);
-                }
-            }
-
-            return scenario;
+           throw new NotImplementedException();
         }
 
         public override void SaveScenario(Scenario scenario)
