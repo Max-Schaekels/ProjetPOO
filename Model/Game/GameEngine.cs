@@ -307,7 +307,7 @@ namespace ProjetPOO.Model.Game
 
                 if (combat.Result == CombatResult.Victory)
                 {
-                    ApplyVictoryRewards(combat, report);
+                    ApplyVictoryRewards(scenario, combat, report);
                 }
 
                 ResolveCombatExit(scenario, combat.Result);
@@ -340,7 +340,7 @@ namespace ProjetPOO.Model.Game
             {
                 if (combat.Result == CombatResult.Victory)
                 {
-                    ApplyVictoryRewards(combat, report);
+                    ApplyVictoryRewards(scenario, combat, report);
                 }
 
                 ResolveCombatExit(scenario, combat.Result);
@@ -393,14 +393,30 @@ namespace ProjetPOO.Model.Game
             EnterCurrentScene(scenario);
         }
 
-        private void ApplyVictoryRewards(CombatState combat, RoundReport report)
+        private void ApplyVictoryRewards(Scenario scenario, CombatState combat, RoundReport report)
         {
-            EnemyInstance enemy = combat.Enemy;
+            if (scenario == null)
+            {
+                throw new ArgumentNullException(nameof(scenario));
+            }
 
-            int experience = enemy.GetExperienceReward();
+            if (combat == null)
+            {
+                throw new ArgumentNullException(nameof(combat));
+            }
+
+            if (report == null)
+            {
+                throw new ArgumentNullException(nameof(report));
+            }
+
+            EnemyInstance enemyInstance = combat.Enemy;
+            Enemy enemyTemplate = ResolveEnemy(scenario, enemyInstance.TemplateId);
+
+            int experience = enemyTemplate.GetExperienceReward();
             State.PlayerCharacter.GainExperience(experience);
 
-            Loot loot = enemy.GetLoot();
+            Loot loot = enemyTemplate.GetLoot();
             State.GrantLoot(loot);
 
             string lootDescription = loot.GetDescription();
