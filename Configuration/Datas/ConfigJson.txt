@@ -1,0 +1,9 @@
+﻿FOLDER,C:\...\Configuration\Datas\Json\
+SCENARIOS,Scenarios.json
+SCENES,Scenes.json
+CHOICES,Choices.json
+CONDITIONS,Conditions.json
+EFFECTS,Effects.json
+ENEMIES,Enemies.json
+SHOPS,Shops.json
+PLAYERCHARACTERS,PlayerCharacters.json

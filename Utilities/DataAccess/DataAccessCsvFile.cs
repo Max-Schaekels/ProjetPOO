@@ -878,5 +878,44 @@ namespace ProjetPOO.Utilities.DataAccess
             throw new NotImplementedException();
         }
 
+        public override void UpdateAllScenarios(List<Scenario> scenarios)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllScenes(ScenesCollection scenes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllChoices(ChoicesCollection choices)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllConditions(ConditionsCollection conditions)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllEffects(EffectsCollection effects)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllEnemies(EnemiesCollection enemies)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllShops(ShopsCollection shops)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllPlayerCharacterTemplates(PlayerCharactersCollection playerCharacterTemplates)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

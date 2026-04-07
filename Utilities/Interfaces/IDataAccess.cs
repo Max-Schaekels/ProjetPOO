@@ -19,6 +19,7 @@ namespace ProjetPOO.Utilities.Interfaces
         Scenario? GetScenarioById(int scenarioId);
         void AddScenario(Scenario scenario);
         void UpdateScenario(Scenario scenario);
+        void UpdateAllScenarios(List<Scenario> scenarios);
         void DeleteScenario(int scenarioId);
 
         Scenario? LoadScenario(int scenarioId);
@@ -29,6 +30,7 @@ namespace ProjetPOO.Utilities.Interfaces
         Scene? GetSceneById(int sceneId);
         void AddScene(Scene scene);
         void UpdateScene(Scene scene);
+        void UpdateAllScenes(ScenesCollection scenes);
         void DeleteScene(int sceneId);
 
         ChoicesCollection GetAllChoices();
@@ -36,6 +38,7 @@ namespace ProjetPOO.Utilities.Interfaces
         Choice? GetChoiceById(int choiceId);
         void AddChoice(Choice choice);
         void UpdateChoice(Choice choice);
+        void UpdateAllChoices(ChoicesCollection choices);
         void DeleteChoice(int choiceId);
 
         ConditionsCollection GetAllConditions();
@@ -43,6 +46,7 @@ namespace ProjetPOO.Utilities.Interfaces
         Condition? GetConditionById(int conditionId);
         void AddCondition(Condition condition);
         void UpdateCondition(Condition condition);
+        void UpdateAllConditions(ConditionsCollection conditions);
         void DeleteCondition(int conditionId);
 
         EffectsCollection GetAllEffects();
@@ -50,6 +54,7 @@ namespace ProjetPOO.Utilities.Interfaces
         Effect? GetEffectById(int effectId);
         void AddEffect(Effect effect);
         void UpdateEffect(Effect effect);
+        void UpdateAllEffects(EffectsCollection effects);
         void DeleteEffect(int effectId);
 
         EnemiesCollection GetAllEnemies();
@@ -57,6 +62,7 @@ namespace ProjetPOO.Utilities.Interfaces
         Enemy? GetEnemyById(int enemyId);
         void AddEnemy(Enemy enemy);
         void UpdateEnemy(Enemy enemy);
+        void UpdateAllEnemies(EnemiesCollection enemies);
         void DeleteEnemy(int enemyId);
 
         ShopsCollection GetAllShops();
@@ -64,6 +70,7 @@ namespace ProjetPOO.Utilities.Interfaces
         Shop? GetShopById(int shopId);
         void AddShop(Shop shop);
         void UpdateShop(Shop shop);
+        void UpdateAllShops(ShopsCollection shops);
         void DeleteShop(int shopId);
 
         PlayerCharactersCollection GetAllPlayerCharacterTemplates();
@@ -71,6 +78,7 @@ namespace ProjetPOO.Utilities.Interfaces
         PlayerCharacterTemplate? GetPlayerCharacterTemplateById(int playerCharacterTemplateId);
         void AddPlayerCharacterTemplate(PlayerCharacterTemplate playerCharacterTemplate);
         void UpdatePlayerCharacterTemplate(PlayerCharacterTemplate playerCharacterTemplate);
+        void UpdateAllPlayerCharacterTemplates(PlayerCharactersCollection playerCharacterTemplates);
         void DeletePlayerCharacterTemplate(int playerCharacterTemplateId);
     }
 }
