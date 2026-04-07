@@ -1,0 +1,235 @@
+{
+  "$type": "System.Collections.Generic.List`1[[ProjetPOO.Model.Story.Scenario, ProjetPOO]], System.Private.CoreLib",
+  "$values": [
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 1,
+      "Title": "Le réveil du héros",
+      "Description": "Un jeune aventurier se réveille dans un monde dangereux et doit survivre à ses premiers choix.",
+      "StartSceneId": 1,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 2,
+      "Title": "La tour interdite",
+      "Description": "Une ancienne tour attire les curieux, mais peu en reviennent vivants.",
+      "StartSceneId": 10,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 3,
+      "Title": "Le village oublié",
+      "Description": "Un ancien village abandonné cache encore quelques secrets.",
+      "StartSceneId": 9,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 4,
+      "Title": "Les ruines du marais",
+      "Description": "Des ruines humides émergent d’un marais silencieux.",
+      "StartSceneId": 1,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 5,
+      "Title": "La caverne rouge",
+      "Description": "Une grotte teintée de rouge semble abriter un danger ancien.",
+      "StartSceneId": 5,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 6,
+      "Title": "Le bois des murmures",
+      "Description": "Une forêt étrange semble chuchoter à ceux qui s’y aventurent.",
+      "StartSceneId": 9,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 7,
+      "Title": "Le fort en ruine",
+      "Description": "Les murs brisés d’un ancien fort abritent encore des ennemis.",
+      "StartSceneId": 1,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 8,
+      "Title": "Le temple scellé",
+      "Description": "Un temple ancien reste fermé depuis des siècles.",
+      "StartSceneId": 5,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 9,
+      "Title": "Le port noyé",
+      "Description": "Un ancien port partiellement englouti abrite des créatures hostiles.",
+      "StartSceneId": 9,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scenario, ProjetPOO",
+      "Id": 10,
+      "Title": "La montagne noire",
+      "Description": "Au sommet d’une montagne sombre sommeille une terrible menace.",
+      "StartSceneId": 1,
+      "Scenes": {
+        "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Enemies": {
+        "$type": "ProjetPOO.Model.Combat.EnemiesCollection, ProjetPOO",
+        "$values": []
+      },
+      "Shops": {
+        "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
+        "$values": []
+      },
+      "PlayerCharacters": {
+        "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
+        "$values": []
+      }
+    }
+  ]
+}

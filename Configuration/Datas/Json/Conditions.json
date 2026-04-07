@@ -1,0 +1,75 @@
+{
+  "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+  "$values": [
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 1,
+      "ChoiceId": 1,
+      "Type": 0,
+      "MinValue": 1
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 2,
+      "ChoiceId": 1,
+      "Type": 2,
+      "MinValue": 10
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 3,
+      "ChoiceId": 2,
+      "Type": 1,
+      "MinValue": 2
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 4,
+      "ChoiceId": 3,
+      "Type": 2,
+      "MinValue": 5
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 5,
+      "ChoiceId": 4,
+      "Type": 0,
+      "MinValue": 1
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 6,
+      "ChoiceId": 5,
+      "Type": 1,
+      "MinValue": 1
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 7,
+      "ChoiceId": 6,
+      "Type": 2,
+      "MinValue": 1
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 8,
+      "ChoiceId": 7,
+      "Type": 0,
+      "MinValue": 1
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 9,
+      "ChoiceId": 8,
+      "Type": 2,
+      "MinValue": 15
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Condition, ProjetPOO",
+      "Id": 10,
+      "ChoiceId": 10,
+      "Type": 1,
+      "MinValue": 1
+    }
+  ]
+}

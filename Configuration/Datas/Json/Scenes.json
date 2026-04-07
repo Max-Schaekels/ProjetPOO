@@ -1,0 +1,185 @@
+{
+  "$type": "ProjetPOO.Model.Story.ScenesCollection, ProjetPOO",
+  "$values": [
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 1,
+      "Title": "Entrée de la grotte",
+      "Text": "Vous êtes devant une grotte sombre.",
+      "Type": 0,
+      "ScenarioId": 1,
+      "PictureFileName": "grotte.jpg",
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": null,
+      "EnemyId": null,
+      "FleeTargetSceneId": null,
+      "DefeatTargetSceneId": null,
+      "VictoryTargetSceneId": null
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 2,
+      "Title": "Marchand",
+      "Text": "Un marchand vous observe en silence.",
+      "Type": 2,
+      "ScenarioId": 1,
+      "PictureFileName": null,
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": 1,
+      "EnemyId": null,
+      "FleeTargetSceneId": null,
+      "DefeatTargetSceneId": null,
+      "VictoryTargetSceneId": null
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 3,
+      "Title": "Combat contre le gobelin",
+      "Text": "Un gobelin surgit des ombres et attaque.",
+      "Type": 1,
+      "ScenarioId": 1,
+      "PictureFileName": null,
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": null,
+      "EnemyId": 4,
+      "FleeTargetSceneId": 5,
+      "DefeatTargetSceneId": 6,
+      "VictoryTargetSceneId": 7
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 4,
+      "Title": "Fin heureuse",
+      "Text": "Vous avez gagné le combat et trouvé la sortie.",
+      "Type": 3,
+      "ScenarioId": 1,
+      "PictureFileName": null,
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": null,
+      "EnemyId": null,
+      "FleeTargetSceneId": null,
+      "DefeatTargetSceneId": null,
+      "VictoryTargetSceneId": null
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 5,
+      "Title": "Pied de la tour",
+      "Text": "Une vieille tour se dresse devant vous.",
+      "Type": 0,
+      "ScenarioId": 2,
+      "PictureFileName": "tour.jpg",
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": null,
+      "EnemyId": null,
+      "FleeTargetSceneId": null,
+      "DefeatTargetSceneId": null,
+      "VictoryTargetSceneId": null
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 6,
+      "Title": "Boutique de la tour",
+      "Text": "Un vieil alchimiste tient boutique ici.",
+      "Type": 2,
+      "ScenarioId": 2,
+      "PictureFileName": null,
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": 2,
+      "EnemyId": null,
+      "FleeTargetSceneId": null,
+      "DefeatTargetSceneId": null,
+      "VictoryTargetSceneId": null
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 7,
+      "Title": "Gardien draconique",
+      "Text": "Une créature protège l’escalier de pierre.",
+      "Type": 1,
+      "ScenarioId": 2,
+      "PictureFileName": null,
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": null,
+      "EnemyId": 3,
+      "FleeTargetSceneId": 8,
+      "DefeatTargetSceneId": 8,
+      "VictoryTargetSceneId": 8
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 8,
+      "Title": "Salle du sommet",
+      "Text": "Vous atteignez le sommet de la tour.",
+      "Type": 3,
+      "ScenarioId": 2,
+      "PictureFileName": null,
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": null,
+      "EnemyId": null,
+      "FleeTargetSceneId": null,
+      "DefeatTargetSceneId": null,
+      "VictoryTargetSceneId": null
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 9,
+      "Title": "Place abandonnée",
+      "Text": "Le village oublié est silencieux et désert.",
+      "Type": 0,
+      "ScenarioId": 3,
+      "PictureFileName": "village.jpg",
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": null,
+      "EnemyId": null,
+      "FleeTargetSceneId": null,
+      "DefeatTargetSceneId": null,
+      "VictoryTargetSceneId": null
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Scene, ProjetPOO",
+      "Id": 10,
+      "Title": "Échoppe délabrée",
+      "Text": "Une petite boutique tient encore debout.",
+      "Type": 2,
+      "ScenarioId": 3,
+      "PictureFileName": null,
+      "Choices": {
+        "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+        "$values": []
+      },
+      "ShopId": 3,
+      "EnemyId": null,
+      "FleeTargetSceneId": null,
+      "DefeatTargetSceneId": null,
+      "VictoryTargetSceneId": null
+    }
+  ]
+}

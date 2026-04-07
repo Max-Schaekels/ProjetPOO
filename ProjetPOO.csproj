@@ -63,8 +63,4 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Configuration\Datas\Json\" />
-	</ItemGroup>
-
 </Project>

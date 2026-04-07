@@ -15,8 +15,11 @@ namespace ProjetPOO.View
 {
     public partial class MainPage : ContentPage
     {
-        private const string CONFIG_HOME = @"C:\ProjetPOO\Max-Schaekels\ProjetPOO\Configuration\Datas\Config.local.txt";
-        private const string CONFIG_PORT = @"C:\POO\Brasserie\Configuration\Datas\Config.local.txt";
+        private const string CONFIG_HOME_CSV = @"C:\ProjetPOO\Max-Schaekels\ProjetPOO\Configuration\Datas\Config.local.txt";
+        private const string CONFIG_PORT_CSV = @"C:\POO\Brasserie\Configuration\Datas\Config.local.txt";
+
+        private const string CONFIG_HOME_JSON = @"C:\ProjetPOO\Max-Schaekels\ProjetPOO\Configuration\Datas\ConfigJson.local.txt";
+        private const string CONFIG_PORT_JSON = @"C:\POO\Brasserie\Configuration\Datas\ConfigJson.local.txt";
 
         public MainPage()
         {
@@ -107,7 +110,7 @@ namespace ProjetPOO.View
 
         private void buttonTestDataAccess_Clicked(object sender, EventArgs e)
         {
-            string CONFIG_FILE = CONFIG_HOME; 
+            string CONFIG_FILE = CONFIG_HOME_CSV; 
             DataFilesManager dataFilesManager = new DataFilesManager(CONFIG_FILE);
             DataAccessCsvFile da = new DataAccessCsvFile(dataFilesManager);
             lblDebug.Text = "===== TEST DATA ACCESS =====";
@@ -167,6 +170,99 @@ namespace ProjetPOO.View
             {
                 lblDebug.Text += $"\n[PLAYER] Id: {p.Id} - Name: {p.Name} - ScenarioId: {p.ScenarioId} - HP: {p.MaxHp}";
             }
+        }
+
+        private void buttonTestConvertCsvToJson_Clicked(object sender, EventArgs e)
+        {
+            DataFilesManager dfmCsv = new DataFilesManager(CONFIG_HOME_CSV);
+            DataAccessCsvFile daCsv = new DataAccessCsvFile(dfmCsv);
+
+            List<Scenario> scenarios = daCsv.GetAllScenarios();
+            ScenesCollection scenes = daCsv.GetAllScenes();
+            ChoicesCollection choices = daCsv.GetAllChoices();
+            ConditionsCollection conditions = daCsv.GetAllConditions();
+            EffectsCollection effects = daCsv.GetAllEffects();
+            EnemiesCollection enemies = daCsv.GetAllEnemies();
+            ShopsCollection shops = daCsv.GetAllShops();
+            PlayerCharactersCollection playerCharacterTemplates = daCsv.GetAllPlayerCharacterTemplates();
+
+            DataFilesManager dfmJson = new DataFilesManager(CONFIG_HOME_JSON);
+            DataAccessJsonFile daJson = new DataAccessJsonFile(dfmJson);
+
+            daJson.UpdateAllScenarios(scenarios);
+            daJson.UpdateAllScenes(scenes);
+            daJson.UpdateAllChoices(choices);
+            daJson.UpdateAllConditions(conditions);
+            daJson.UpdateAllEffects(effects);
+            daJson.UpdateAllEnemies(enemies);
+            daJson.UpdateAllShops(shops);
+            daJson.UpdateAllPlayerCharacterTemplates(playerCharacterTemplates);
+
+            lblDebug.Text = "Conversion CSV vers JSON terminée.";
+        }
+
+        private void buttonTestJson_Clicked(object sender, EventArgs e)
+        {
+            DataFilesManager dataFilesManager = new DataFilesManager(CONFIG_HOME_JSON);
+            DataAccessJsonFile da = new DataAccessJsonFile(dataFilesManager);
+            lblDebug.Text = "===== TEST DATA ACCESS =====";
+
+            // SCENARIOS
+            List<Scenario> scenarios = da.GetAllScenarios();
+            foreach (Scenario s in scenarios)
+            {
+                lblDebug.Text += $"\n[SCENARIO] Id: {s.Id} - Title: {s.Title} - StartSceneId: {s.StartSceneId}";
+            }
+
+            // SCENES
+            ScenesCollection scenes = da.GetAllScenes();
+            foreach (Scene s in scenes)
+            {
+                lblDebug.Text += $"\n[SCENE] Id: {s.Id} - Title: {s.Title} - Type: {s.Type} - ScenarioId: {s.ScenarioId}";
+            }
+
+            // CHOICES
+            ChoicesCollection choices = da.GetAllChoices();
+            foreach (Choice c in choices)
+            {
+                lblDebug.Text += $"\n[CHOICE] Id: {c.Id} - Label: {c.Label} - SceneId: {c.SceneId} - TargetSceneId: {c.TargetSceneId}";
+            }
+
+            // CONDITIONS
+            ConditionsCollection conditions = da.GetAllConditions();
+            foreach (Condition c in conditions)
+            {
+                lblDebug.Text += $"\n[CONDITION] Id: {c.Id} - ChoiceId: {c.ChoiceId} - Type: {c.Type} - MinValue: {c.MinValue}";
+            }
+
+            // EFFECTS
+            EffectsCollection effects = da.GetAllEffects();
+            foreach (Effect efx in effects)
+            {
+                lblDebug.Text += $"\n[EFFECT] Id: {efx.Id} - ChoiceId: {efx.ChoiceId} - Type: {efx.Type} - Amount: {efx.Amount} - Flag: {efx.FlagKey}";
+            }
+
+            // ENEMIES
+            EnemiesCollection enemies = da.GetAllEnemies();
+            foreach (Enemy en in enemies)
+            {
+                lblDebug.Text += $"\n[ENEMY] Id: {en.Id} - Name: {en.Name} - ScenarioId: {en.ScenarioId} - HP: {en.MaxHp}";
+            }
+
+            // SHOPS
+            ShopsCollection shops = da.GetAllShops();
+            foreach (Shop s in shops)
+            {
+                lblDebug.Text += $"\n[SHOP] Id: {s.Id} - Name: {s.Name} - ScenarioId: {s.ScenarioId}";
+            }
+
+            // PLAYER TEMPLATES
+            PlayerCharactersCollection players = da.GetAllPlayerCharacterTemplates();
+            foreach (PlayerCharacterTemplate p in players)
+            {
+                lblDebug.Text += $"\n[PLAYER] Id: {p.Id} - Name: {p.Name} - ScenarioId: {p.ScenarioId} - HP: {p.MaxHp}";
+            }
+
         }
     }
 

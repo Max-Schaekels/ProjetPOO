@@ -1,0 +1,155 @@
+{
+  "$type": "ProjetPOO.Model.Story.ChoicesCollection, ProjetPOO",
+  "$values": [
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 1,
+      "Label": "Entrer dans la grotte",
+      "TargetSceneId": 2,
+      "SceneId": 1,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 2,
+      "Label": "Fuir",
+      "TargetSceneId": 3,
+      "SceneId": 1,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 3,
+      "Label": "Acheter une potion",
+      "TargetSceneId": 4,
+      "SceneId": 2,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 4,
+      "Label": "Parler au marchand",
+      "TargetSceneId": 4,
+      "SceneId": 2,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 5,
+      "Label": "Combattre sans peur",
+      "TargetSceneId": 4,
+      "SceneId": 3,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 6,
+      "Label": "Prendre la fuite",
+      "TargetSceneId": 1,
+      "SceneId": 3,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 7,
+      "Label": "Monter les escaliers",
+      "TargetSceneId": 6,
+      "SceneId": 5,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 8,
+      "Label": "Explorer la tour",
+      "TargetSceneId": 7,
+      "SceneId": 5,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 9,
+      "Label": "",
+      "TargetSceneId": 8,
+      "SceneId": 6,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    },
+    {
+      "$type": "ProjetPOO.Model.Story.Choice, ProjetPOO",
+      "Id": 10,
+      "Label": "Continuer vers la place",
+      "TargetSceneId": 10,
+      "SceneId": 9,
+      "Conditions": {
+        "$type": "ProjetPOO.Model.Story.ConditionsCollection, ProjetPOO",
+        "$values": []
+      },
+      "Effects": {
+        "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
+        "$values": []
+      }
+    }
+  ]
+}

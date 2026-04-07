@@ -366,4 +366,4 @@ FodyWeavers.xsd
 Configuration/Datas/Config.local.txt
 
 # Config locale Json (chemins machine)
-Configuration/Datas/Config.local.Json.txt
+Configuration/Datas/ConfigJson.local.txt

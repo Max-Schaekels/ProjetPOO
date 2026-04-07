@@ -46,6 +46,18 @@
                 Text="Test Data Access"
                 Clicked="buttonTestDataAccess_Clicked"
                 Style="{StaticResource TestButton}" />
+            
+            <Button
+                x:Name="buttonTestConvertCsvToJson"
+                Text="Transfert Csv to Json"
+                Clicked="buttonTestConvertCsvToJson_Clicked"
+                Style="{StaticResource TestButton}" />
+            
+            <Button
+                x:Name="buttonTestJson"
+                Text="Test Json Data"
+                Clicked="buttonTestJson_Clicked"
+                Style="{StaticResource TestButton}" />
 
         </VerticalStackLayout>
     </ScrollView>
