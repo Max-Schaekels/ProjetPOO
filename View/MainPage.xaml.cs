@@ -5,7 +5,6 @@ using ProjetPOO.Model.Story.Enums;
 using Condition = ProjetPOO.Model.Story.Condition;
 using Effect = ProjetPOO.Model.Story.Effect;
 using ProjetPOO.Model.Combat.Enums;
-using ProjetPOO.Model.Data;
 using ProjetPOO.Model.Game;
 using ProjetPOO.Utilities.DataAccess.Files;
 using ProjetPOO.Utilities.DataAccess;
@@ -103,9 +102,7 @@ namespace ProjetPOO.View
             CombatState combatState = new CombatState(playerInstance, enemyInstance);
             SaveGame saveGame = new SaveGame("Sauvegarde de test", gameState);
 
-            //DataAccess dataAccess = new DataAccess();
-            //dataAccess.SaveScenario(scenario);
-            //dataAccess.SaveGame(saveGame);
+
         }
 
         private void buttonTestDataAccess_Clicked(object sender, EventArgs e)
