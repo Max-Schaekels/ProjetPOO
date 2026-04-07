@@ -2,3 +2,10 @@ Type;Id;ScenarioId;Name;MaxHp;Attack;Defense;Agility;EnemyType;RewardExperience;
 ENEMY;1;1;Petit slime;10;3;1;2;Slime;5;1;3;20;0;1;0;0;0
 ENEMY;2;1;Gobelin;18;5;3;4;Goblin;10;2;6;30;1;2;10;0;1
 ENEMY;3;2;Dragon;100;20;15;8;Dragon;100;20;50;80;2;5;50;1;2
+ENEMY;4;2;Slime des ruines;12;4;2;3;Slime;6;1;4;15;0;1;0;0;0
+ENEMY;5;3;Gobelin éclaireur;16;5;2;5;Goblin;9;2;5;25;0;1;5;0;1
+ENEMY;6;3;Dragonnet;40;9;6;6;Dragon;30;8;15;40;1;2;20;0;1
+ENEMY;7;4;Slime noir;14;4;3;2;Slime;7;2;4;20;0;1;0;0;0
+ENEMY;8;5;Gobelin vétéran;22;7;4;5;Goblin;14;4;8;30;1;2;10;0;1
+ENEMY;9;6;Dragon ancien;120;24;18;9;Dragon;120;25;60;85;2;5;55;1;2
+ENEMY;10;7;Slime royal;20;6;5;3;Slime;12;3;7;35;1;2;5;0;1

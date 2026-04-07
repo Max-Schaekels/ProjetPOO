@@ -1,3 +1,11 @@
 Type;Id;ScenarioId;Name;PotionPrice;KeyPrice
 SHOP;1;1;Marchand du village;10;25
 SHOP;2;1;Vieil alchimiste;15;40
+SHOP;3;2;Boutique secrète;20;50
+SHOP;4;3;Marchand ambulant;12;30
+SHOP;5;4;Échoppe du marais;14;35
+SHOP;6;5;Forgeron isolé;18;45
+SHOP;7;6;Herboriste du bois;11;28
+SHOP;8;7;Commerçant du fort;16;38
+SHOP;9;8;Gardien du temple;22;55
+SHOP;10;9;Vendeur du port;13;33

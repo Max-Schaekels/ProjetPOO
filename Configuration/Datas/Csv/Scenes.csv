@@ -3,3 +3,9 @@ SCENE;1;Entrée de la grotte;Vous êtes devant une grotte sombre.;Normal;1;grott
 SCENE;2;Marchand;Un marchand vous observe en silence.;Shop;1;;1;;;;;
 SCENE;3;Combat contre le gobelin;Un gobelin surgit des ombres et attaque.;Combat;1;;;4;5;6;7
 SCENE;4;Fin heureuse;Vous avez gagné le combat et trouvé la sortie.;End;1;;;;;;
+SCENE;5;Pied de la tour;Une vieille tour se dresse devant vous.;Normal;2;tour.jpg;;;;;;
+SCENE;6;Boutique de la tour;Un vieil alchimiste tient boutique ici.;Shop;2;;2;;;;;
+SCENE;7;Gardien draconique;Une créature protège l’escalier de pierre.;Combat;2;;;3;8;8;8
+SCENE;8;Salle du sommet;Vous atteignez le sommet de la tour.;End;2;;;;;;
+SCENE;9;Place abandonnée;Le village oublié est silencieux et désert.;Normal;3;village.jpg;;;;;;
+SCENE;10;Échoppe délabrée;Une petite boutique tient encore debout.;Shop;3;;3;;;;;

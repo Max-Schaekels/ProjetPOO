@@ -3,3 +3,9 @@ EFFECT;1;1;AddGold;10;
 EFFECT;2;1;SetFlag;;BossDefeated
 EFFECT;3;2;RemovePotion;1;
 EFFECT;4;2;RemoveFlag;;DoorOpened
+EFFECT;5;3;AddGold;5;
+EFFECT;6;4;SetFlag;;MerchantHelped
+EFFECT;7;5;AddGold;20;
+EFFECT;8;6;RemoveFlag;;BossDefeated
+EFFECT;9;7;SetFlag;;TowerEntered
+EFFECT;10;10;AddGold;50;

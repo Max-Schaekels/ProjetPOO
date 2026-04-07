@@ -2,3 +2,10 @@ Type;Id;Label;TargetSceneId;SceneId
 CHOICE;1;Entrer dans la grotte;2;1
 CHOICE;2;Fuir;3;1
 CHOICE;3;Acheter une potion;4;2
+CHOICE;4;Parler au marchand;4;2
+CHOICE;5;Combattre sans peur;4;3
+CHOICE;6;Prendre la fuite;1;3
+CHOICE;7;Monter les escaliers;6;5
+CHOICE;8;Explorer la tour;7;5
+CHOICE;9;Acheter une clé;8;6
+CHOICE;10;Continuer vers la place;10;9

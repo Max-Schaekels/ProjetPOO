@@ -1,3 +1,11 @@
 Type;Id;Title;Description;StartSceneId
 SCENARIO;1;Le réveil du héros;Un jeune aventurier se réveille dans un monde dangereux et doit survivre à ses premiers choix.;1
 SCENARIO;2;La tour interdite;Une ancienne tour attire les curieux, mais peu en reviennent vivants.;10
+SCENARIO;3;Le village oublié;Un ancien village abandonné cache encore quelques secrets.;9
+SCENARIO;4;Les ruines du marais;Des ruines humides émergent d’un marais silencieux.;1
+SCENARIO;5;La caverne rouge;Une grotte teintée de rouge semble abriter un danger ancien.;5
+SCENARIO;6;Le bois des murmures;Une forêt étrange semble chuchoter à ceux qui s’y aventurent.;9
+SCENARIO;7;Le fort en ruine;Les murs brisés d’un ancien fort abritent encore des ennemis.;1
+SCENARIO;8;Le temple scellé;Un temple ancien reste fermé depuis des siècles.;5
+SCENARIO;9;Le port noyé;Un ancien port partiellement englouti abrite des créatures hostiles.;9
+SCENARIO;10;La montagne noire;Au sommet d’une montagne sombre sommeille une terrible menace.;1

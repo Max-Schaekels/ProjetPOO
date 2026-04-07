@@ -2,3 +2,10 @@ Type;Id;ChoiceId;ConditionType;MinValue
 CONDITION;1;1;HasKey;1
 CONDITION;2;1;MinGold;10
 CONDITION;3;2;HasPotion;2
+CONDITION;4;3;MinGold;5
+CONDITION;5;4;HasKey;1
+CONDITION;6;5;HasPotion;1
+CONDITION;7;6;MinGold;0
+CONDITION;8;7;HasKey;1
+CONDITION;9;8;MinGold;15
+CONDITION;10;10;HasPotion;1
