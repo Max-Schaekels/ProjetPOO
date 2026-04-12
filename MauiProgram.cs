@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using ProjetPOO.Utilities.DataAccess;
 using ProjetPOO.Utilities.DataAccess.Files;
 using ProjetPOO.Utilities.Interfaces;
@@ -18,6 +19,7 @@ namespace ProjetPOO
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
