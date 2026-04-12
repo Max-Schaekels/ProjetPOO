@@ -10,7 +10,7 @@
     Title="ProjetPOO">
 
     <ShellContent
-        Title="Home"
+        Title=""
         ContentTemplate="{DataTemplate view:MainPage}"
         Route="MainPage" />
 

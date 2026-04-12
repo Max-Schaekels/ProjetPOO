@@ -8,6 +8,7 @@ using ProjetPOO.Model.Combat.Enums;
 using ProjetPOO.Model.Game;
 using ProjetPOO.Utilities.DataAccess.Files;
 using ProjetPOO.Utilities.DataAccess;
+using ProjetPOO.ViewModel;
 
 
 namespace ProjetPOO.View
@@ -21,9 +22,10 @@ namespace ProjetPOO.View
         private const string CONFIG_HOME_JSON = @"C:\ProjetPOO\Max-Schaekels\ProjetPOO\Configuration\Datas\ConfigJson.local.txt";
         private const string CONFIG_PORT_JSON = @"C:\POO\Brasserie\Configuration\Datas\ConfigJson.local.txt";
 
-        public MainPage()
+        public MainPage(MainPageViewModel viewModel)
         {
             InitializeComponent();
+            BindingContext = viewModel;
         }
 
         private void buttonCreateLoot_Clicked(object sender, EventArgs e)
@@ -264,6 +266,7 @@ namespace ProjetPOO.View
             }
 
         }
+
     }
 
 }

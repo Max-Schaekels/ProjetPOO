@@ -2,64 +2,126 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProjetPOO.View.MainPage">
-    
+
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style x:Key= "TestButton" TargetType ="Button">
+            <Style x:Key="TestButton" TargetType="Button">
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="FontSize" Value="12" />
-                <Setter Property="BackgroundColor" Value="Grey"/>
+                <Setter Property="WidthRequest" Value="220" />
+                <Setter Property="BackgroundColor" Value="Grey" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="MainActionButton" TargetType="Button">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="WidthRequest" Value="180" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BackgroundColor" Value="#3A6EA5" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="Margin" Value="0,8,0,0" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+        <Grid Margin="0,20,0,20"
+              ColumnSpacing="20">
 
-            <Label
-            x:Name="lblDebug"
-            Text="debug Text"
-            />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-            <Button
-                x:Name="buttonCreateLoot"
-                Text="Créer un loot"
-                Clicked="buttonCreateLoot_Clicked"
-                Style="{StaticResource TestButton}" />
+            <!-- Colonne gauche : tests -->
+            <VerticalStackLayout Grid.Column="0"
+                                 Padding="10,0"
+                                 Spacing="8">
 
-            <Button
-                 x:Name="buttonCreateInventory"
-                 Text="Créer un inventaire"
-                 Clicked="buttonCreateInventory_Clicked"
-                 Style="{StaticResource TestButton}" />
+                <Label x:Name="lblDebug"
+                       Text="debug Text" />
 
-            <Button
-                x:Name="buttonInitialiseAllClass"
-                Text="Initialiser toutes les classes"
-                Clicked="buttonInitialiseAllClass_Clicked"
-                Style="{StaticResource TestButton}" />
-            
-            <Button
-                x:Name="buttonTestDataAccess"
-                Text="Test Data Access"
-                Clicked="buttonTestDataAccess_Clicked"
-                Style="{StaticResource TestButton}" />
-            
-            <Button
-                x:Name="buttonTestConvertCsvToJson"
-                Text="Transfert Csv to Json"
-                Clicked="buttonTestConvertCsvToJson_Clicked"
-                Style="{StaticResource TestButton}" />
-            
-            <Button
-                x:Name="buttonTestJson"
-                Text="Test Json Data"
-                Clicked="buttonTestJson_Clicked"
-                Style="{StaticResource TestButton}" />
+                <Button x:Name="buttonCreateLoot"
+                        Text="Créer un loot"
+                        Clicked="buttonCreateLoot_Clicked"
+                        Style="{StaticResource TestButton}" />
 
-        </VerticalStackLayout>
+                <Button x:Name="buttonCreateInventory"
+                        Text="Créer un inventaire"
+                        Clicked="buttonCreateInventory_Clicked"
+                        Style="{StaticResource TestButton}" />
+
+                <Button x:Name="buttonInitialiseAllClass"
+                        Text="Initialiser toutes les classes"
+                        Clicked="buttonInitialiseAllClass_Clicked"
+                        Style="{StaticResource TestButton}" />
+
+                <Button x:Name="buttonTestDataAccess"
+                        Text="Test Data Access"
+                        Clicked="buttonTestDataAccess_Clicked"
+                        Style="{StaticResource TestButton}" />
+
+                <Button x:Name="buttonTestConvertCsvToJson"
+                        Text="Transfert Csv to Json"
+                        Clicked="buttonTestConvertCsvToJson_Clicked"
+                        Style="{StaticResource TestButton}" />
+
+                <Button x:Name="buttonTestJson"
+                        Text="Test Json Data"
+                        Clicked="buttonTestJson_Clicked"
+                        Style="{StaticResource TestButton}" />
+            </VerticalStackLayout>
+
+            <!-- Colonne centre : accueil -->
+            <VerticalStackLayout Grid.Column="1"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center">
+
+                <Frame Padding="30"
+                       CornerRadius="15"
+                       HasShadow="True"
+                       BackgroundColor="#F2F2F2"
+                       WidthRequest="320">
+
+                    <VerticalStackLayout Spacing="15"
+                                         HorizontalOptions="Center">
+
+                        <Label Text="Projet POO"
+                               FontSize="26"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="#222222" />
+
+                        <Label Text="Éditeur et moteur de jeu narratif"
+                               FontSize="14"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#666666" />
+
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="#D0D0D0"
+                                 Margin="0,5,0,5" />
+
+                        <Button Text="Éditer"
+                                Command="{Binding EditerCommand}"
+                                Style="{StaticResource MainActionButton}" />
+
+                        <Button Text="Jouer"
+                                Command="{Binding JouerCommand}"
+                                Style="{StaticResource MainActionButton}" />
+
+                        <Button Text="Quitter"
+                                Command="{Binding QuitterCommand}"
+                                Style="{StaticResource MainActionButton}" />
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+
+            <!-- Colonne droite : vide -->
+            <VerticalStackLayout Grid.Column="2" />
+        </Grid>
     </ScrollView>
 
 </ContentPage>

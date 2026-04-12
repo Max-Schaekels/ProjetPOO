@@ -4,6 +4,8 @@ using ProjetPOO.Utilities.DataAccess;
 using ProjetPOO.Utilities.DataAccess.Files;
 using ProjetPOO.Utilities.Interfaces;
 using ProjetPOO.Utilities.Services;
+using ProjetPOO.View;
+using ProjetPOO.ViewModel;
 
 namespace ProjetPOO
 {
@@ -31,6 +33,9 @@ namespace ProjetPOO
             //Singleton for AlertServiceDisplay
             builder.Services.AddSingleton<IAlertService, AlertServiceDisplay>();
             builder.Services.AddSingleton<IDataAccess, DataAccessJsonFile>();
+
+            builder.Services.AddTransient<MainPageViewModel>();
+            builder.Services.AddTransient<MainPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
