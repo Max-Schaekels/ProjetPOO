@@ -122,6 +122,45 @@ namespace ProjetPOO.Model.Story
             }
         }
 
+        public int ScenesCount
+        {
+            get
+            {
+                if (Scenes == null)
+                {
+                    return 0;
+                }
+
+                return Scenes.Count;
+            }
+        }
+
+        public int EnemiesCount
+        {
+            get
+            {
+                if (Enemies == null)
+                {
+                    return 0;
+                }
+
+                return Enemies.Count;
+            }
+        }
+
+        public int ShopsCount
+        {
+            get
+            {
+                if (Shops == null)
+                {
+                    return 0;
+                }
+
+                return Shops.Count;
+            }
+        }
+
         public Scenario(string title, string description)
         {            
 

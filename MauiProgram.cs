@@ -37,6 +37,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<MainPageViewModel>();
             builder.Services.AddTransient<MainPage>();
 
+            builder.Services.AddTransient<ScenarioListViewModel>();
+            builder.Services.AddTransient<ScenarioListPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

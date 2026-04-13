@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using ProjetPOO.Utilities.Interfaces;
+using ProjetPOO.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,24 +11,26 @@ namespace ProjetPOO.ViewModel
 {
     public partial class MainPageViewModel : BaseViewModel
     {
-        public MainPageViewModel(IAlertService alertService, IDataAccess dataAccess) : base(alertService, dataAccess)
+        private readonly ScenarioListPage scenarioListPage;
+        public MainPageViewModel(IAlertService alertService, IDataAccess dataAccess, ScenarioListPage scenarioListPage) : base(alertService, dataAccess)
         {
+            this.scenarioListPage = scenarioListPage;
             PageTitle = "Accueil";
         }
 
-        [RelayCommand]
+        [RelayCommand()]
         private async Task Editer()
         {
-            await alertService.ShowAlert("Édition", "La partie édition sera ajoutée plus tard.");
+            await Shell.Current.Navigation.PushAsync(scenarioListPage);
         }
 
-        [RelayCommand]
+        [RelayCommand()]
         private async Task Jouer()
         {
             await alertService.ShowAlert("Jeu", "La partie jeu sera ajoutée plus tard.");
         }
 
-        [RelayCommand]
+        [RelayCommand()]
         private void Quitter()
         {
             Application.Current?.Quit();

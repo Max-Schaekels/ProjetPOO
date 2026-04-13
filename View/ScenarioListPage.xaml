@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProjetPOO.View.ScenarioListPage"
+             BackgroundColor="#F3F3F3">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="HeaderButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#2D2D32" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="18,10" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="ActionButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="WidthRequest" Value="42" />
+                <Setter Property="HeightRequest" Value="42" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*"
+          Padding="20">
+
+        <!-- Header -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="Auto,*,Auto"
+              Margin="0,0,0,20">
+
+            <Button Grid.Column="0"
+                    Text="← Retour"
+                    Command="{Binding BackCommand}"
+                    Style="{StaticResource HeaderButtonStyle}" />
+
+            <Label Grid.Column="1"
+                   Text="Mes Scénarios"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="#111111"
+                   HorizontalOptions="Start"
+                   VerticalOptions="Center"
+                   Margin="20,0,0,0" />
+
+            <Button Grid.Column="2"
+                    Text="+ Nouveau Scénario"
+                    Command="{Binding NewScenarioCommand}"
+                    Style="{StaticResource HeaderButtonStyle}" />
+        </Grid>
+
+        <!-- Liste -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Scenarios}"
+                        SelectionMode="None">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="30"
+                                     Spacing="12"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
+                    <Label Text="Aucun scénario disponible"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#222222"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label Text="Clique sur &quot;Nouveau Scénario&quot; pour commencer."
+                           FontSize="14"
+                           TextColor="#777777"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,18"
+                           Padding="20"
+                           CornerRadius="15"
+                           HasShadow="False"
+                           BorderColor="#DDDDDD"
+                           BackgroundColor="White">
+
+                        <Grid ColumnDefinitions="*,Auto"
+                              RowDefinitions="Auto,Auto,Auto"
+                              ColumnSpacing="20"
+                              RowSpacing="12">
+
+                            <!-- Titre -->
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="{Binding Title}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#111111"
+                                   LineBreakMode="TailTruncation" />
+
+                            <!-- Description -->
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="{Binding Description}"
+                                   FontSize="14"
+                                   TextColor="#6B7280"
+                                   LineBreakMode="WordWrap"
+                                   MaxLines="2" />
+
+                            <!-- Infos -->
+                            <HorizontalStackLayout Grid.Row="2"
+                                                   Grid.Column="0"
+                                                   Spacing="12">
+
+                                <Label Text="{Binding ScenesCount, StringFormat='{}{0} scènes'}"
+                                       FontSize="13"
+                                       TextColor="#7A7A7A" />
+
+                                <Label Text="•"
+                                       FontSize="13"
+                                       TextColor="#7A7A7A" />
+
+                                <Label Text="{Binding EnemiesCount, StringFormat='{}{0} ennemis'}"
+                                       FontSize="13"
+                                       TextColor="#7A7A7A" />
+
+                                <Label Text="•"
+                                       FontSize="13"
+                                       TextColor="#7A7A7A" />
+
+                                <Label Text="{Binding ShopsCount, StringFormat='{}{0} boutiques'}"
+                                       FontSize="13"
+                                       TextColor="#7A7A7A" />
+                            </HorizontalStackLayout>
+
+                            <!-- Boutons -->
+                            <HorizontalStackLayout Grid.Row="0"
+                                                   Grid.Column="1"
+                                                   Grid.RowSpan="3"
+                                                   Spacing="10"
+                                                   HorizontalOptions="End"
+                                                   VerticalOptions="Start">
+
+                                <Button Text="✎"
+                                        BackgroundColor="#2D2D32"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditScenarioCommand}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource ActionButtonStyle}" />
+
+                                <Button Text="🗑"
+                                        BackgroundColor="#F04438"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteScenarioCommand}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource ActionButtonStyle}" />
+                            </HorizontalStackLayout>
+
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+</ContentPage>
