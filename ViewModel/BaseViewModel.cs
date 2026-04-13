@@ -12,9 +12,12 @@ namespace ProjetPOO.ViewModel
     {
         protected readonly IAlertService alertService;
 
-        public BaseViewModel(IAlertService alertService)
+        protected readonly IDataAccess dataAccess;
+
+        public BaseViewModel(IAlertService alertService, IDataAccess dataAccessService)
         {
             this.alertService = alertService;
+            dataAccess = dataAccessService;
             pageTitle = string.Empty;
             isBusy = false;
         }

@@ -10,7 +10,7 @@ namespace ProjetPOO.ViewModel
 {
     public partial class MainPageViewModel : BaseViewModel
     {
-        public MainPageViewModel(IAlertService alertService) : base(alertService)
+        public MainPageViewModel(IAlertService alertService, IDataAccess dataAccess) : base(alertService, dataAccess)
         {
             PageTitle = "Accueil";
         }
