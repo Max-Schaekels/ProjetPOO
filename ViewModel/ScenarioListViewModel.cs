@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.Interfaces;
+using ProjetPOO.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,10 +13,12 @@ namespace ProjetPOO.ViewModel
 {
     public partial class ScenarioListViewModel : BaseViewModel
     {
-        public ScenarioListViewModel(IAlertService alertService, IDataAccess dataAccess) : base(alertService, dataAccess)
+        private readonly ScenarioEditorPage scenarioEditorPage;
+        public ScenarioListViewModel(IAlertService alertService, IDataAccess dataAccess, ScenarioEditorPage scenarioEditorPage) : base(alertService, dataAccess)
         {
             PageTitle = "Liste des scénarios";
             Scenarios = new ObservableCollection<Scenario>(dataAccess.GetAllScenarios());
+            this.scenarioEditorPage = scenarioEditorPage;
         }
 
         public ObservableCollection<Scenario> Scenarios { get; set; }
@@ -23,7 +26,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task NewScenario()
         {
-            await alertService.ShowAlert("Nouveau scénario", "La création de scénario sera ajoutée plus tard.");
+            await Shell.Current.Navigation.PushAsync(scenarioEditorPage);
         }
 
         [RelayCommand()]

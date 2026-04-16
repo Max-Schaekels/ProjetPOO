@@ -219,13 +219,7 @@ namespace ProjetPOO.Utilities.DataAccess
                 ConditionsCollection conditions = GetConditionsByChoiceId(dto.Id);
                 EffectsCollection effects = GetEffectsByChoiceId(dto.Id);
 
-                Choice choice = Choice.Load(
-                    dto.Id,
-                    GetSafeLabel(dto.Label),
-                    dto.TargetSceneId,
-                    dto.SceneId,
-                    conditions,
-                    effects);
+                Choice choice = Choice.Load( dto.Id,GetSafeLabel(dto.Label), dto.TargetSceneId,dto.SceneId,conditions,effects);
 
                 choices.Add(choice);
             }
@@ -256,19 +250,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
                 ChoicesCollection choices = GetChoicesBySceneId(dto.Id);
 
-                Scene scene = Scene.Load(
-                    dto.Id,
-                    GetSafeTitle(dto.Title),
-                    GetSafeSceneText(dto.Text),
-                    dto.Type,
-                    dto.ScenarioId,
-                    dto.PictureFileName,
-                    dto.ShopId,
-                    dto.EnemyId,
-                    dto.FleeTargetSceneId,
-                    dto.DefeatTargetSceneId,
-                    dto.VictoryTargetSceneId,
-                    choices);
+                Scene scene = Scene.Load(dto.Id, GetSafeTitle(dto.Title),GetSafeSceneText(dto.Text),dto.Type,dto.ScenarioId,dto.PictureFileName, dto.ShopId,dto.EnemyId, dto.FleeTargetSceneId, dto.DefeatTargetSceneId,dto.VictoryTargetSceneId,choices);
 
                 scenes.Add(scene);
             }
@@ -297,24 +279,7 @@ namespace ProjetPOO.Utilities.DataAccess
             {
                 EnemyJsonDto dto = dtos[i];
 
-                Enemy enemy = Enemy.Load(
-                    dto.Id,
-                    dto.ScenarioId,
-                    GetSafeName(dto.Name, "Enemy chargé"),
-                    dto.MaxHp,
-                    dto.Attack,
-                    dto.Defense,
-                    dto.Agility,
-                    dto.Type,
-                    dto.RewardExperience,
-                    dto.RewardGoldMin,
-                    dto.RewardGoldMax,
-                    dto.PotionDropChance,
-                    dto.PotionAmountMin,
-                    dto.PotionAmountMax,
-                    dto.KeyDropChance,
-                    dto.KeyAmountMin,
-                    dto.KeyAmountMax);
+                Enemy enemy = Enemy.Load(dto.Id,dto.ScenarioId, GetSafeName(dto.Name, "Enemy chargé"), dto.MaxHp,dto.Attack, dto.Defense,dto.Agility,dto.Type,dto.RewardExperience, dto.RewardGoldMin, dto.RewardGoldMax,dto.PotionDropChance,dto.PotionAmountMin,dto.PotionAmountMax,dto.KeyDropChance,dto.KeyAmountMin, dto.KeyAmountMax);
 
                 enemies.Add(enemy);
             }
@@ -343,12 +308,7 @@ namespace ProjetPOO.Utilities.DataAccess
             {
                 ShopJsonDto dto = dtos[i];
 
-                Shop shop = Shop.Load(
-                    dto.Id,
-                    dto.ScenarioId,
-                    GetSafeName(dto.Name, "Shop chargé"),
-                    dto.PotionPrice,
-                    dto.KeyPrice);
+                Shop shop = Shop.Load( dto.Id,dto.ScenarioId,GetSafeName(dto.Name, "Shop chargé"), dto.PotionPrice, dto.KeyPrice);
 
                 shops.Add(shop);
             }
@@ -377,18 +337,9 @@ namespace ProjetPOO.Utilities.DataAccess
             {
                 PlayerCharacterTemplateJsonDto dto = dtos[i];
 
-                PlayerCharacterTemplate player = PlayerCharacterTemplate.Load(
-                    dto.Id,
-                    dto.ScenarioId,
-                    GetSafeName(dto.Name, "Player chargé"),
-                    dto.MaxHp,
-                    dto.Attack,
-                    dto.Defense,
-                    dto.Agility,
-                    dto.StartingExperience,
-                    dto.StartingLevel);
+                PlayerCharacterTemplate player = PlayerCharacterTemplate.Load(dto.Id, dto.ScenarioId, GetSafeName(dto.Name, "Player chargé"), dto.MaxHp, dto.Attack, dto.Defense,dto.Agility,dto.StartingExperience,dto.StartingLevel);
 
-                players.Add(player);
+                players.AddPlayer(player);
             }
 
             cachedPlayerCharacters = players;
@@ -420,15 +371,7 @@ namespace ProjetPOO.Utilities.DataAccess
                 ShopsCollection shops = GetShopsByScenarioId(dto.Id);
                 PlayerCharactersCollection players = GetPlayerCharacterTemplatesByScenarioId(dto.Id);
 
-                Scenario scenario = Scenario.Load(
-                    dto.Id,
-                    GetSafeTitle(dto.Title),
-                    GetSafeDescription(dto.Description),
-                    dto.StartSceneId,
-                    scenes,
-                    enemies,
-                    shops,
-                    players);
+                Scenario scenario = Scenario.Load( dto.Id, GetSafeTitle(dto.Title),GetSafeDescription(dto.Description),dto.StartSceneId,scenes, enemies, shops,players);
 
                 scenarios.Add(scenario);
             }
@@ -886,7 +829,23 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override void UpdateChoice(Choice choice)
         {
-            throw new NotImplementedException();
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("CHOICES");
+
+            if (IsValidAccessPath)
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                };
+
+                string json = JsonConvert.SerializeObject(choice, Formatting.Indented, settings);
+                File.WriteAllText(AccessPath, json);
+                ClearCache();
+            }
+            else
+            {
+                Console.WriteLine("UpdateChoice error can't update datasource file");
+            }
         }
 
         public override void UpdateCondition(Condition condition)

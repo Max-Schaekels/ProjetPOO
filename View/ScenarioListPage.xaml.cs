@@ -9,4 +9,9 @@ public partial class ScenarioListPage : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
 	}
+
+    private void ButtonScrollToTop_Clicked(object sender, EventArgs e)
+    {
+        ScenarioCollectionView.ScrollTo(0, position: ScrollToPosition.Start, animate: true);
+    }
 }

@@ -66,6 +66,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="View\ScenarioEditorPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\ScenarioListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
