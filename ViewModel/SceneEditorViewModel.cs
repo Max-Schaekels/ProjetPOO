@@ -5,19 +5,19 @@ using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Model.Story.Enums;
 using ProjetPOO.Utilities.Interfaces;
-using ProjetPOO.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace ProjetPOO.ViewModel
 {
     public partial class SceneEditorViewModel : BaseViewModel
     {
         
-        public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, ScenarioEditorPage scenarioEditorPage) : base(alertService, dataAccessService)
+        public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
         {
             PageTitle = "Éditeur de scène";
             sceneTitle = "Nouvelle Scène";
@@ -28,7 +28,13 @@ namespace ProjetPOO.ViewModel
             enemies = new EnemiesCollection();
             shops = new ShopsCollection();
             choices = new ChoicesCollection();
-            sceneTypes = new List<SceneType>();
+            sceneTypes = new List<SceneType>
+            {
+                SceneType.Normal,
+                SceneType.Combat,
+                SceneType.Shop,
+                SceneType.End
+            };
             availableScenesForCombatTargets = new ScenesCollection();
 
             selectedEnemy = null;
@@ -36,6 +42,9 @@ namespace ProjetPOO.ViewModel
             selectedVictoryTargetScene = null;
             selectedDefeatTargetScene = null;
             selectedFleeTargetScene = null;
+
+            SelectedImageFileName = "Aucune image sélectionnée";
+
         }
 
         [ObservableProperty]
@@ -135,6 +144,35 @@ namespace ProjetPOO.ViewModel
                 return SelectedSceneType == SceneType.Shop;
             }
         }
+        private string _selectedImageFileName;
+        public string SelectedImageFileName
+        {
+            get => _selectedImageFileName;
+            set
+            {
+                _selectedImageFileName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ImageSource? _sceneImagePreview;
+        public ImageSource? SceneImagePreview
+        {
+            get => _sceneImagePreview;
+            set
+            {
+                _sceneImagePreview = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasSceneImagePreview));
+                OnPropertyChanged(nameof(HasNoSceneImagePreview));
+            }
+        }
+
+
+
+        public bool HasSceneImagePreview => SceneImagePreview != null;
+
+        public bool HasNoSceneImagePreview => SceneImagePreview == null;
 
         partial void OnSelectedSceneTypeChanged(SceneType value)
         {
@@ -170,5 +208,14 @@ namespace ProjetPOO.ViewModel
         {
             await alertService.ShowAlert("Supprimer choix", $"La suppression du choix '{choice.Label}' sera ajoutée plus tard.");
         }
+
+
+        [RelayCommand]
+        private async Task BrowseImage()
+        {
+            await alertService.ShowAlert("Image", "La sélection d'image sera implémentée plus tard.");
+        }
+
+
     }
 }

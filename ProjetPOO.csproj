@@ -77,4 +77,8 @@
 	  </MauiXaml>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Configuration\Datas\Images\Scenes\" />
+	</ItemGroup>
+
 </Project>
