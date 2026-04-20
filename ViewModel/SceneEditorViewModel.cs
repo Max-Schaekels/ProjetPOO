@@ -16,11 +16,10 @@ namespace ProjetPOO.ViewModel
 {
     public partial class SceneEditorViewModel : BaseViewModel
     {
-        private readonly ScenarioEditorPage scenarioEditorPage;
+        
         public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, ScenarioEditorPage scenarioEditorPage) : base(alertService, dataAccessService)
         {
             PageTitle = "Éditeur de scène";
-            this.scenarioEditorPage = scenarioEditorPage;
             sceneTitle = "Nouvelle Scène";
             sceneText = string.Empty;
             selectedSceneType = SceneType.Normal;
