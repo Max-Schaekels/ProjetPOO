@@ -8,7 +8,7 @@ namespace ProjetPOO.Model.Story
     {
         private const int MINIMUM_TITLE_LENGTH = 3;
         private const int MAX_TITLE_LENGTH = 200;
-        public static readonly string[] ALLOWED_PICTURE_FILE_FORMATS = { "jpg", "png" };
+        public static readonly string[] ALLOWED_PICTURE_FILE_FORMATS = { "jpg","jpeg","png" };
         private const int MINIMUM_TEXT_LENGTH = 10;
 
         private static int _nextId = 1;

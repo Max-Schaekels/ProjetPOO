@@ -10,15 +10,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjetPOO.Utilities.DataAccess.Files;
+using System.IO;
+using System.Text;
+using ProjetPOO.Utilities.EntriesValidation;
 
 
 namespace ProjetPOO.ViewModel
 {
     public partial class SceneEditorViewModel : BaseViewModel
     {
-        
-        public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
+        private readonly DataFilesManager _dataFilesManager;
+        public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, DataFilesManager dataFilesManager) : base(alertService, dataAccessService)
         {
+            _dataFilesManager = dataFilesManager;
             PageTitle = "Éditeur de scène";
             sceneTitle = "Nouvelle Scène";
             sceneText = string.Empty;
@@ -173,7 +178,91 @@ namespace ProjetPOO.ViewModel
         public bool HasSceneImagePreview => SceneImagePreview != null;
 
         public bool HasNoSceneImagePreview => SceneImagePreview == null;
+        private string GetScenesImagesDirectoryPath()
+        {
+            if (string.IsNullOrWhiteSpace(DataFile.FilesPathDir))
+            {
+                throw new InvalidOperationException("Le dossier de données n'est pas configuré.");
+            }
 
+            string? jsonDirectoryPath = DataFile.FilesPathDir;
+
+            DirectoryInfo? jsonDirectory = new DirectoryInfo(jsonDirectoryPath);
+            DirectoryInfo? datasDirectory = jsonDirectory.Parent;
+
+            if (datasDirectory == null)
+            {
+                throw new InvalidOperationException("Impossible de retrouver le dossier Datas.");
+            }
+
+            string imagesDirectoryPath = Path.Combine(datasDirectory.FullName, "Images", "Scenes");
+            return imagesDirectoryPath;
+        }
+
+        private string BuildSafeImageFileName(string originalFileName)
+        {
+            string extension = Path.GetExtension(originalFileName).ToLowerInvariant();
+
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                extension = ".jpg";
+            }
+
+            string safeTitle = BuildSafeFileNameBase(SceneTitle);
+
+            if (string.IsNullOrWhiteSpace(safeTitle))
+            {
+                safeTitle = "scene";
+            }
+
+            string finalFileName = safeTitle + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + extension;
+            return finalFileName;
+        }
+
+        private string BuildSafeFileNameBase(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "scene";
+            }
+
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                char currentChar = value[i];
+
+                if (char.IsLetterOrDigit(currentChar))
+                {
+                    builder.Append(currentChar);
+                }
+                else if (currentChar == ' ' || currentChar == '-' || currentChar == '_')
+                {
+                    builder.Append('_');
+                }
+            }
+
+            string result = builder.ToString().Trim('_');
+
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                return "scene";
+            }
+
+            return result;
+        }
+
+        private void UpdateImagePreview(string fullImagePath)
+        {
+            if (File.Exists(fullImagePath))
+            {
+                SceneImagePreview = ImageSource.FromFile(fullImagePath);
+            }
+            else
+            {
+                SceneImagePreview = null;
+            }
+        }
         partial void OnSelectedSceneTypeChanged(SceneType value)
         {
             OnPropertyChanged(nameof(IsNormalScene));
@@ -213,7 +302,54 @@ namespace ProjetPOO.ViewModel
         [RelayCommand]
         private async Task BrowseImage()
         {
-            await alertService.ShowAlert("Image", "La sélection d'image sera implémentée plus tard.");
+            try
+            {
+                PickOptions pickOptions = new PickOptions
+                {
+                    PickerTitle = "Choisir une image",
+                    FileTypes = FilePickerFileType.Images
+                };
+
+                FileResult? fileResult = await FilePicker.Default.PickAsync(pickOptions);
+
+                if (fileResult == null)
+                {
+                    return;
+                }
+
+                string selectedFileName = fileResult.FileName;
+
+                if (!ValidUtils.CheckFileFormat(selectedFileName, Scene.ALLOWED_PICTURE_FILE_FORMATS) &&
+                    !selectedFileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+                {
+                    await alertService.ShowAlert("Image invalide", "Veuillez sélectionner une image au format .jpg, .jpeg ou .png.");
+                    return;
+                }
+
+                string imagesDirectoryPath = GetScenesImagesDirectoryPath();
+
+                if (!Directory.Exists(imagesDirectoryPath))
+                {
+                    Directory.CreateDirectory(imagesDirectoryPath);
+                }
+
+                string newFileName = BuildSafeImageFileName(selectedFileName);
+                string destinationPath = Path.Combine(imagesDirectoryPath, newFileName);
+
+                using Stream sourceStream = await fileResult.OpenReadAsync();
+                using FileStream destinationStream = File.Create(destinationPath);
+
+                await sourceStream.CopyToAsync(destinationStream);
+
+                PictureFileName = newFileName;
+                SelectedImageFileName = newFileName;
+
+                UpdateImagePreview(destinationPath);
+            }
+            catch (Exception ex)
+            {
+                await alertService.ShowAlert("Erreur", "Impossible de sélectionner l'image : " + ex.Message);
+            }
         }
 
 
