@@ -9,7 +9,7 @@
 
             <Style x:Key="HeaderButtonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="BackgroundColor" Value="#2D2D32" />
+                <Setter Property="BackgroundColor" Value="#3B82F6" />
                 <Setter Property="CornerRadius" Value="10" />
                 <Setter Property="Padding" Value="18,10" />
                 <Setter Property="FontSize" Value="14" />
@@ -25,7 +25,7 @@
 
             <Style x:Key="ScrollTopButtonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="BackgroundColor" Value="#2D2D32" />
+                <Setter Property="BackgroundColor" Value="#3B82F6" />
                 <Setter Property="CornerRadius" Value="25" />
                 <Setter Property="WidthRequest" Value="50" />
                 <Setter Property="HeightRequest" Value="50" />

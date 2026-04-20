@@ -339,7 +339,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
                 PlayerCharacterTemplate player = PlayerCharacterTemplate.Load(dto.Id, dto.ScenarioId, GetSafeName(dto.Name, "Player chargé"), dto.MaxHp, dto.Attack, dto.Defense,dto.Agility,dto.StartingExperience,dto.StartingLevel);
 
-                players.AddPlayer(player);
+                players.Add(player);
             }
 
             cachedPlayerCharacters = players;

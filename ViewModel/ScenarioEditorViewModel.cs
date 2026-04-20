@@ -11,11 +11,11 @@ namespace ProjetPOO.ViewModel
 {
     public partial class ScenarioEditorViewModel : BaseViewModel
     {
-        
-        public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
+        private readonly SceneEditorPage sceneEditorPage;
+        public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage) : base(alertService, dataAccessService)
         {
             PageTitle = "Édition scénario";
-            
+            this.sceneEditorPage = sceneEditorPage;
         }
 
         [RelayCommand()]
@@ -33,7 +33,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task AddScene()
         {
-            await alertService.ShowAlert("Ajouter scène", "L'ajout de scène sera ajouté plus tard.");
+            await Shell.Current.Navigation.PushAsync(sceneEditorPage);
         }
 
         [RelayCommand()]

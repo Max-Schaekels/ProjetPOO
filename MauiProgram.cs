@@ -28,7 +28,7 @@ namespace ProjetPOO
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            builder.Services.AddSingleton<DataFilesManager>(new DataFilesManager(CONFIG_PORT_JSON));
+            builder.Services.AddSingleton<DataFilesManager>(new DataFilesManager(CONFIG_HOME_JSON));
 
             //Singleton for AlertServiceDisplay
             builder.Services.AddSingleton<IAlertService, AlertServiceDisplay>();
@@ -42,6 +42,9 @@ namespace ProjetPOO
 
             builder.Services.AddTransient<ScenarioEditorViewModel>();
             builder.Services.AddTransient<ScenarioEditorPage>();
+
+            builder.Services.AddTransient<SceneEditorViewModel>();
+            builder.Services.AddTransient<SceneEditorPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
