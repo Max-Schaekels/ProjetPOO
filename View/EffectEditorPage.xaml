@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ProjetPOO.View.EffectEditorPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#f3f3f3">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
+
+            <Button
+                Text="← Retour au choix"
+                Command="{Binding BackCommand}"
+                HorizontalOptions="Start"
+                BackgroundColor="Transparent"
+                TextColor="#333333" />
+
+            <Label
+                Text="Éditeur d'effet"
+                FontSize="28"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Border
+                BackgroundColor="White"
+                Stroke="#dddddd"
+                StrokeThickness="1"
+                Padding="20">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="18">
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            Text="Type d'effet"
+                            FontSize="16"
+                            FontAttributes="Bold" />
+
+                        <Picker
+                            Title="Choisir un type"
+                            ItemsSource="{Binding EffectTypes}"
+                            SelectedItem="{Binding SelectedEffectType}"
+                            BackgroundColor="#f5f5f7" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout
+                        Spacing="8"
+                        IsVisible="{Binding IsAmountVisible}">
+
+                        <Label
+                            Text="Quantité"
+                            FontSize="16"
+                            FontAttributes="Bold" />
+
+                        <Entry
+                            Text="{Binding Amount}"
+                            Keyboard="Numeric"
+                            Placeholder="Exemple : 10"
+                            BackgroundColor="#f5f5f7" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout
+                        Spacing="8"
+                        IsVisible="{Binding IsFlagKeyVisible}">
+
+                        <Label
+                            Text="Nom du repère"
+                            FontSize="16"
+                            FontAttributes="Bold" />
+
+                        <Entry
+                            Text="{Binding FlagKey}"
+                            Placeholder="Exemple : porte_ouverte"
+                            BackgroundColor="#f5f5f7" />
+
+                        <Label
+                            Text="Un repère sert à mémoriser un état du scénario, par exemple : porte ouverte, personnage rencontré, quête commencée."
+                            TextColor="#888888"
+                            FontSize="13" />
+                    </VerticalStackLayout>
+
+                    <Label
+                        Text="La validation et la sauvegarde réelle seront ajoutées avec la base de données."
+                        TextColor="#888888"
+                        FontSize="13" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <Button
+                Text="Sauvegarder l'effet"
+                Command="{Binding SaveCommand}"
+                HeightRequest="55"
+                BackgroundColor="#3b82f6"
+                TextColor="White"
+                CornerRadius="8"
+                FontAttributes="Bold" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

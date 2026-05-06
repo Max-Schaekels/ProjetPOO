@@ -52,6 +52,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<ConditionEditorViewModel>();
             builder.Services.AddTransient<ConditionEditorPage>();
 
+            builder.Services.AddTransient<EffectEditorViewModel>();
+            builder.Services.AddTransient<EffectEditorPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

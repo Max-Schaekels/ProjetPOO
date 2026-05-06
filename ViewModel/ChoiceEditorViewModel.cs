@@ -14,9 +14,11 @@ namespace ProjetPOO.ViewModel
     public partial class ChoiceEditorViewModel : BaseViewModel
     {
         private readonly ConditionEditorPage conditionEditorPage;
-        public ChoiceEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, ConditionEditorPage conditionEditorPage) : base(alertService, dataAccessService)
+        private readonly EffectEditorPage effectEditorPage;
+        public ChoiceEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, ConditionEditorPage conditionEditorPage, EffectEditorPage effectEditorPage) : base(alertService, dataAccessService)
         {
             this.conditionEditorPage = conditionEditorPage;
+            this.effectEditorPage = effectEditorPage;
             PageTitle = "Édition choix";
 
             choiceLabel = string.Empty;
@@ -63,7 +65,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task NewEffect()
         {
-            await alertService.ShowAlert("Ajouter effet", $"L'ajout d'un effet sera ajouté plus tard.");
+            await Shell.Current.Navigation.PushAsync(effectEditorPage);
         }
 
     }
