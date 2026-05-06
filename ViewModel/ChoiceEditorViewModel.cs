@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.Interfaces;
+using ProjetPOO.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,10 @@ namespace ProjetPOO.ViewModel
 {
     public partial class ChoiceEditorViewModel : BaseViewModel
     {
-        public ChoiceEditorViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
+        private readonly ConditionEditorPage conditionEditorPage;
+        public ChoiceEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, ConditionEditorPage conditionEditorPage) : base(alertService, dataAccessService)
         {
+            this.conditionEditorPage = conditionEditorPage;
             PageTitle = "Édition choix";
 
             choiceLabel = string.Empty;
@@ -54,7 +57,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task NewCondition()
         {
-            await alertService.ShowAlert("Ajouter condition", $"L'ajout d'une condition sera ajouté plus tard.");
+            await Shell.Current.Navigation.PushAsync(conditionEditorPage);
         }
 
         [RelayCommand()]

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ProjetPOO.View.ConditionEditorPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#f3f3f3">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
+
+            <Button
+                Text="← Retour au choix"
+                Command="{Binding BackCommand}"
+                HorizontalOptions="Start"
+                BackgroundColor="Transparent"
+                TextColor="#333333" />
+
+            <Label
+                Text="Éditeur de condition"
+                FontSize="28"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Border
+                BackgroundColor="White"
+                Stroke="#dddddd"
+                StrokeThickness="1"
+                Padding="20">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="18">
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            Text="Type de condition"
+                            FontSize="16"
+                            FontAttributes="Bold" />
+
+                        <Picker
+                            Title="Choisir un type"
+                            ItemsSource="{Binding ConditionTypes}"
+                            SelectedItem="{Binding SelectedConditionType}"
+                            BackgroundColor="#f5f5f7" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            Text="Valeur"
+                            FontSize="16"
+                            FontAttributes="Bold" />
+
+                        <Entry
+                            Text="{Binding Value}"
+                            Placeholder="Exemple : clé, potion, quantité d'or..."
+                            BackgroundColor="#f5f5f7" />
+                    </VerticalStackLayout>
+
+                    
+
+                </VerticalStackLayout>
+            </Border>
+
+            <Button
+                Text="Sauvegarder la condition"
+                Command="{Binding SaveCommand}"
+                HeightRequest="55"
+                BackgroundColor="#3b82f6"
+                TextColor="White"
+                CornerRadius="8"
+                FontAttributes="Bold" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
