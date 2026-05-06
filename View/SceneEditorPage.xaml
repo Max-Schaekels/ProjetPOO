@@ -271,8 +271,8 @@
                                        VerticalOptions="Center" />
 
                                 <Button Grid.Column="1"
-                                        Text="+ Ajouter un choix"
-                                        Command="{Binding AddChoiceCommand}"
+                                        Text="+ Nouveau choix"
+                                        Command="{Binding NewChoiceCommand}"
                                         Style="{StaticResource DarkButtonStyle}" />
                             </Grid>
 

@@ -14,6 +14,7 @@ using ProjetPOO.Utilities.DataAccess.Files;
 using System.IO;
 using System.Text;
 using ProjetPOO.Utilities.EntriesValidation;
+using ProjetPOO.View;
 
 
 namespace ProjetPOO.ViewModel
@@ -21,9 +22,11 @@ namespace ProjetPOO.ViewModel
     public partial class SceneEditorViewModel : BaseViewModel
     {
         private readonly DataFilesManager _dataFilesManager;
-        public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, DataFilesManager dataFilesManager) : base(alertService, dataAccessService)
+        private readonly ChoiceEditorPage choiceEditorPage;
+        public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, DataFilesManager dataFilesManager, ChoiceEditorPage choiceEditorPage) : base(alertService, dataAccessService)
         {
             _dataFilesManager = dataFilesManager;
+            this.choiceEditorPage = choiceEditorPage;
             PageTitle = "Éditeur de scène";
             sceneTitle = "Nouvelle Scène";
             sceneText = string.Empty;
@@ -287,9 +290,9 @@ namespace ProjetPOO.ViewModel
         }
 
         [RelayCommand]
-        private async Task AddChoice()
+        private async Task NewChoice()
         {
-            await alertService.ShowAlert("Ajouter choix", "L'ajout d'un choix sera ajouté plus tard.");
+            await Shell.Current.Navigation.PushAsync(choiceEditorPage);
         }
 
         [RelayCommand]

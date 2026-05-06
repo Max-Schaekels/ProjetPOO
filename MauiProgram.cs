@@ -46,6 +46,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<SceneEditorViewModel>();
             builder.Services.AddTransient<SceneEditorPage>();
 
+            builder.Services.AddTransient<ChoiceEditorViewModel>();
+            builder.Services.AddTransient<ChoiceEditorPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
