@@ -26,13 +26,20 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task NewScenario()
         {
+            scenarioEditorPage.PrepareNewScenario();
             await Shell.Current.Navigation.PushAsync(scenarioEditorPage);
         }
 
         [RelayCommand()]
         private async Task EditScenario(Scenario scenario)
         {
-            await alertService.ShowAlert("Éditer scénario", $"L'édition du scénario '{scenario.Title}' sera ajoutée plus tard.");
+            if (scenario == null)
+            {
+                return;
+            }
+
+            scenarioEditorPage.LoadScenario(scenario);
+            await Shell.Current.Navigation.PushAsync(scenarioEditorPage);
         }
 
         [RelayCommand()]
