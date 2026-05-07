@@ -58,6 +58,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<EnemyEditorViewModel>();
             builder.Services.AddTransient<EnemyEditorPage>();
 
+            builder.Services.AddTransient<ShopEditorViewModel>();
+            builder.Services.AddTransient<ShopEditorPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

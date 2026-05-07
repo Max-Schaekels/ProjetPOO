@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ProjetPOO.View.ShopEditorPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#F3F3F3">
+
+    <ScrollView>
+        <Grid Padding="20"
+              RowDefinitions="Auto,*">
+
+            <VerticalStackLayout Grid.Row="0"
+                                 Spacing="10"
+                                 Margin="0,0,0,20">
+
+                <Button
+                    Text="← Retour au scénario"
+                    Command="{Binding BackCommand}"
+                    HorizontalOptions="Start"
+                    BackgroundColor="Transparent"
+                    TextColor="#2D2D32"
+                    Padding="0" />
+
+                <Label
+                    Text="Éditeur de boutique"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    TextColor="#111111" />
+
+            </VerticalStackLayout>
+
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="1*,8*,1*">
+
+                <VerticalStackLayout Grid.Column="1"
+                                     Spacing="18">
+
+                    <Frame
+                        CornerRadius="15"
+                        Padding="20"
+                        HasShadow="False"
+                        BorderColor="#DDDDDD"
+                        BackgroundColor="White">
+
+                        <VerticalStackLayout Spacing="18">
+
+                            <Label
+                                Text="Informations générales"
+                                FontSize="18"
+                                FontAttributes="Bold" />
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label
+                                    Text="Nom de la boutique"
+                                    FontAttributes="Bold" />
+
+                                <Entry
+                                    Text="{Binding ShopName}"
+                                    Placeholder="Exemple : Boutique du village"
+                                    BackgroundColor="#F5F5F7"
+                                    HeightRequest="50" />
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame
+                        CornerRadius="15"
+                        Padding="20"
+                        HasShadow="False"
+                        BorderColor="#DDDDDD"
+                        BackgroundColor="White">
+
+                        <VerticalStackLayout Spacing="18">
+
+                            <Label
+                                Text="Articles vendus"
+                                FontSize="18"
+                                FontAttributes="Bold" />
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="15">
+
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label
+                                        Text="Prix d'une potion"
+                                        FontAttributes="Bold" />
+
+                                    <Entry
+                                        Text="{Binding PotionPrice}"
+                                        Keyboard="Numeric"
+                                        Placeholder="Exemple : 10"
+                                        BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label
+                                        Text="Prix d'une clé"
+                                        FontAttributes="Bold" />
+
+                                    <Entry
+                                        Text="{Binding KeyPrice}"
+                                        Keyboard="Numeric"
+                                        Placeholder="Exemple : 25"
+                                        BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+
+                            <Label
+                                Text="La validation et la sauvegarde réelle seront ajoutées avec la base de données."
+                                TextColor="#888888"
+                                FontSize="13" />
+
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Button
+                        Text="Sauvegarder la boutique"
+                        Command="{Binding SaveCommand}"
+                        HeightRequest="50"
+                        BackgroundColor="#3B82F6"
+                        TextColor="White"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        Margin="0,10,0,30" />
+
+                </VerticalStackLayout>
+            </Grid>
+        </Grid>
+    </ScrollView>
+</ContentPage>

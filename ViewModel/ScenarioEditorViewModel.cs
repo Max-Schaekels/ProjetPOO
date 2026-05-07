@@ -15,11 +15,13 @@ namespace ProjetPOO.ViewModel
     {
         private readonly SceneEditorPage sceneEditorPage;
         private readonly EnemyEditorPage enemyEditorPage;
-        public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage, EnemyEditorPage enemyEditorPage) : base(alertService, dataAccessService)
+        private readonly ShopEditorPage shopEditorPage;
+        public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage, EnemyEditorPage enemyEditorPage, ShopEditorPage shopEditorPage) : base(alertService, dataAccessService)
         {
             PageTitle = "Édition scénario";
             this.sceneEditorPage = sceneEditorPage;
             this.enemyEditorPage = enemyEditorPage;
+            this.shopEditorPage = shopEditorPage;
             scenarioTitle = string.Empty;
             scenarioDescription = string.Empty;
             scenesCount = 0;
@@ -79,7 +81,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task AddShop()
         {
-            await alertService.ShowAlert("Ajouter boutique", "L'ajout de boutique sera ajouté plus tard.");
+            await Shell.Current.Navigation.PushAsync(shopEditorPage);
         }
 
         [RelayCommand()]
