@@ -46,14 +46,16 @@
             <Button Grid.Column="0"
                     Text="← Retour"
                     Command="{Binding BackCommand}"
-                    Style="{StaticResource HeaderButtonStyle}" />
+                    BackgroundColor="Transparent"
+                    TextColor="#2D2D32"
+                    Padding="0"  />
 
             <Label Grid.Column="1"
                    Text="Mes Scénarios"
                    FontSize="24"
                    FontAttributes="Bold"
                    TextColor="#111111"
-                   HorizontalOptions="Start"
+                   HorizontalOptions="Center"
                    VerticalOptions="Center"
                    Margin="20,0,0,0" />
 

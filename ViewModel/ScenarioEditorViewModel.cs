@@ -16,12 +16,14 @@ namespace ProjetPOO.ViewModel
         private readonly SceneEditorPage sceneEditorPage;
         private readonly EnemyEditorPage enemyEditorPage;
         private readonly ShopEditorPage shopEditorPage;
-        public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage, EnemyEditorPage enemyEditorPage, ShopEditorPage shopEditorPage) : base(alertService, dataAccessService)
+        private readonly PlayerCharacterEditorPage playerCharacterEditorPage;
+        public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage, EnemyEditorPage enemyEditorPage, ShopEditorPage shopEditorPage, PlayerCharacterEditorPage playerCharacterEditorPage) : base(alertService, dataAccessService)
         {
             PageTitle = "Édition scénario";
             this.sceneEditorPage = sceneEditorPage;
             this.enemyEditorPage = enemyEditorPage;
             this.shopEditorPage = shopEditorPage;
+            this.playerCharacterEditorPage = playerCharacterEditorPage;
             scenarioTitle = string.Empty;
             scenarioDescription = string.Empty;
             scenesCount = 0;
@@ -87,7 +89,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task AddPlayerCharacter()
         {
-            await alertService.ShowAlert("Ajouter personnage joueur", "L'ajout de personnage joueur sera ajouté plus tard.");
+            await Shell.Current.Navigation.PushAsync(playerCharacterEditorPage);
         }
 
         public void LoadScenario(Scenario scenario)

@@ -25,7 +25,8 @@
                     Text="Éditeur d'ennemi"
                     FontSize="24"
                     FontAttributes="Bold"
-                    TextColor="#111111" />
+                    TextColor="#111111"
+                    HorizontalOptions="Center"/>
 
             </VerticalStackLayout>
 

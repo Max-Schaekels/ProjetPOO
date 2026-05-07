@@ -45,13 +45,16 @@
 
                 <Button Text="← Retour à la liste"
                         Command="{Binding BackCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"
+                        BackgroundColor="Transparent"
+                        TextColor="#2D2D32"
+                        Padding="0" 
                         HorizontalOptions="Start" />
 
                 <Label Text="Éditeur de Scénario"
                        FontSize="24"
                        FontAttributes="Bold"
-                       TextColor="#111111" />
+                       TextColor="#111111" 
+                       HorizontalOptions="Center"/>
 
             </VerticalStackLayout>
 

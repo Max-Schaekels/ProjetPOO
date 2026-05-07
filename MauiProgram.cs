@@ -61,6 +61,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<ShopEditorViewModel>();
             builder.Services.AddTransient<ShopEditorPage>();
 
+            builder.Services.AddTransient<PlayerCharacterEditorViewModel>();
+            builder.Services.AddTransient<PlayerCharacterEditorPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
