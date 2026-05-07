@@ -55,6 +55,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<EffectEditorViewModel>();
             builder.Services.AddTransient<EffectEditorPage>();
 
+            builder.Services.AddTransient<EnemyEditorViewModel>();
+            builder.Services.AddTransient<EnemyEditorPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

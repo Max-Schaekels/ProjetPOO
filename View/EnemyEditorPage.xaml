@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ProjetPOO.View.EnemyEditorPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#F3F3F3">
+
+    <ScrollView>
+        <Grid Padding="20"
+              RowDefinitions="Auto,*">
+
+            <VerticalStackLayout Grid.Row="0"
+                                 Spacing="10"
+                                 Margin="0,0,0,20">
+
+                <Button
+                    Text="← Retour au scénario"
+                    Command="{Binding BackCommand}"
+                    HorizontalOptions="Start"
+                    BackgroundColor="Transparent"
+                    TextColor="#2D2D32"
+                    Padding="0" />
+
+                <Label
+                    Text="Éditeur d'ennemi"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    TextColor="#111111" />
+
+            </VerticalStackLayout>
+
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="1*,8*,1*">
+
+                <VerticalStackLayout Grid.Column="1"
+                                     Spacing="18">
+
+                    <Frame
+                        CornerRadius="15"
+                        Padding="20"
+                        HasShadow="False"
+                        BorderColor="#DDDDDD"
+                        BackgroundColor="White">
+
+                        <VerticalStackLayout Spacing="18">
+
+                            <Label
+                                Text="Informations générales"
+                                FontSize="18"
+                                FontAttributes="Bold" />
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label
+                                    Text="Nom"
+                                    FontAttributes="Bold" />
+
+                                <Entry
+                                    Text="{Binding EnemyName}"
+                                    Placeholder="Exemple : Gobelin"
+                                    BackgroundColor="#F5F5F7"
+                                    HeightRequest="50" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label
+                                    Text="Type d'ennemi"
+                                    FontAttributes="Bold" />
+
+                                <Picker
+                                    Title="Choisir un type"
+                                    ItemsSource="{Binding EnemyTypes}"
+                                    SelectedItem="{Binding SelectedEnemyType}"
+                                    BackgroundColor="#F5F5F7" />
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame
+                        CornerRadius="15"
+                        Padding="20"
+                        HasShadow="False"
+                        BorderColor="#DDDDDD"
+                        BackgroundColor="White">
+
+                        <VerticalStackLayout Spacing="18">
+
+                            <Label
+                                Text="Statistiques de combat"
+                                FontSize="18"
+                                FontAttributes="Bold" />
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="15">
+
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Points de vie max" FontAttributes="Bold" />
+                                    <Entry Text="{Binding MaxHp}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Attaque" FontAttributes="Bold" />
+                                    <Entry Text="{Binding Attack}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="15">
+
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Défense" FontAttributes="Bold" />
+                                    <Entry Text="{Binding Defense}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Agilité" FontAttributes="Bold" />
+                                    <Entry Text="{Binding Agility}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame
+                        CornerRadius="15"
+                        Padding="20"
+                        HasShadow="False"
+                        BorderColor="#DDDDDD"
+                        BackgroundColor="White">
+
+                        <VerticalStackLayout Spacing="18">
+
+                            <Label
+                                Text="Récompenses"
+                                FontSize="18"
+                                FontAttributes="Bold" />
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Expérience gagnée" FontAttributes="Bold" />
+                                <Entry Text="{Binding RewardExperience}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                            </VerticalStackLayout>
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="15">
+
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Or minimum" FontAttributes="Bold" />
+                                    <Entry Text="{Binding RewardGoldMin}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Or maximum" FontAttributes="Bold" />
+                                    <Entry Text="{Binding RewardGoldMax}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame
+                        CornerRadius="15"
+                        Padding="20"
+                        HasShadow="False"
+                        BorderColor="#DDDDDD"
+                        BackgroundColor="White">
+
+                        <VerticalStackLayout Spacing="18">
+
+                            <Label
+                                Text="Butin : potions"
+                                FontSize="18"
+                                FontAttributes="Bold" />
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Chance de drop potion (%)" FontAttributes="Bold" />
+                                <Entry Text="{Binding PotionDropChance}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                            </VerticalStackLayout>
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="15">
+
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Potions min" FontAttributes="Bold" />
+                                    <Entry Text="{Binding PotionAmountMin}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Potions max" FontAttributes="Bold" />
+                                    <Entry Text="{Binding PotionAmountMax}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame
+                        CornerRadius="15"
+                        Padding="20"
+                        HasShadow="False"
+                        BorderColor="#DDDDDD"
+                        BackgroundColor="White">
+
+                        <VerticalStackLayout Spacing="18">
+
+                            <Label
+                                Text="Butin : clés"
+                                FontSize="18"
+                                FontAttributes="Bold" />
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Chance de drop clé (%)" FontAttributes="Bold" />
+                                <Entry Text="{Binding KeyDropChance}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                            </VerticalStackLayout>
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="15">
+
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Clés min" FontAttributes="Bold" />
+                                    <Entry Text="{Binding KeyAmountMin}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Clés max" FontAttributes="Bold" />
+                                    <Entry Text="{Binding KeyAmountMax}" Keyboard="Numeric" BackgroundColor="#F5F5F7" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+
+                            <Label
+                                Text="La validation et la sauvegarde réelle seront ajoutées avec la base de données."
+                                TextColor="#888888"
+                                FontSize="13" />
+
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Button
+                        Text="Sauvegarder l'ennemi"
+                        Command="{Binding SaveCommand}"
+                        HeightRequest="50"
+                        BackgroundColor="#3B82F6"
+                        TextColor="White"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        Margin="0,10,0,30" />
+
+                </VerticalStackLayout>
+            </Grid>
+        </Grid>
+    </ScrollView>
+</ContentPage>

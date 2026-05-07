@@ -14,10 +14,12 @@ namespace ProjetPOO.ViewModel
     public partial class ScenarioEditorViewModel : BaseViewModel
     {
         private readonly SceneEditorPage sceneEditorPage;
-        public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage) : base(alertService, dataAccessService)
+        private readonly EnemyEditorPage enemyEditorPage;
+        public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage, EnemyEditorPage enemyEditorPage) : base(alertService, dataAccessService)
         {
             PageTitle = "Édition scénario";
             this.sceneEditorPage = sceneEditorPage;
+            this.enemyEditorPage = enemyEditorPage;
             scenarioTitle = string.Empty;
             scenarioDescription = string.Empty;
             scenesCount = 0;
@@ -71,7 +73,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task AddEnemy()
         {
-            await alertService.ShowAlert("Ajouter ennemi", "L'ajout d'ennemi sera ajouté plus tard.");
+            await Shell.Current.Navigation.PushAsync(enemyEditorPage);
         }
 
         [RelayCommand()]

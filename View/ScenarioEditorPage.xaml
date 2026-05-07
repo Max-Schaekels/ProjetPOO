@@ -119,7 +119,7 @@
                                        VerticalOptions="Center" />
 
                                 <Button Grid.Column="2"
-                                        Text="+ Ajouter"
+                                        Text="+ Nouveau"
                                         Command="{Binding AddSceneCommand}"
                                         Style="{StaticResource PrimaryButtonStyle}" />
                             </Grid>
@@ -158,7 +158,7 @@
                                    VerticalOptions="Center" />
 
                             <Button Grid.Column="2"
-                                    Text="+ Ajouter"
+                                    Text="+ Nouveau"
                                     Command="{Binding AddEnemyCommand}"
                                     Style="{StaticResource PrimaryButtonStyle}" />
                         </Grid>
@@ -186,7 +186,7 @@
                                    VerticalOptions="Center" />
 
                             <Button Grid.Column="2"
-                                    Text="+ Ajouter"
+                                    Text="+ Nouveau"
                                     Command="{Binding AddShopCommand}"
                                     Style="{StaticResource PrimaryButtonStyle}" />
                         </Grid>
@@ -214,7 +214,7 @@
                                    VerticalOptions="Center" />
 
                             <Button Grid.Column="2"
-                                    Text="+ Ajouter"
+                                    Text="+ Nouveau"
                                     Command="{Binding AddPlayerCharacterCommand}"
                                     Style="{StaticResource PrimaryButtonStyle}" />
                         </Grid>
