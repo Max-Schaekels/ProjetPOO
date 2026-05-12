@@ -80,7 +80,7 @@ namespace ProjetPOO.View
             introChoice.Conditions.AddCondition(introCondition);
             introChoice.Effects.AddEffect(introEffect);
 
-            PlayerCharacterTemplate playerTemplate = new PlayerCharacterTemplate( "Héros", 100, 20,10, 5, 0, 1 );
+            PlayerCharacterTemplate playerTemplate = new PlayerCharacterTemplate("Héros", "Guerrier", "Humain", 100, 20, 10, 5, 0, 1);
             scenario.PlayerCharacters.AddPlayer(playerTemplate);
 
             PlayerCharacterInstance playerInstance = playerTemplate.CreateInstance();

@@ -17,5 +17,7 @@ namespace ProjetPOO.Utilities.DataAccess.JsonDtos
         public int Agility { get; set; }
         public int StartingExperience { get; set; }
         public int StartingLevel { get; set; }
+        public string? ClassName { get; set; }
+        public string? RaceName { get; set; }
     }
 }

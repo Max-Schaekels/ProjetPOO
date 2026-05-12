@@ -25,8 +25,7 @@
                     Text="Éditeur de personnage"
                     FontSize="24"
                     FontAttributes="Bold"
-                    TextColor="#111111" 
-                    HorizontalOptions="Center"/>
+                    TextColor="#111111" />
 
             </VerticalStackLayout>
 
@@ -61,6 +60,35 @@
                                     BackgroundColor="#F5F5F7"
                                     HeightRequest="50" />
                             </VerticalStackLayout>
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="15">
+
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label
+                                        Text="Classe"
+                                        FontAttributes="Bold" />
+
+                                    <Entry
+                                        Text="{Binding ClassName}"
+                                        Placeholder="Exemple : Guerrier"
+                                        BackgroundColor="#F5F5F7"
+                                        HeightRequest="50" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label
+                                        Text="Race"
+                                        FontAttributes="Bold" />
+
+                                    <Entry
+                                        Text="{Binding RaceName}"
+                                        Placeholder="Exemple : Humain"
+                                        BackgroundColor="#F5F5F7"
+                                        HeightRequest="50" />
+                                </VerticalStackLayout>
+
+                            </Grid>
 
                         </VerticalStackLayout>
                     </Frame>

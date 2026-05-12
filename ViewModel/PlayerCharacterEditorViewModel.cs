@@ -21,6 +21,8 @@ namespace ProjetPOO.ViewModel
             agility = 2;
             startingExperience = 0;
             startingLevel = 1;
+            className = string.Empty;
+            raceName = string.Empty;
         }
 
         [ObservableProperty]
@@ -43,6 +45,12 @@ namespace ProjetPOO.ViewModel
 
         [ObservableProperty]
         private int startingLevel;
+
+        [ObservableProperty]
+        private string className;
+
+        [ObservableProperty]
+        private string raceName;
 
         [RelayCommand()]
         private async Task Back()

@@ -23,6 +23,8 @@ namespace ProjetPOO.Model.Combat
         private int _agility;
         private int _startingExperience;
         private int _startingLevel;
+        private string _className;
+        private string _raceName;
 
         public int Id
         {
@@ -56,6 +58,29 @@ namespace ProjetPOO.Model.Combat
                 if (ValidUtils.CheckEntryName(value, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
                 {
                     _name = value;
+                }
+            }
+        }
+        public string ClassName
+        {
+            get => _className;
+            private set
+            {
+                if (ValidUtils.CheckEntryName(value, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
+                {
+                    _className = value;
+                }
+            }
+        }
+
+        public string RaceName
+        {
+            get => _raceName;
+            private set
+            {
+                if (ValidUtils.CheckEntryName(value, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
+                {
+                    _raceName = value;
                 }
             }
         }
@@ -132,10 +157,12 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
-        public PlayerCharacterTemplate( string name, int maxHp, int attack,  int defense, int agility, int startingExperience = 0, int startingLevel = 1)
+        public PlayerCharacterTemplate( string name, string className, string raceName, int maxHp, int attack,  int defense, int agility, int startingExperience = 0, int startingLevel = 1)
         {
             Id = GenerateId();
             Name = name;
+            ClassName = className;
+            RaceName = raceName;
             MaxHp = maxHp;
             Attack = attack;
             Defense = defense;
@@ -144,11 +171,13 @@ namespace ProjetPOO.Model.Combat
             StartingLevel = startingLevel;
         }
 
-        private PlayerCharacterTemplate(int id, int scenarioId, string name, int maxHp, int attack, int defense, int agility, int startingExperience,int startingLevel)
+        private PlayerCharacterTemplate(int id, int scenarioId, string name, string className, string raceName, int maxHp, int attack, int defense, int agility, int startingExperience,int startingLevel)
         {
             Id = id;
             ScenarioId = scenarioId;
             Name = name;
+            ClassName = className;
+            RaceName = raceName;
             MaxHp = maxHp;
             Attack = attack;
             Defense = defense;
@@ -172,7 +201,7 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
-        public static PlayerCharacterTemplate Load( int id,int scenarioId,string name, int maxHp, int attack, int defense, int agility, int startingExperience, int startingLevel)
+        public static PlayerCharacterTemplate Load( int id,int scenarioId,string name, string className, string raceName, int maxHp, int attack, int defense, int agility, int startingExperience, int startingLevel)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -184,7 +213,7 @@ namespace ProjetPOO.Model.Combat
                 throw new ArgumentException("scenarioId doit être un nombre non négatif.", nameof(scenarioId));
             }
 
-            PlayerCharacterTemplate template = new PlayerCharacterTemplate( id,scenarioId,name,maxHp, attack,defense,agility,startingExperience,startingLevel);
+            PlayerCharacterTemplate template = new PlayerCharacterTemplate( id,scenarioId,name,className,raceName,maxHp, attack,defense,agility,startingExperience,startingLevel);
 
             EnsureNextIdIsAfterLoadedId(id);
 
@@ -193,7 +222,7 @@ namespace ProjetPOO.Model.Combat
 
         public PlayerCharacterInstance CreateInstance()
         {
-            return new PlayerCharacterInstance( Id, Name, MaxHp, Attack, Defense, Agility, StartingExperience, StartingLevel);
+            return new PlayerCharacterInstance(Id, Name, ClassName, RaceName, MaxHp, Attack, Defense, Agility, StartingExperience, StartingLevel);
         }
 
         public void Rename(string name)

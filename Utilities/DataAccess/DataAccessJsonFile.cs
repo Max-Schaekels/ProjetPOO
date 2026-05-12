@@ -337,7 +337,7 @@ namespace ProjetPOO.Utilities.DataAccess
             {
                 PlayerCharacterTemplateJsonDto dto = dtos[i];
 
-                PlayerCharacterTemplate player = PlayerCharacterTemplate.Load(dto.Id, dto.ScenarioId, GetSafeName(dto.Name, "Player chargé"), dto.MaxHp, dto.Attack, dto.Defense,dto.Agility,dto.StartingExperience,dto.StartingLevel);
+                PlayerCharacterTemplate player = PlayerCharacterTemplate.Load(dto.Id, dto.ScenarioId, GetSafeName(dto.Name, "Player chargé"), GetSafeName(dto.ClassName, "Aventurier"),GetSafeName(dto.RaceName, "Humain"), dto.MaxHp, dto.Attack, dto.Defense,dto.Agility,dto.StartingExperience,dto.StartingLevel);
 
                 players.Add(player);
             }

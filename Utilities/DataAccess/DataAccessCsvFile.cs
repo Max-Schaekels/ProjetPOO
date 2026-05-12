@@ -716,9 +716,21 @@ namespace ProjetPOO.Utilities.DataAccess
         private PlayerCharacterTemplate GetPlayerCharacterTemplate(string csvLine)
         {
             string[] fields = csvLine.Split(';');
+
             if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("PLAYERCHARACTERTEMPLATE"))
             {
-                PlayerCharacterTemplate playerCharacterTemplate = PlayerCharacterTemplate.Load( int.Parse(fields[1]), int.Parse(fields[2]), fields[3],int.Parse(fields[4]),int.Parse(fields[5]), int.Parse(fields[6]),int.Parse(fields[7]), int.Parse(fields[8]),int.Parse(fields[9]));
+                PlayerCharacterTemplate playerCharacterTemplate = PlayerCharacterTemplate.Load(
+                    int.Parse(fields[1]),
+                    int.Parse(fields[2]),
+                    fields[3],
+                    fields[4],
+                    fields[5],
+                    int.Parse(fields[6]),
+                    int.Parse(fields[7]),
+                    int.Parse(fields[8]),
+                    int.Parse(fields[9]),
+                    int.Parse(fields[10]),
+                    int.Parse(fields[11]));
 
                 return playerCharacterTemplate;
             }
