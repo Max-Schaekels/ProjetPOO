@@ -14,13 +14,16 @@ namespace ProjetPOO.Model.Combat
     {
         private const int LOW_DROP_CHANCE = 0;
         private const int HIGH_DROP_CHANCE = 100;
+        private const int MINIMUM_ENEMY_NAME_LENGTH = 3;
+        private const int MAXIMUM_ENEMY_NAME_LENGTH = 50;
 
         private static int _nextId = 1;
 
         private int _id;
         private int _scenarioId;
 
-        private EnemyType _type;
+        private string? _enemyName;
+        private int _enemyRaceId;
         private int _rewardExperience;
 
         private int _rewardGoldMin;
@@ -56,10 +59,28 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
-        public EnemyType Type
+        public string? EnemyName
         {
-            get => _type;
-            private set => _type = value;
+            get => _enemyName;
+            private set
+            {
+                if (value == null || value == string.Empty || ValidUtils.CheckEntryName(value, MINIMUM_ENEMY_NAME_LENGTH, MAXIMUM_ENEMY_NAME_LENGTH))
+                {
+                    _enemyName = value;
+                }
+            }
+        }
+
+        public int EnemyRaceId
+        {
+            get => _enemyRaceId;
+            private set
+            {
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                {
+                    _enemyRaceId = value;
+                }
+            }
         }
 
 
@@ -171,14 +192,15 @@ namespace ProjetPOO.Model.Combat
         }
 
         // Constructeur "normal" (en mémoire)
-        public Enemy(string name,int maxHp, int attack, int defense,  int agility, EnemyType type, int rewardExperience, int rewardGoldMin, int rewardGoldMax, int potionDropChance,int potionAmountMin, int potionAmountMax, int keyDropChance, int keyAmountMin,
-            int keyAmountMax) : base(name, maxHp, attack, defense, agility)
+        public Enemy(string? enemyName, int enemyRaceId, int maxHp, int attack, int defense,  int agility, int rewardExperience, int rewardGoldMin, int rewardGoldMax, int potionDropChance,int potionAmountMin, int potionAmountMax, int keyDropChance, int keyAmountMin,
+            int keyAmountMax) : base(GetCharacterName(enemyName, enemyRaceId), maxHp, attack, defense, agility)
         {
             Id = GenerateId();
 
             ScenarioId = 0; // draft-friendly
 
-            Type = type;
+            EnemyName = enemyName;
+            EnemyRaceId = enemyRaceId;
 
             RewardExperience = rewardExperience;
 
@@ -197,13 +219,14 @@ namespace ProjetPOO.Model.Combat
         }
 
         // Constructeur privé pour Load (évite de dupliquer la logique)
-        private Enemy( int id,int scenarioId, string name,int maxHp,int attack, int defense,int agility,EnemyType type,int rewardExperience,int rewardGoldMin,int rewardGoldMax,int potionDropChance,int potionAmountMin,int potionAmountMax,int keyDropChance,int keyAmountMin,
-            int keyAmountMax) : base(name, maxHp, attack, defense, agility)
+        private Enemy( int id,int scenarioId, string? enemyName, int enemyRaceId, int maxHp,int attack, int defense,int agility,int rewardExperience,int rewardGoldMin,int rewardGoldMax,int potionDropChance,int potionAmountMin,int potionAmountMax,int keyDropChance,int keyAmountMin,
+            int keyAmountMax) : base(GetCharacterName(enemyName, enemyRaceId), maxHp, attack, defense, agility)
         {
             Id = id;
             ScenarioId = scenarioId;
 
-            Type = type;
+            EnemyName = enemyName;
+            EnemyRaceId = enemyRaceId;
 
             RewardExperience = rewardExperience;
 
@@ -252,8 +275,7 @@ namespace ProjetPOO.Model.Combat
         }
 
         // Constructeur pour Load (depuis la base de données)
-        public static Enemy Load( int id, int scenarioId, string name,int maxHp,int attack,int defense, int agility,EnemyType type, int rewardExperience,int rewardGoldMin, int rewardGoldMax,int potionDropChance,int potionAmountMin, int potionAmountMax, int keyDropChance,
-            int keyAmountMin, int keyAmountMax)
+        public static Enemy Load( int id, int scenarioId, string? enemyName,int enemyRaceId, int maxHp,int attack,int defense, int agility, int rewardExperience,int rewardGoldMin, int rewardGoldMax,int potionDropChance,int potionAmountMin, int potionAmountMax, int keyDropChance, int keyAmountMin, int keyAmountMax)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -265,7 +287,12 @@ namespace ProjetPOO.Model.Combat
                 throw new ArgumentException("scenarioId doit être >= 0.", nameof(scenarioId));
             }
 
-            Enemy enemy = new Enemy(id,scenarioId,name,maxHp,attack, defense,agility, type,rewardExperience,rewardGoldMin,rewardGoldMax, potionDropChance,potionAmountMin, potionAmountMax,keyDropChance,keyAmountMin, keyAmountMax);
+            if (!ValidUtils.CheckIfPositiveNumber(enemyRaceId))
+            {
+                throw new ArgumentException("enemyRaceId doit être un nombre positif.", nameof(enemyRaceId));
+            }
+
+            Enemy enemy = new Enemy(id,scenarioId, enemyName,enemyRaceId, maxHp,attack, defense,agility,rewardExperience,rewardGoldMin,rewardGoldMax, potionDropChance,potionAmountMin, potionAmountMax,keyDropChance,keyAmountMin, keyAmountMax);
 
             EnsureNextIdIsAfterLoadedId(id);
 
@@ -325,6 +352,30 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
+        private static string GetCharacterName(string? enemyName, int enemyRaceId)
+        {
+            if (!string.IsNullOrWhiteSpace(enemyName))
+            {
+                return enemyName;
+            }
+
+            return "Ennemi race " + enemyRaceId;
+        }
+
+        public void RenameEnemy(string? enemyName)
+        {
+            EnemyName = enemyName;
+        }
+
+        public void ChangeEnemyRace(int enemyRaceId)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(enemyRaceId))
+            {
+                throw new ArgumentException("enemyRaceId doit être un nombre positif.", nameof(enemyRaceId));
+            }
+
+            EnemyRaceId = enemyRaceId;
+        }
 
     }
 }

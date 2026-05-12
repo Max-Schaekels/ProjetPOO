@@ -26,6 +26,7 @@ namespace ProjetPOO.Model.Story
         private EnemiesCollection _enemies;
         private ShopsCollection _shops;
         private PlayerCharactersCollection _playerCharacters;
+        private EnemyRacesCollection _enemyRaces;
 
 
 
@@ -122,6 +123,12 @@ namespace ProjetPOO.Model.Story
             }
         }
 
+        public EnemyRacesCollection EnemyRaces
+        {
+            get => _enemyRaces;
+            private set => _enemyRaces = value;
+        }
+
         public int ScenesCount
         {
             get
@@ -148,6 +155,19 @@ namespace ProjetPOO.Model.Story
             }
         }
 
+        public int EnemyRacesCount
+        {
+            get
+            {
+                if (EnemyRaces == null)
+                {
+                    return 0;
+                }
+
+                return EnemyRaces.Count;
+            }
+        }
+
         public int ShopsCount
         {
             get
@@ -169,6 +189,7 @@ namespace ProjetPOO.Model.Story
             Scenes = new ScenesCollection(Id);
             Enemies = new EnemiesCollection(Id);
             Shops = new ShopsCollection(Id);
+            EnemyRaces = new EnemyRacesCollection(Id);
             Title = title;
             Description = description;
 
@@ -185,11 +206,12 @@ namespace ProjetPOO.Model.Story
             Scenes = new ScenesCollection(Id);
             Enemies = new EnemiesCollection(Id);
             Shops = new ShopsCollection(Id);
+            EnemyRaces = new EnemyRacesCollection(Id);
             StartSceneId = 0;
         }
 
         // Constructeur pour Load (depuis la base de données) avec vérifications de cohérence (ex: les scènes rattachées ont bien le ScenarioId du scénario chargé, pas de scène dupliquée, etc.)
-        public static Scenario Load(int id, string title, string description, int startSceneId, ScenesCollection? scenes, EnemiesCollection? enemies = null, ShopsCollection? shops = null, PlayerCharactersCollection? playerCharacters = null)
+        public static Scenario Load(int id, string title, string description, int startSceneId, ScenesCollection? scenes, EnemiesCollection? enemies = null, EnemyRacesCollection? enemyRaces = null, ShopsCollection? shops = null, PlayerCharactersCollection? playerCharacters = null)
         {
             if (!ValidUtils.CheckIfPositiveNumber(id))
             {
@@ -202,6 +224,7 @@ namespace ProjetPOO.Model.Story
             scenario.Scenes = new ScenesCollection(scenario.Id);
             scenario.Enemies = new EnemiesCollection(scenario.Id);
             scenario.Shops = new ShopsCollection(scenario.Id);
+            scenario.EnemyRaces = new EnemyRacesCollection(scenario.Id);
             scenario.PlayerCharacters = new PlayerCharactersCollection(scenario.Id);
             EnsureNextIdIsAfterLoadedId(id);
 
@@ -235,6 +258,27 @@ namespace ProjetPOO.Model.Story
                 }
             }
 
+            if (enemyRaces != null)
+            {
+                for (int i = 0; i < enemyRaces.Count; i++)
+                {
+                    EnemyRace enemyRace = enemyRaces[i];
+
+                    if (enemyRace == null)
+                    {
+                        continue;
+                    }
+
+                    if (enemyRace.ScenarioId != 0 && enemyRace.ScenarioId != scenario.Id)
+                    {
+                        throw new InvalidOperationException(
+                            $"Load Scenario incohérent : la race ennemie \"{enemyRace.Name}\" a ScenarioId={enemyRace.ScenarioId} mais le scénario chargé a Id={scenario.Id}.");
+                    }
+
+                    scenario.EnemyRaces.Add(enemyRace);
+                }
+            }
+
 
             if (enemies != null)
             {
@@ -255,6 +299,12 @@ namespace ProjetPOO.Model.Story
                     else if (enemy.ScenarioId != scenario.Id)
                     {
                         throw new InvalidOperationException( $"Load Scenario incohérent : l'ennemi \"{enemy.Name}\" a ScenarioId={enemy.ScenarioId} mais le scénario chargé a Id={scenario.Id}.");
+                    }
+
+                    if (scenario.EnemyRaces.GetById(enemy.EnemyRaceId) == null)
+                    {
+                        throw new InvalidOperationException(
+                            $"Load Scenario incohérent : l'ennemi \"{enemy.Name}\" référence EnemyRaceId={enemy.EnemyRaceId}, mais cette race n'existe pas dans le scénario.");
                     }
 
                     scenario.Enemies.AddEnemy(enemy);
@@ -439,6 +489,27 @@ namespace ProjetPOO.Model.Story
             return store;
         }
 
+        public EnemyRace? GetEnemyRaceById(int enemyRaceId)
+        {
+            EnemyRace? enemyRace = EnemyRaces.GetById(enemyRaceId);
+            return enemyRace;
+        }
+
+        public bool RemoveEnemyRace(int enemyRaceId)
+        {
+            for (int i = 0; i < Enemies.Count; i++)
+            {
+                Enemy enemy = Enemies[i];
+
+                if (enemy != null && enemy.EnemyRaceId == enemyRaceId)
+                {
+                    return false;
+                }
+            }
+
+            EnemyRaces.RemoveEnemyRace(enemyRaceId);
+            return true;
+        }
 
         public bool ValidateSafe(out List<string> errors)
         {
@@ -467,6 +538,12 @@ namespace ProjetPOO.Model.Story
             if (_enemies == null)
             {
                 errors.Add("Scenario : la liste des ennemis est null (liste corromue).");
+                return false;
+            }
+
+            if (_enemyRaces == null)
+            {
+                errors.Add("Scenario : la liste des races ennemies est null (liste corrompue).");
                 return false;
             }
 
@@ -517,6 +594,29 @@ namespace ProjetPOO.Model.Story
                 }
             }
 
+            for (int i = 0; i < EnemyRaces.Count; i++)
+            {
+                EnemyRace enemyRace = EnemyRaces[i];
+
+                if (enemyRace == null)
+                {
+                    errors.Add("Scenario : une race ennemie est null (liste corrompue).");
+                    continue;
+                }
+
+                bool duplicate = EnemyRaces.Any(r => r != null && r.Id == enemyRace.Id && !ReferenceEquals(r, enemyRace));
+
+                if (duplicate)
+                {
+                    errors.Add($"Scenario : Id de race ennemie dupliqué ({enemyRace.Id}).");
+                }
+
+                if (!ValidUtils.CheckIfNonNegativeNumber(enemyRace.ScenarioId))
+                {
+                    errors.Add($"Scenario : EnemyRaceId={enemyRace.Id} a un ScenarioId invalide (<0).");
+                }
+            }
+
             // vérifier null + ids dupliqués pour les ennemis (validation légère)
             for (int i = 0; i < Enemies.Count; i++)
             {
@@ -537,6 +637,11 @@ namespace ProjetPOO.Model.Story
                 if (!ValidUtils.CheckIfNonNegativeNumber(enemy.ScenarioId))
                 {
                     errors.Add($"Scenario : EnemyId={enemy.Id} a un ScenarioId invalide (<0).");
+                }
+
+                if (!ValidUtils.CheckIfPositiveNumber(enemy.EnemyRaceId))
+                {
+                    errors.Add($"Scenario : EnemyId={enemy.Id} n'a pas de race valide.");
                 }
             }
 
@@ -601,6 +706,15 @@ namespace ProjetPOO.Model.Story
                 else if (enemy.ScenarioId != Id)
                 {
                     errors.Add($"Enemy \"{enemy.Name}\" : ScenarioId doit valoir {Id} (actuel={enemy.ScenarioId}).");
+                }
+
+                if (!ValidUtils.CheckIfPositiveNumber(enemy.EnemyRaceId))
+                {
+                    errors.Add($"Enemy \"{enemy.Name}\" : en jouable, EnemyRaceId doit être > 0.");
+                }
+                else if (EnemyRaces.GetById(enemy.EnemyRaceId) == null)
+                {
+                    errors.Add($"Enemy \"{enemy.Name}\" : EnemyRaceId={enemy.EnemyRaceId} n'existe pas dans les races ennemies du scénario.");
                 }
             }
 

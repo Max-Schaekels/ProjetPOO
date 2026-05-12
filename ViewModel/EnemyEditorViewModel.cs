@@ -1,7 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProjetPOO.Model.Combat;
 using ProjetPOO.Model.Combat.Enums;
 using ProjetPOO.Utilities.Interfaces;
+using ProjetPOO.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +19,15 @@ namespace ProjetPOO.ViewModel
         {
             PageTitle = "Édition ennemi";
 
-            enemyTypes = new List<EnemyType>
-            {
-                EnemyType.Slime,
-                EnemyType.Goblin,
-                EnemyType.Orc,
-                EnemyType.Dragon
-            };
-
             enemyName = string.Empty;
-            selectedEnemyType = EnemyType.Slime;
+
+            enemyRaces = dataAccessService.GetAllEnemyRaces();
+            selectedEnemyRace = null;
+
+            if (enemyRaces != null && enemyRaces.Count > 0)
+            {
+                selectedEnemyRace = enemyRaces[0];
+            }
 
             maxHp = 10;
             attack = 1;
@@ -43,16 +45,19 @@ namespace ProjetPOO.ViewModel
             keyDropChance = 0;
             keyAmountMin = 0;
             keyAmountMax = 0;
+
+            newEnemyRaceName = string.Empty;
+            newEnemyRaceDescription = string.Empty;
         }
 
         [ObservableProperty]
         private string enemyName;
 
         [ObservableProperty]
-        private List<EnemyType> enemyTypes;
+        private EnemyRacesCollection enemyRaces;
 
         [ObservableProperty]
-        private EnemyType selectedEnemyType;
+        private EnemyRace? selectedEnemyRace;
 
         [ObservableProperty]
         private int maxHp;
@@ -93,6 +98,12 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private int keyAmountMax;
 
+        [ObservableProperty]
+        private string newEnemyRaceName;
+
+        [ObservableProperty]
+        private string newEnemyRaceDescription;
+
         [RelayCommand]
         private async Task Back()
         {
@@ -100,9 +111,51 @@ namespace ProjetPOO.ViewModel
         }
 
         [RelayCommand]
+        private void NewEnemyRace()
+        {
+            NewEnemyRaceName = string.Empty;
+            NewEnemyRaceDescription = string.Empty;
+
+            EnemyRacePopup popup = new EnemyRacePopup(this);
+            Shell.Current.CurrentPage.ShowPopup(popup);
+        }
+
+        [RelayCommand]
         private async Task Save()
         {
-            await alertService.ShowAlert("Sauvegarder ennem", "La sauvegarde de l'ennemi sera ajoutée plus tard.");
+            if (SelectedEnemyRace == null)
+            {
+                await alertService.ShowAlert("Race manquante", "Veuillez sélectionner ou créer une race d'ennemi.");
+                return;
+            }
+
+            await alertService.ShowAlert("Sauvegarder ennemi", "La sauvegarde de l'ennemi sera ajoutée plus tard.");
+        }
+
+        public async Task<bool> SaveNewEnemyRace()
+        {
+            try
+            {
+                EnemyRace enemyRace = new EnemyRace(NewEnemyRaceName, NewEnemyRaceDescription);
+
+                if (EnemyRaces == null)
+                {
+                    EnemyRaces = new EnemyRacesCollection();
+                }
+
+                EnemyRaces.Add(enemyRace);
+                SelectedEnemyRace = enemyRace;
+
+                NewEnemyRaceName = string.Empty;
+                NewEnemyRaceDescription = string.Empty;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await alertService.ShowAlert("Erreur", ex.Message);
+                return false;
+            }
         }
     }
 }

@@ -25,8 +25,7 @@
                     Text="Éditeur d'ennemi"
                     FontSize="24"
                     FontAttributes="Bold"
-                    TextColor="#111111"
-                    HorizontalOptions="Center"/>
+                    TextColor="#111111" />
 
             </VerticalStackLayout>
 
@@ -52,26 +51,47 @@
 
                             <VerticalStackLayout Spacing="8">
                                 <Label
-                                    Text="Nom"
+                                    Text="Nom spécifique (optionnel)"
                                     FontAttributes="Bold" />
 
                                 <Entry
                                     Text="{Binding EnemyName}"
-                                    Placeholder="Exemple : Gobelin"
+                                    Placeholder="Exemple : Roi gobelin, Dragon ancien..."
                                     BackgroundColor="#F5F5F7"
                                     HeightRequest="50" />
+
+                                <Label
+                                    Text="Laissez vide pour créer un ennemi générique basé uniquement sur sa race."
+                                    TextColor="#888888"
+                                    FontSize="13" />
                             </VerticalStackLayout>
 
                             <VerticalStackLayout Spacing="8">
                                 <Label
-                                    Text="Type d'ennemi"
+                                    Text="Race de l'ennemi"
                                     FontAttributes="Bold" />
 
-                                <Picker
-                                    Title="Choisir un type"
-                                    ItemsSource="{Binding EnemyTypes}"
-                                    SelectedItem="{Binding SelectedEnemyType}"
-                                    BackgroundColor="#F5F5F7" />
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="10">
+
+                                    <Picker
+                                        Grid.Column="0"
+                                        Title="Choisir une race"
+                                        ItemsSource="{Binding EnemyRaces}"
+                                        SelectedItem="{Binding SelectedEnemyRace}"
+                                        ItemDisplayBinding="{Binding Name}"
+                                        BackgroundColor="#F5F5F7" />
+
+                                    <Button
+                                        Grid.Column="1"
+                                        Text="+ Nouvelle race"
+                                        Command="{Binding NewEnemyRaceCommand}"
+                                        BackgroundColor="#25252D"
+                                        TextColor="White"
+                                        CornerRadius="8"
+                                        Padding="15,0" />
+
+                                </Grid>
                             </VerticalStackLayout>
 
                         </VerticalStackLayout>

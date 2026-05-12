@@ -1,0 +1,5 @@
+﻿Type;Id;ScenarioId;Name;Description
+ENEMYRACE;1;1;Slime;Créature gélatineuse faible mais nombreuse.
+ENEMYRACE;2;1;Gobelin;Petite créature agressive et opportuniste.
+ENEMYRACE;3;1;Orc;Créature robuste et brutale.
+ENEMYRACE;4;1;Dragon;Créature ancienne et très puissante.

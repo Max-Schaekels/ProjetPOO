@@ -20,6 +20,7 @@ namespace ProjetPOO.Utilities.DataAccess
         private ShopsCollection? cachedShops;
         private PlayerCharactersCollection? cachedPlayerCharacters;
         private List<Scenario>? cachedScenarios;
+        private EnemyRacesCollection? cachedEnemyRaces;
 
         public DataAccessJsonFile(string filePath) : base(filePath)
         {
@@ -279,7 +280,7 @@ namespace ProjetPOO.Utilities.DataAccess
             {
                 EnemyJsonDto dto = dtos[i];
 
-                Enemy enemy = Enemy.Load(dto.Id,dto.ScenarioId, GetSafeName(dto.Name, "Enemy chargé"), dto.MaxHp,dto.Attack, dto.Defense,dto.Agility,dto.Type,dto.RewardExperience, dto.RewardGoldMin, dto.RewardGoldMax,dto.PotionDropChance,dto.PotionAmountMin,dto.PotionAmountMax,dto.KeyDropChance,dto.KeyAmountMin, dto.KeyAmountMax);
+                Enemy enemy = Enemy.Load( dto.Id, dto.ScenarioId, string.IsNullOrWhiteSpace(dto.EnemyName) ? null : dto.EnemyName, dto.EnemyRaceId,  dto.MaxHp, dto.Attack, dto.Defense, dto.Agility, dto.RewardExperience, dto.RewardGoldMin, dto.RewardGoldMax, dto.PotionDropChance,dto.PotionAmountMin, dto.PotionAmountMax, dto.KeyDropChance, dto.KeyAmountMin, dto.KeyAmountMax);
 
                 enemies.Add(enemy);
             }
@@ -368,11 +369,11 @@ namespace ProjetPOO.Utilities.DataAccess
 
                 ScenesCollection scenes = GetScenesByScenarioId(dto.Id);
                 EnemiesCollection enemies = GetEnemiesByScenarioId(dto.Id);
+                EnemyRacesCollection enemyRaces = GetEnemyRacesByScenarioId(dto.Id);
                 ShopsCollection shops = GetShopsByScenarioId(dto.Id);
                 PlayerCharactersCollection players = GetPlayerCharacterTemplatesByScenarioId(dto.Id);
 
-                Scenario scenario = Scenario.Load( dto.Id, GetSafeTitle(dto.Title),GetSafeDescription(dto.Description),dto.StartSceneId,scenes, enemies, shops,players);
-
+                Scenario scenario = Scenario.Load( dto.Id, GetSafeTitle(dto.Title),GetSafeDescription(dto.Description),dto.StartSceneId,scenes, enemies, enemyRaces, shops,players);
                 scenarios.Add(scenario);
             }
 
@@ -846,6 +847,101 @@ namespace ProjetPOO.Utilities.DataAccess
             {
                 Console.WriteLine("UpdateChoice error can't update datasource file");
             }
+        }
+
+        public override EnemyRacesCollection GetAllEnemyRaces()
+        {
+            if (cachedEnemyRaces != null)
+            {
+                return cachedEnemyRaces;
+            }
+
+            List<EnemyRaceJsonDto>? dtos = ReadJsonValues<EnemyRaceJsonDto>("ENEMYRACES");
+
+            if (dtos == null)
+            {
+                return null;
+            }
+
+            EnemyRacesCollection enemyRaces = new EnemyRacesCollection();
+
+            for (int i = 0; i < dtos.Count; i++)
+            {
+                EnemyRaceJsonDto dto = dtos[i];
+
+                EnemyRace enemyRace = EnemyRace.Load(
+                    dto.Id,
+                    dto.ScenarioId,
+                    GetSafeName(dto.Name, "Race ennemie"),
+                    dto.Description ?? string.Empty);
+
+                enemyRaces.Add(enemyRace);
+            }
+
+            cachedEnemyRaces = enemyRaces;
+            return cachedEnemyRaces;
+        }
+
+        public override EnemyRacesCollection GetEnemyRacesByScenarioId(int scenarioId)
+        {
+            EnemyRacesCollection allEnemyRaces = GetAllEnemyRaces();
+
+            if (allEnemyRaces == null)
+            {
+                return null;
+            }
+
+            EnemyRacesCollection enemyRaces = new EnemyRacesCollection(scenarioId);
+
+            foreach (EnemyRace enemyRace in allEnemyRaces)
+            {
+                if (enemyRace.ScenarioId == 0 || enemyRace.ScenarioId == scenarioId)
+                {
+                    enemyRaces.Add(enemyRace);
+                }
+            }
+
+            return enemyRaces;
+        }
+
+        public override EnemyRace? GetEnemyRaceById(int enemyRaceId)
+        {
+            EnemyRacesCollection enemyRaces = GetAllEnemyRaces();
+
+            if (enemyRaces == null)
+            {
+                return null;
+            }
+
+            foreach (EnemyRace enemyRace in enemyRaces)
+            {
+                if (enemyRace.Id == enemyRaceId)
+                {
+                    return enemyRace;
+                }
+            }
+
+            return null;
+        }
+
+        public override void AddEnemyRace(EnemyRace enemyRace)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateEnemyRace(EnemyRace enemyRace)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllEnemyRaces(EnemyRacesCollection enemyRaces)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteEnemyRace(int enemyRaceId)
+        {
+            throw new NotImplementedException();
         }
 
         public override void UpdateCondition(Condition condition)

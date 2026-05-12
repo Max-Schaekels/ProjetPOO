@@ -533,12 +533,34 @@ namespace ProjetPOO.Utilities.DataAccess
         private static Enemy GetEnemy(string csvLine)
         {
             string[] fields = csvLine.Split(';');
+
             if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("ENEMY"))
             {
-                EnemyType enemyType;
-                Enum.TryParse(fields[8], out enemyType);
+                string? enemyName = null;
 
-                Enemy enemy = Enemy.Load( int.Parse(fields[1]), int.Parse(fields[2]), fields[3], int.Parse(fields[4]), int.Parse(fields[5]),int.Parse(fields[6]), int.Parse(fields[7]), enemyType, int.Parse(fields[9]), int.Parse(fields[10]), int.Parse(fields[11]), int.Parse(fields[12]), int.Parse(fields[13]), int.Parse(fields[14]),int.Parse(fields[15]), int.Parse(fields[16]),int.Parse(fields[17]));
+                if (!string.IsNullOrWhiteSpace(fields[3]))
+                {
+                    enemyName = fields[3];
+                }
+
+                Enemy enemy = Enemy.Load(
+                    int.Parse(fields[1]),
+                    int.Parse(fields[2]),
+                    enemyName,
+                    int.Parse(fields[4]),
+                    int.Parse(fields[5]),
+                    int.Parse(fields[6]),
+                    int.Parse(fields[7]),
+                    int.Parse(fields[8]),
+                    int.Parse(fields[9]),
+                    int.Parse(fields[10]),
+                    int.Parse(fields[11]),
+                    int.Parse(fields[12]),
+                    int.Parse(fields[13]),
+                    int.Parse(fields[14]),
+                    int.Parse(fields[15]),
+                    int.Parse(fields[16]),
+                    int.Parse(fields[17]));
 
                 return enemy;
             }
@@ -547,6 +569,7 @@ namespace ProjetPOO.Utilities.DataAccess
                 return null;
             }
         }
+
 
         public override Enemy? GetEnemyById(int enemyId)
         {
@@ -567,6 +590,127 @@ namespace ProjetPOO.Utilities.DataAccess
 
             return null;
         }
+
+        public override EnemyRacesCollection GetAllEnemyRaces()
+        {
+            List<string> listToRead = new List<string>();
+            EnemyRacesCollection enemyRaces = new EnemyRacesCollection();
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("ENEMYRACES");
+
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    EnemyRace enemyRace = GetEnemyRace(s);
+
+                    if (enemyRace != null)
+                    {
+                        enemyRaces.Add(enemyRace);
+                    }
+                }
+
+                return enemyRaces;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override EnemyRacesCollection GetEnemyRacesByScenarioId(int scenarioId)
+        {
+            List<string> listToRead = new List<string>();
+            EnemyRacesCollection enemyRaces = new EnemyRacesCollection(scenarioId);
+
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("ENEMYRACES");
+
+            if (IsValidAccessPath)
+            {
+                listToRead = File.ReadAllLines(AccessPath).ToList();
+                listToRead.RemoveAt(0);
+
+                foreach (string s in listToRead)
+                {
+                    EnemyRace enemyRace = GetEnemyRace(s);
+
+                    if (enemyRace != null && enemyRace.ScenarioId == scenarioId)
+                    {
+                        enemyRaces.AddEnemyRace(enemyRace);
+                    }
+                }
+
+                return enemyRaces;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static EnemyRace GetEnemyRace(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("ENEMYRACE"))
+            {
+                EnemyRace enemyRace = EnemyRace.Load(
+                    int.Parse(fields[1]),
+                    int.Parse(fields[2]),
+                    fields[3],
+                    fields[4]);
+
+                return enemyRace;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override EnemyRace? GetEnemyRaceById(int enemyRaceId)
+        {
+            EnemyRacesCollection enemyRaces = GetAllEnemyRaces();
+
+            if (enemyRaces == null)
+            {
+                return null;
+            }
+
+            foreach (EnemyRace enemyRace in enemyRaces)
+            {
+                if (enemyRace.Id == enemyRaceId)
+                {
+                    return enemyRace;
+                }
+            }
+
+            return null;
+        }
+
+        public override void AddEnemyRace(EnemyRace enemyRace)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateEnemyRace(EnemyRace enemyRace)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateAllEnemyRaces(EnemyRacesCollection enemyRaces)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteEnemyRace(int enemyRaceId)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public override ShopsCollection GetAllShops()
         {

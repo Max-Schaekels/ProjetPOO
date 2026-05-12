@@ -121,6 +121,14 @@ namespace ProjetPOO.Utilities.DataAccess
         public abstract void UpdateAllEnemies(EnemiesCollection enemies);
         public abstract void DeleteEnemy(int enemyId);
 
+        public abstract EnemyRacesCollection GetAllEnemyRaces();
+        public abstract EnemyRacesCollection GetEnemyRacesByScenarioId(int scenarioId);
+        public abstract EnemyRace? GetEnemyRaceById(int enemyRaceId);
+        public abstract void AddEnemyRace(EnemyRace enemyRace);
+        public abstract void UpdateEnemyRace(EnemyRace enemyRace);
+        public abstract void UpdateAllEnemyRaces(EnemyRacesCollection enemyRaces);
+        public abstract void DeleteEnemyRace(int enemyRaceId);
+
         public abstract ShopsCollection GetAllShops();
         public abstract ShopsCollection GetShopsByScenarioId(int scenarioId);
         public abstract Shop? GetShopById(int shopId);

@@ -65,6 +65,14 @@ namespace ProjetPOO.Utilities.Interfaces
         void UpdateAllEnemies(EnemiesCollection enemies);
         void DeleteEnemy(int enemyId);
 
+        EnemyRacesCollection GetAllEnemyRaces();
+        EnemyRacesCollection GetEnemyRacesByScenarioId(int scenarioId);
+        EnemyRace? GetEnemyRaceById(int enemyRaceId);
+        void AddEnemyRace(EnemyRace enemyRace);
+        void UpdateEnemyRace(EnemyRace enemyRace);
+        void UpdateAllEnemyRaces(EnemyRacesCollection enemyRaces);
+        void DeleteEnemyRace(int enemyRaceId);
+
         ShopsCollection GetAllShops();
         ShopsCollection GetShopsByScenarioId(int scenarioId);
         Shop? GetShopById(int shopId);

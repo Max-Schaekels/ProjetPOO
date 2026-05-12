@@ -11,7 +11,8 @@ namespace ProjetPOO.Model.Combat
     public class EnemyInstance : Character
     {
         private int _templateId;
-        private EnemyType _type;
+        private int _enemyRaceId;
+        private string? _enemyName;
 
         public int TemplateId
         {
@@ -25,17 +26,30 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
-        public EnemyType Type
+        public int EnemyRaceId
         {
-            get => _type;
-            private set => _type = value;
+            get => _enemyRaceId;
+            private set
+            {
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                {
+                    _enemyRaceId = value;
+                }
+            }
+        }
+
+        public string? EnemyName
+        {
+            get => _enemyName;
+            private set => _enemyName = value;
         }
 
         public EnemyInstance(Enemy template)
             : base(template.Name, template.MaxHp, template.Attack, template.Defense, template.Agility)
         {
             TemplateId = template.Id;
-            Type = template.Type;
+            EnemyName = template.EnemyName;
+            EnemyRaceId = template.EnemyRaceId;
         }
 
     }

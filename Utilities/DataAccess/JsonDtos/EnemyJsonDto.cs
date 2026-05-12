@@ -11,7 +11,8 @@ namespace ProjetPOO.Utilities.DataAccess.JsonDtos
     {
         public int Id { get; set; }
         public int ScenarioId { get; set; }
-        public EnemyType Type { get; set; }
+        public string? EnemyName { get; set; }
+        public int EnemyRaceId { get; set; }
         public int RewardExperience { get; set; }
         public int RewardGoldMin { get; set; }
         public int RewardGoldMax { get; set; }

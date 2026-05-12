@@ -1,0 +1,33 @@
+{
+  "$type": "System.Collections.Generic.List`1[[ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyRaceJsonDto, ProjetPOO]], System.Private.CoreLib",
+  "$values": [
+    {
+      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyRaceJsonDto, ProjetPOO",
+      "Id": 1,
+      "ScenarioId": 0,
+      "Name": "Slime",
+      "Description": "Créature gélatineuse faible mais nombreuse."
+    },
+    {
+      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyRaceJsonDto, ProjetPOO",
+      "Id": 2,
+      "ScenarioId": 0,
+      "Name": "Gobelin",
+      "Description": "Petite créature agressive et opportuniste."
+    },
+    {
+      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyRaceJsonDto, ProjetPOO",
+      "Id": 3,
+      "ScenarioId": 0,
+      "Name": "Orc",
+      "Description": "Créature robuste et brutale."
+    },
+    {
+      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyRaceJsonDto, ProjetPOO",
+      "Id": 4,
+      "ScenarioId": 0,
+      "Name": "Dragon",
+      "Description": "Créature ancienne et très puissante."
+    }
+  ]
+}

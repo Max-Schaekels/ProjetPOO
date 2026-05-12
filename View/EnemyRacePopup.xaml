@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="ProjetPOO.View.EnemyRacePopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+
+    <Frame
+        WidthRequest="500"
+        Padding="25"
+        CornerRadius="15"
+        HasShadow="True"
+        BorderColor="#DDDDDD"
+        BackgroundColor="White">
+
+        <VerticalStackLayout Spacing="16">
+
+            <Label
+                Text="Nouvelle race ennemie"
+                FontSize="22"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <VerticalStackLayout Spacing="8">
+                <Label
+                    Text="Nom de la race"
+                    FontAttributes="Bold" />
+
+                <Entry
+                    Text="{Binding NewEnemyRaceName}"
+                    Placeholder="Exemple : Spectre"
+                    BackgroundColor="#F5F5F7"
+                    HeightRequest="50" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8">
+                <Label
+                    Text="Description"
+                    FontAttributes="Bold" />
+
+                <Editor
+                    Text="{Binding NewEnemyRaceDescription}"
+                    Placeholder="Petite description de la race..."
+                    BackgroundColor="#F5F5F7"
+                    HeightRequest="120" />
+            </VerticalStackLayout>
+
+            <Grid
+                ColumnDefinitions="*,*"
+                ColumnSpacing="12"
+                Margin="0,10,0,0">
+
+                <Button
+                    Grid.Column="0"
+                    Text="Annuler"
+                    Clicked="CloseButton_Clicked"
+                    BackgroundColor="#888888"
+                    TextColor="White"
+                    CornerRadius="8" />
+
+                <Button
+                    Grid.Column="1"
+                    Text="Créer"
+                    Clicked="CreateButton_Clicked"
+                    BackgroundColor="#3B82F6"
+                    TextColor="White"
+                    CornerRadius="8" />
+
+            </Grid>
+
+        </VerticalStackLayout>
+
+    </Frame>
+</toolkit:Popup>

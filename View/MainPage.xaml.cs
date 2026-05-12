@@ -85,7 +85,7 @@ namespace ProjetPOO.View
 
             PlayerCharacterInstance playerInstance = playerTemplate.CreateInstance();
 
-            Enemy enemy = new Enemy( "Gobelin test",50, 15,5,3, EnemyType.Goblin,50, 10, 25, 50, 0,2, 10, 0, 1 );
+            Enemy enemy = new Enemy( "Gobelin test", 2, 50,15,5,3, 50,10, 25, 50, 0, 2, 10, 0, 1);
             scenario.Enemies.AddEnemy(enemy);
 
             EnemyInstance enemyInstance = new EnemyInstance(enemy);
