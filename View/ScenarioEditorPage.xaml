@@ -31,6 +31,23 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
+            <Style x:Key="ElementFrameStyle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="BorderColor" Value="#E5E5E5" />
+                <Setter Property="BackgroundColor" Value="#FAFAFA" />
+            </Style>
+
+            <Style x:Key="SmallActionButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="WidthRequest" Value="38" />
+                <Setter Property="HeightRequest" Value="38" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -47,14 +64,14 @@
                         Command="{Binding BackCommand}"
                         BackgroundColor="Transparent"
                         TextColor="#2D2D32"
-                        Padding="0" 
+                        Padding="0"
                         HorizontalOptions="Start" />
 
                 <Label Text="Éditeur de Scénario"
                        FontSize="24"
                        FontAttributes="Bold"
-                       TextColor="#111111" 
-                       HorizontalOptions="Center"/>
+                       TextColor="#111111"
+                       HorizontalOptions="Center" />
 
             </VerticalStackLayout>
 
@@ -104,14 +121,17 @@
                 <Grid ColumnDefinitions="1*,8*,1*">
                     <Frame Grid.Column="1"
                            Style="{StaticResource SectionFrameStyle}">
+
                         <VerticalStackLayout>
 
                             <Grid ColumnDefinitions="*,Auto,Auto"
                                   Padding="20,16">
+
                                 <Label Grid.Column="0"
                                        Text="Scènes"
                                        FontSize="16"
                                        FontAttributes="Bold"
+                                       TextColor="#111111"
                                        VerticalOptions="Center" />
 
                                 <Label Grid.Column="1"
@@ -125,16 +145,71 @@
                                         Text="+ Nouveau"
                                         Command="{Binding AddSceneCommand}"
                                         Style="{StaticResource PrimaryButtonStyle}" />
+
                             </Grid>
 
                             <BoxView HeightRequest="1"
                                      BackgroundColor="#E5E5E5" />
 
-                            <Label Text="Aucun élément"
+                            <Label Text="Aucune scène"
                                    HorizontalOptions="Center"
                                    TextColor="#8A8A8A"
                                    Margin="0,20,0,20"
                                    IsVisible="{Binding IsScenesEmpty}" />
+
+                            <VerticalStackLayout Padding="20,12"
+                                                 Spacing="10"
+                                                 BindableLayout.ItemsSource="{Binding Scenes}">
+
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Frame Style="{StaticResource ElementFrameStyle}">
+
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  RowDefinitions="Auto,Auto"
+                                                  ColumnSpacing="16"
+                                                  RowSpacing="4">
+
+                                                <Label Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="{Binding Title}"
+                                                       FontSize="15"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#111111" />
+
+                                                <Label Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="{Binding SceneType, StringFormat='Type : {0}'}"
+                                                       FontSize="13"
+                                                       TextColor="#6B7280" />
+
+                                                <HorizontalStackLayout Grid.Row="0"
+                                                                       Grid.Column="1"
+                                                                       Grid.RowSpan="2"
+                                                                       Spacing="8"
+                                                                       VerticalOptions="Center">
+
+                                                    <Button Text="✎"
+                                                            BackgroundColor="#2D2D32"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditSceneCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                    <Button Text="🗑"
+                                                            BackgroundColor="#F04438"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteSceneCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                </HorizontalStackLayout>
+
+                                            </Grid>
+                                        </Frame>
+
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
 
                         </VerticalStackLayout>
                     </Frame>
@@ -144,27 +219,97 @@
                 <Grid ColumnDefinitions="1*,8*,1*">
                     <Frame Grid.Column="1"
                            Style="{StaticResource SectionFrameStyle}">
-                        <Grid ColumnDefinitions="*,Auto,Auto"
-                              Padding="20,16">
 
-                            <Label Grid.Column="0"
-                                   Text="Ennemis"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   VerticalOptions="Center" />
+                        <VerticalStackLayout>
 
-                            <Label Grid.Column="1"
-                                   Text="{Binding EnemiesCount, StringFormat='({0})'}"
-                                   FontSize="14"
-                                   TextColor="#7A7A7A"
-                                   Margin="8,0,16,0"
-                                   VerticalOptions="Center" />
+                            <Grid ColumnDefinitions="*,Auto,Auto"
+                                  Padding="20,16">
 
-                            <Button Grid.Column="2"
-                                    Text="+ Nouveau"
-                                    Command="{Binding AddEnemyCommand}"
-                                    Style="{StaticResource PrimaryButtonStyle}" />
-                        </Grid>
+                                <Label Grid.Column="0"
+                                       Text="Ennemis"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#111111"
+                                       VerticalOptions="Center" />
+
+                                <Label Grid.Column="1"
+                                       Text="{Binding EnemiesCount, StringFormat='({0})'}"
+                                       FontSize="14"
+                                       TextColor="#7A7A7A"
+                                       Margin="8,0,16,0"
+                                       VerticalOptions="Center" />
+
+                                <Button Grid.Column="2"
+                                        Text="+ Nouveau"
+                                        Command="{Binding AddEnemyCommand}"
+                                        Style="{StaticResource PrimaryButtonStyle}" />
+
+                            </Grid>
+
+                            <BoxView HeightRequest="1"
+                                     BackgroundColor="#E5E5E5" />
+
+                            <Label Text="Aucun ennemi"
+                                   HorizontalOptions="Center"
+                                   TextColor="#8A8A8A"
+                                   Margin="0,20,0,20"
+                                   IsVisible="{Binding IsEnemiesEmpty}" />
+
+                            <VerticalStackLayout Padding="20,12"
+                                                 Spacing="10"
+                                                 BindableLayout.ItemsSource="{Binding Enemies}">
+
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Frame Style="{StaticResource ElementFrameStyle}">
+
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  RowDefinitions="Auto,Auto"
+                                                  ColumnSpacing="16"
+                                                  RowSpacing="4">
+
+                                                <Label Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="{Binding EnemyName, TargetNullValue='Ennemi générique'}"
+                                                       FontSize="15"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#111111" />
+
+                                                <Label Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="{Binding EnemyRaceId, StringFormat='Race ID : {0}'}"
+                                                       FontSize="13"
+                                                       TextColor="#6B7280" />
+
+                                                <HorizontalStackLayout Grid.Row="0"
+                                                                       Grid.Column="1"
+                                                                       Grid.RowSpan="2"
+                                                                       Spacing="8"
+                                                                       VerticalOptions="Center">
+
+                                                    <Button Text="✎"
+                                                            BackgroundColor="#2D2D32"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditEnemyCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                    <Button Text="🗑"
+                                                            BackgroundColor="#F04438"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteEnemyCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                </HorizontalStackLayout>
+
+                                            </Grid>
+                                        </Frame>
+
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
                     </Frame>
                 </Grid>
 
@@ -172,27 +317,97 @@
                 <Grid ColumnDefinitions="1*,8*,1*">
                     <Frame Grid.Column="1"
                            Style="{StaticResource SectionFrameStyle}">
-                        <Grid ColumnDefinitions="*,Auto,Auto"
-                              Padding="20,16">
 
-                            <Label Grid.Column="0"
-                                   Text="Boutiques"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   VerticalOptions="Center" />
+                        <VerticalStackLayout>
 
-                            <Label Grid.Column="1"
-                                   Text="{Binding ShopsCount, StringFormat='({0})'}"
-                                   FontSize="14"
-                                   TextColor="#7A7A7A"
-                                   Margin="8,0,16,0"
-                                   VerticalOptions="Center" />
+                            <Grid ColumnDefinitions="*,Auto,Auto"
+                                  Padding="20,16">
 
-                            <Button Grid.Column="2"
-                                    Text="+ Nouveau"
-                                    Command="{Binding AddShopCommand}"
-                                    Style="{StaticResource PrimaryButtonStyle}" />
-                        </Grid>
+                                <Label Grid.Column="0"
+                                       Text="Boutiques"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#111111"
+                                       VerticalOptions="Center" />
+
+                                <Label Grid.Column="1"
+                                       Text="{Binding ShopsCount, StringFormat='({0})'}"
+                                       FontSize="14"
+                                       TextColor="#7A7A7A"
+                                       Margin="8,0,16,0"
+                                       VerticalOptions="Center" />
+
+                                <Button Grid.Column="2"
+                                        Text="+ Nouveau"
+                                        Command="{Binding AddShopCommand}"
+                                        Style="{StaticResource PrimaryButtonStyle}" />
+
+                            </Grid>
+
+                            <BoxView HeightRequest="1"
+                                     BackgroundColor="#E5E5E5" />
+
+                            <Label Text="Aucune boutique"
+                                   HorizontalOptions="Center"
+                                   TextColor="#8A8A8A"
+                                   Margin="0,20,0,20"
+                                   IsVisible="{Binding IsShopsEmpty}" />
+
+                            <VerticalStackLayout Padding="20,12"
+                                                 Spacing="10"
+                                                 BindableLayout.ItemsSource="{Binding Shops}">
+
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Frame Style="{StaticResource ElementFrameStyle}">
+
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  RowDefinitions="Auto,Auto"
+                                                  ColumnSpacing="16"
+                                                  RowSpacing="4">
+
+                                                <Label Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="{Binding Name}"
+                                                       FontSize="15"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#111111" />
+
+                                                <Label Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="{Binding PotionPrice, StringFormat='Potion : {0} pièces'}"
+                                                       FontSize="13"
+                                                       TextColor="#6B7280" />
+
+                                                <HorizontalStackLayout Grid.Row="0"
+                                                                       Grid.Column="1"
+                                                                       Grid.RowSpan="2"
+                                                                       Spacing="8"
+                                                                       VerticalOptions="Center">
+
+                                                    <Button Text="✎"
+                                                            BackgroundColor="#2D2D32"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditShopCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                    <Button Text="🗑"
+                                                            BackgroundColor="#F04438"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteShopCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                </HorizontalStackLayout>
+
+                                            </Grid>
+                                        </Frame>
+
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
                     </Frame>
                 </Grid>
 
@@ -200,27 +415,97 @@
                 <Grid ColumnDefinitions="1*,8*,1*">
                     <Frame Grid.Column="1"
                            Style="{StaticResource SectionFrameStyle}">
-                        <Grid ColumnDefinitions="*,Auto,Auto"
-                              Padding="20,16">
 
-                            <Label Grid.Column="0"
-                                   Text="Personnages"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   VerticalOptions="Center" />
+                        <VerticalStackLayout>
 
-                            <Label Grid.Column="1"
-                                   Text="{Binding PlayerCharactersCount, StringFormat='({0})'}"
-                                   FontSize="14"
-                                   TextColor="#7A7A7A"
-                                   Margin="8,0,16,0"
-                                   VerticalOptions="Center" />
+                            <Grid ColumnDefinitions="*,Auto,Auto"
+                                  Padding="20,16">
 
-                            <Button Grid.Column="2"
-                                    Text="+ Nouveau"
-                                    Command="{Binding AddPlayerCharacterCommand}"
-                                    Style="{StaticResource PrimaryButtonStyle}" />
-                        </Grid>
+                                <Label Grid.Column="0"
+                                       Text="Personnages"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#111111"
+                                       VerticalOptions="Center" />
+
+                                <Label Grid.Column="1"
+                                       Text="{Binding PlayerCharactersCount, StringFormat='({0})'}"
+                                       FontSize="14"
+                                       TextColor="#7A7A7A"
+                                       Margin="8,0,16,0"
+                                       VerticalOptions="Center" />
+
+                                <Button Grid.Column="2"
+                                        Text="+ Nouveau"
+                                        Command="{Binding AddPlayerCharacterCommand}"
+                                        Style="{StaticResource PrimaryButtonStyle}" />
+
+                            </Grid>
+
+                            <BoxView HeightRequest="1"
+                                     BackgroundColor="#E5E5E5" />
+
+                            <Label Text="Aucun personnage"
+                                   HorizontalOptions="Center"
+                                   TextColor="#8A8A8A"
+                                   Margin="0,20,0,20"
+                                   IsVisible="{Binding IsPlayerCharactersEmpty}" />
+
+                            <VerticalStackLayout Padding="20,12"
+                                                 Spacing="10"
+                                                 BindableLayout.ItemsSource="{Binding PlayerCharacters}">
+
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Frame Style="{StaticResource ElementFrameStyle}">
+
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  RowDefinitions="Auto,Auto"
+                                                  ColumnSpacing="16"
+                                                  RowSpacing="4">
+
+                                                <Label Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="{Binding Name}"
+                                                       FontSize="15"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#111111" />
+
+                                                <Label Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="{Binding ClassName, StringFormat='Classe : {0}'}"
+                                                       FontSize="13"
+                                                       TextColor="#6B7280" />
+
+                                                <HorizontalStackLayout Grid.Row="0"
+                                                                       Grid.Column="1"
+                                                                       Grid.RowSpan="2"
+                                                                       Spacing="8"
+                                                                       VerticalOptions="Center">
+
+                                                    <Button Text="✎"
+                                                            BackgroundColor="#2D2D32"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditPlayerCharacterCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                    <Button Text="🗑"
+                                                            BackgroundColor="#F04438"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeletePlayerCharacterCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                </HorizontalStackLayout>
+
+                                            </Grid>
+                                        </Frame>
+
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
                     </Frame>
                 </Grid>
 
@@ -233,6 +518,7 @@
                             Command="{Binding SaveCommand}"
                             Style="{StaticResource PrimaryButtonStyle}"
                             HeightRequest="50" />
+
                 </Grid>
 
             </VerticalStackLayout>
