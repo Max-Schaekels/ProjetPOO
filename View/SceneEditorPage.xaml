@@ -40,6 +40,23 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
+            <Style x:Key="ElementFrameStyle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="BorderColor" Value="#E5E5E5" />
+                <Setter Property="BackgroundColor" Value="#FAFAFA" />
+            </Style>
+
+            <Style x:Key="SmallActionButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="WidthRequest" Value="38" />
+                <Setter Property="HeightRequest" Value="38" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+
             <Style x:Key="FieldLabelStyle" TargetType="Label">
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="FontSize" Value="16" />
@@ -68,7 +85,7 @@
                         Style="{StaticResource SecondaryButtonStyle}"
                         HorizontalOptions="Start" />
 
-                <Label Text="Éditeur de Scène"
+                <Label Text="{Binding PageTitle}"
                        FontSize="24"
                        FontAttributes="Bold"
                        TextColor="#111111"
@@ -144,7 +161,6 @@
                                     <Label Text="{Binding SelectedImageFileName}"
                                            Style="{StaticResource HintLabelStyle}" />
 
-                                    <!-- Zone d’aperçu -->
                                     <Frame Padding="8"
                                            CornerRadius="12"
                                            HasShadow="False"
@@ -264,16 +280,19 @@
 
                             <Grid ColumnDefinitions="*,Auto"
                                   Padding="20,16">
+
                                 <Label Grid.Column="0"
-                                       Text="Choix disponibles"
+                                       Text="Choix de la scène"
                                        FontSize="16"
                                        FontAttributes="Bold"
+                                       TextColor="#111111"
                                        VerticalOptions="Center" />
 
                                 <Button Grid.Column="1"
                                         Text="+ Nouveau choix"
                                         Command="{Binding NewChoiceCommand}"
                                         Style="{StaticResource DarkButtonStyle}" />
+
                             </Grid>
 
                             <BoxView HeightRequest="1"
@@ -292,61 +311,51 @@
 
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
+
                                         <Frame Margin="20,10,20,10"
-                                               Padding="16"
-                                               CornerRadius="12"
-                                               HasShadow="False"
-                                               BorderColor="#E2E2E2"
-                                               BackgroundColor="#F8F8FA">
+                                               Style="{StaticResource ElementFrameStyle}">
 
                                             <Grid ColumnDefinitions="*,Auto"
                                                   RowDefinitions="Auto,Auto"
-                                                  ColumnSpacing="12"
-                                                  RowSpacing="14">
+                                                  ColumnSpacing="16"
+                                                  RowSpacing="4">
 
-                                                <VerticalStackLayout Grid.Row="0"
-                                                                     Grid.Column="0"
-                                                                     Spacing="8">
-                                                    <Label Text="Texte du choix"
-                                                           FontSize="13"
-                                                           FontAttributes="Bold"
-                                                           TextColor="#6B7280" />
+                                                <Label Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="{Binding Label}"
+                                                       FontSize="15"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#111111" />
 
-                                                    <Entry Text="{Binding Label}"
-                                                           Placeholder="Nouveau choix"
-                                                           BackgroundColor="White"
-                                                           TextColor="#111111" />
-                                                </VerticalStackLayout>
+                                                <Label Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="{Binding TargetSceneId, StringFormat='Destination ID : {0}'}"
+                                                       FontSize="13"
+                                                       TextColor="#6B7280" />
 
-                                                <Button Grid.Row="0"
-                                                        Grid.Column="1"
-                                                        Text="🗑"
-                                                        BackgroundColor="Transparent"
-                                                        TextColor="#F04438"
-                                                        FontSize="18"
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteChoiceCommand}"
-                                                        CommandParameter="{Binding}"
-                                                        VerticalOptions="Center" />
+                                                <HorizontalStackLayout Grid.Row="0"
+                                                                       Grid.Column="1"
+                                                                       Grid.RowSpan="2"
+                                                                       Spacing="8"
+                                                                       VerticalOptions="Center">
 
-                                                <VerticalStackLayout Grid.Row="1"
-                                                                     Grid.Column="0"
-                                                                     Grid.ColumnSpan="2"
-                                                                     Spacing="8">
-                                                    <Label Text="Scène de destination"
-                                                           FontSize="13"
-                                                           FontAttributes="Bold"
-                                                           TextColor="#6B7280" />
+                                                    <Button Text="✎"
+                                                            BackgroundColor="#2D2D32"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditChoiceCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
 
-                                                    <Picker ItemsSource="{Binding AvailableTargetScenes}"
-                                                            SelectedItem="{Binding SelectedTargetScene}"
-                                                            ItemDisplayBinding="{Binding Title}"
-                                                            BackgroundColor="White"
-                                                            TextColor="#111111"
-                                                            Title="Choisir une scène" />
-                                                </VerticalStackLayout>
+                                                    <Button Text="🗑"
+                                                            BackgroundColor="#F04438"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteChoiceCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallActionButtonStyle}" />
+
+                                                </HorizontalStackLayout>
 
                                             </Grid>
                                         </Frame>
+
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
 

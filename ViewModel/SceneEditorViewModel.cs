@@ -23,6 +23,8 @@ namespace ProjetPOO.ViewModel
     {
         private readonly DataFilesManager _dataFilesManager;
         private readonly ChoiceEditorPage choiceEditorPage;
+        private Scenario? selectedScenario;
+        private Scene? selectedScene;
         public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, DataFilesManager dataFilesManager, ChoiceEditorPage choiceEditorPage) : base(alertService, dataAccessService)
         {
             _dataFilesManager = dataFilesManager;
@@ -268,13 +270,7 @@ namespace ProjetPOO.ViewModel
         }
         partial void OnSelectedSceneTypeChanged(SceneType value)
         {
-            OnPropertyChanged(nameof(IsNormalScene));
-            OnPropertyChanged(nameof(IsCombatScene));
-            OnPropertyChanged(nameof(IsShopScene));
-            OnPropertyChanged(nameof(IsEndScene));
-            OnPropertyChanged(nameof(AreChoicesVisible));
-            OnPropertyChanged(nameof(IsEnemySelectionVisible));
-            OnPropertyChanged(nameof(IsShopSelectionVisible));
+            RefreshSceneTypeVisibility();
         }
 
         [RelayCommand]
@@ -295,9 +291,24 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PushAsync(choiceEditorPage);
         }
 
+        [RelayCommand()]
+        private async Task EditChoice(Choice choice)
+        {
+            if (choice == null)
+            {
+                return;
+            }
+
+            await alertService.ShowAlert("Modifier choix", $"L'édition du choix \"{choice.Label}\" sera ajoutée plus tard.");
+        }
+
         [RelayCommand]
         private async Task DeleteChoice(Choice choice)
         {
+            if (choice == null)
+            {
+                return;
+            }
             await alertService.ShowAlert("Supprimer choix", $"La suppression du choix '{choice.Label}' sera ajoutée plus tard.");
         }
 
@@ -353,6 +364,195 @@ namespace ProjetPOO.ViewModel
             {
                 await alertService.ShowAlert("Erreur", "Impossible de sélectionner l'image : " + ex.Message);
             }
+        }
+
+        public void PrepareNewScene(Scenario scenario)
+        {
+            if (scenario == null)
+            {
+                return;
+            }
+
+            selectedScenario = scenario;
+            selectedScene = null;
+
+            PageTitle = "Nouvelle scène";
+
+            SceneTitle = "Nouvelle scène";
+            SceneText = string.Empty;
+            SelectedSceneType = SceneType.Normal;
+            PictureFileName = string.Empty;
+
+            Enemies = scenario.Enemies;
+            Shops = scenario.Shops;
+            Choices = new ChoicesCollection();
+
+            AvailableScenesForCombatTargets = BuildAvailableTargetScenes(null);
+
+            SelectedEnemy = null;
+            SelectedShop = null;
+            SelectedVictoryTargetScene = null;
+            SelectedDefeatTargetScene = null;
+            SelectedFleeTargetScene = null;
+
+            SelectedImageFileName = "Aucune image sélectionnée";
+            SceneImagePreview = null;
+
+            RefreshSceneTypeVisibility();
+        }
+
+        public void LoadScene(Scenario scenario, Scene scene)
+        {
+            if (scenario == null || scene == null)
+            {
+                return;
+            }
+
+            selectedScenario = scenario;
+            selectedScene = scene;
+
+            PageTitle = "Édition scène";
+
+            SceneTitle = scene.Title;
+            SceneText = scene.Text;
+            SelectedSceneType = scene.Type;
+
+            PictureFileName = scene.PictureFileName ?? string.Empty;
+            SelectedImageFileName = string.IsNullOrWhiteSpace(scene.PictureFileName)
+                ? "Aucune image sélectionnée"
+                : scene.PictureFileName;
+
+            Enemies = scenario.Enemies;
+            Shops = scenario.Shops;
+            Choices = scene.Choices;
+
+            AvailableScenesForCombatTargets = BuildAvailableTargetScenes(scene);
+
+            SelectedEnemy = GetEnemyById(scene.EnemyId);
+            SelectedShop = GetShopById(scene.ShopId);
+            SelectedVictoryTargetScene = GetSceneById(scene.VictoryTargetSceneId);
+            SelectedDefeatTargetScene = GetSceneById(scene.DefeatTargetSceneId);
+            SelectedFleeTargetScene = GetSceneById(scene.FleeTargetSceneId);
+
+            LoadSceneImagePreview(scene.PictureFileName);
+
+            RefreshSceneTypeVisibility();
+        }
+
+        private ScenesCollection BuildAvailableTargetScenes(Scene? sceneToExclude)
+        {
+            ScenesCollection availableScenes = new ScenesCollection();
+
+            if (selectedScenario == null)
+            {
+                return availableScenes;
+            }
+
+            for (int i = 0; i < selectedScenario.Scenes.Count; i++)
+            {
+                Scene scene = selectedScenario.Scenes[i];
+
+                if (sceneToExclude != null && scene.Id == sceneToExclude.Id)
+                {
+                    continue;
+                }
+
+                availableScenes.Add(scene);
+            }
+
+            return availableScenes;
+        }
+
+        private Enemy? GetEnemyById(int? enemyId)
+        {
+            if (enemyId == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < Enemies.Count; i++)
+            {
+                Enemy enemy = Enemies[i];
+
+                if (enemy.Id == enemyId.Value)
+                {
+                    return enemy;
+                }
+            }
+
+            return null;
+        }
+
+        private Shop? GetShopById(int? shopId)
+        {
+            if (shopId == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < Shops.Count; i++)
+            {
+                Shop shop = Shops[i];
+
+                if (shop.Id == shopId.Value)
+                {
+                    return shop;
+                }
+            }
+
+            return null;
+        }
+
+        private Scene? GetSceneById(int? sceneId)
+        {
+            if (sceneId == null || selectedScenario == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < selectedScenario.Scenes.Count; i++)
+            {
+                Scene scene = selectedScenario.Scenes[i];
+
+                if (scene.Id == sceneId.Value)
+                {
+                    return scene;
+                }
+            }
+
+            return null;
+        }
+
+        private void LoadSceneImagePreview(string? pictureFileName)
+        {
+            if (string.IsNullOrWhiteSpace(pictureFileName))
+            {
+                SceneImagePreview = null;
+                return;
+            }
+
+            try
+            {
+                string imagesDirectoryPath = GetScenesImagesDirectoryPath();
+                string fullImagePath = Path.Combine(imagesDirectoryPath, pictureFileName);
+
+                UpdateImagePreview(fullImagePath);
+            }
+            catch
+            {
+                SceneImagePreview = null;
+            }
+        }
+
+        private void RefreshSceneTypeVisibility()
+        {
+            OnPropertyChanged(nameof(IsNormalScene));
+            OnPropertyChanged(nameof(IsCombatScene));
+            OnPropertyChanged(nameof(IsShopScene));
+            OnPropertyChanged(nameof(IsEndScene));
+            OnPropertyChanged(nameof(AreChoicesVisible));
+            OnPropertyChanged(nameof(IsEnemySelectionVisible));
+            OnPropertyChanged(nameof(IsShopSelectionVisible));
         }
 
 

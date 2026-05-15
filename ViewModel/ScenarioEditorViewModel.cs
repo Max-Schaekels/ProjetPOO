@@ -21,6 +21,7 @@ namespace ProjetPOO.ViewModel
         private readonly PlayerCharacterEditorPage playerCharacterEditorPage;
 
         private Scenario? selectedScenario;
+        private Scene? selectedScene;
 
         public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage, EnemyEditorPage enemyEditorPage, ShopEditorPage shopEditorPage, PlayerCharacterEditorPage playerCharacterEditorPage) : base(alertService, dataAccessService)
         {
@@ -109,6 +110,17 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task AddScene()
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
+            if (sceneEditorPage.BindingContext is SceneEditorViewModel sceneEditorViewModel)
+            {
+                sceneEditorViewModel.PrepareNewScene(selectedScenario);
+            }
+
             await Shell.Current.Navigation.PushAsync(sceneEditorPage);
         }
 
@@ -133,12 +145,23 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task EditScene(Scene scene)
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (scene == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Modifier scène", $"L'édition de la scène \"{scene.Title}\" sera ajoutée plus tard.");
+            if (sceneEditorPage.BindingContext is SceneEditorViewModel sceneEditorViewModel)
+            {
+                sceneEditorViewModel.LoadScene(selectedScenario, scene);
+            }
+
+            await Shell.Current.Navigation.PushAsync(sceneEditorPage);
         }
 
         [RelayCommand()]
@@ -264,6 +287,8 @@ namespace ProjetPOO.ViewModel
             IsShopsEmpty = ShopsCount == 0;
             IsPlayerCharactersEmpty = PlayerCharactersCount == 0;
         }
+
+
 
     }
 }
