@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProjetPOO.Model.Story;
 using ProjetPOO.Model.Story.Enums;
 using ProjetPOO.Utilities.Interfaces;
 using System;
@@ -7,11 +8,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Effect = ProjetPOO.Model.Story.Effect;
 
 namespace ProjetPOO.ViewModel
 {
     public partial class EffectEditorViewModel : BaseViewModel
     {
+        private Choice? selectedChoice;
+        private Effect? selectedEffect;
         public EffectEditorViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
         {
             PageTitle = "Édition effet";
@@ -96,6 +100,44 @@ namespace ProjetPOO.ViewModel
         private async Task Save()
         {
             await alertService.ShowAlert("Sauvegarder effet", $"La sauvegarde de l'effet sera ajoutée plus tard.");
+        }
+
+        public void PrepareNewEffect(Choice choice)
+        {
+            if (choice == null)
+            {
+                return;
+            }
+
+            selectedChoice = choice;
+            selectedEffect = null;
+
+            PageTitle = "Nouvel effet";
+
+            SelectedEffectType = EffectType.AddGold;
+            Amount = 1;
+            FlagKey = string.Empty;
+
+            UpdateFieldsVisibility();
+        }
+
+        public void LoadEffect(Choice choice, Effect effect)
+        {
+            if (choice == null || effect == null)
+            {
+                return;
+            }
+
+            selectedChoice = choice;
+            selectedEffect = effect;
+
+            PageTitle = "Édition effet";
+
+            SelectedEffectType = effect.Type;
+            Amount = effect.Amount;
+            FlagKey = effect.FlagKey;
+
+            UpdateFieldsVisibility();
         }
     }
 }

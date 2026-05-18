@@ -90,10 +90,76 @@
 
                     <BoxView HeightRequest="1" Color="#eeeeee" />
 
-                    <Label
-                        Text="Aucune condition"
-                        Padding="20"
-                        TextColor="#888888" />
+                    <CollectionView ItemsSource="{Binding Conditions}"
+                SelectionMode="None"
+                Margin="0,10,0,10">
+
+                        <CollectionView.EmptyView>
+                            <Label Text="Aucune condition"
+               HorizontalOptions="Center"
+               TextColor="#888888"
+               Margin="0,20,0,20" />
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="20,10,20,10"
+                   Padding="14"
+                   CornerRadius="12"
+                   HasShadow="False"
+                   BorderColor="#E5E5E5"
+                   BackgroundColor="#FAFAFA">
+
+                                    <Grid ColumnDefinitions="*,Auto"
+                      RowDefinitions="Auto,Auto"
+                      ColumnSpacing="16"
+                      RowSpacing="4">
+
+                                        <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Text="{Binding Type, StringFormat='Type : {0}'}"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="#111111" />
+
+                                        <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Text="{Binding MinValue, StringFormat='Valeur : {0}'}"
+                           FontSize="13"
+                           TextColor="#6B7280" />
+
+                                        <HorizontalStackLayout Grid.Row="0"
+                                           Grid.Column="1"
+                                           Grid.RowSpan="2"
+                                           Spacing="8"
+                                           VerticalOptions="Center">
+
+                                            <Button Text="✎"
+                                BackgroundColor="#2D2D32"
+                                TextColor="White"
+                                CornerRadius="8"
+                                WidthRequest="38"
+                                HeightRequest="38"
+                                Padding="0"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditConditionCommand}"
+                                CommandParameter="{Binding}" />
+
+                                            <Button Text="🗑"
+                                BackgroundColor="#F04438"
+                                TextColor="White"
+                                CornerRadius="8"
+                                WidthRequest="38"
+                                HeightRequest="38"
+                                Padding="0"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteConditionCommand}"
+                                CommandParameter="{Binding}" />
+
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
 
                 </VerticalStackLayout>
             </Border>
@@ -127,10 +193,82 @@
 
                     <BoxView HeightRequest="1" Color="#eeeeee" />
 
-                    <Label
-                        Text="Aucun effet"
-                        Padding="20"
-                        TextColor="#888888" />
+                    <CollectionView ItemsSource="{Binding Effects}"
+                SelectionMode="None"
+                Margin="0,10,0,10">
+
+                        <CollectionView.EmptyView>
+                            <Label Text="Aucun effet"
+               HorizontalOptions="Center"
+               TextColor="#888888"
+               Margin="0,20,0,20" />
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="20,10,20,10"
+                   Padding="14"
+                   CornerRadius="12"
+                   HasShadow="False"
+                   BorderColor="#E5E5E5"
+                   BackgroundColor="#FAFAFA">
+
+                                    <Grid ColumnDefinitions="*,Auto"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnSpacing="16"
+                      RowSpacing="4">
+
+                                        <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Text="{Binding Type, StringFormat='Type : {0}'}"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="#111111" />
+
+                                        <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Text="{Binding Amount, StringFormat='Quantité : {0}', TargetNullValue='Quantité : -'}"
+                           FontSize="13"
+                           TextColor="#6B7280" />
+
+                                        <Label Grid.Row="2"
+                           Grid.Column="0"
+                           Text="{Binding FlagKey, StringFormat='Repère : {0}', TargetNullValue='Repère : -'}"
+                           FontSize="13"
+                           TextColor="#6B7280" />
+
+                                        <HorizontalStackLayout Grid.Row="0"
+                                           Grid.Column="1"
+                                           Grid.RowSpan="3"
+                                           Spacing="8"
+                                           VerticalOptions="Center">
+
+                                            <Button Text="✎"
+                                BackgroundColor="#2D2D32"
+                                TextColor="White"
+                                CornerRadius="8"
+                                WidthRequest="38"
+                                HeightRequest="38"
+                                Padding="0"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditEffectCommand}"
+                                CommandParameter="{Binding}" />
+
+                                            <Button Text="🗑"
+                                BackgroundColor="#F04438"
+                                TextColor="White"
+                                CornerRadius="8"
+                                WidthRequest="38"
+                                HeightRequest="38"
+                                Padding="0"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteEffectCommand}"
+                                CommandParameter="{Binding}" />
+
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
 
                 </VerticalStackLayout>
             </Border>

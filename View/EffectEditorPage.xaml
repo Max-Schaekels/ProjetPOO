@@ -16,7 +16,7 @@
                 TextColor="#333333" />
 
             <Label
-                Text="Éditeur d'effet"
+                Text="{Binding PageTitle}"
                 FontSize="28"
                 FontAttributes="Bold"
                 HorizontalOptions="Center" />
