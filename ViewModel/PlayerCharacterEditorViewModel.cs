@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,8 @@ namespace ProjetPOO.ViewModel
 {
     public partial class PlayerCharacterEditorViewModel : BaseViewModel
     {
+        private Scenario? selectedScenario;
+        private PlayerCharacterTemplate? selectedPlayerCharacter;
         public PlayerCharacterEditorViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
         {
             PageTitle = "Édition personnage joueur";
@@ -62,6 +66,56 @@ namespace ProjetPOO.ViewModel
         private async Task Save()
         {
             await alertService.ShowAlert("Sauvegarder personnage", "La sauvegarde du personnage sera ajoutée plus tard.");
+        }
+
+        public void PrepareNewPlayerCharacter(Scenario scenario)
+        {
+            if (scenario == null)
+            {
+                return;
+            }
+
+            selectedScenario = scenario;
+            selectedPlayerCharacter = null;
+
+            PageTitle = "Nouveau personnage";
+
+            PlayerName = string.Empty;
+            ClassName = string.Empty;
+            RaceName = string.Empty;
+
+            MaxHp = 10;
+            Attack = 5;
+            Defense = 2;
+            Agility = 2;
+
+            StartingExperience = 0;
+            StartingLevel = 1;
+        }
+
+        public void LoadPlayerCharacter(Scenario scenario, PlayerCharacterTemplate playerCharacter)
+        {
+            if (scenario == null || playerCharacter == null)
+            {
+                return;
+            }
+
+            selectedScenario = scenario;
+            selectedPlayerCharacter = playerCharacter;
+
+            PageTitle = "Édition personnage";
+
+            PlayerName = playerCharacter.Name;
+            ClassName = playerCharacter.ClassName;
+            RaceName = playerCharacter.RaceName;
+
+            MaxHp = playerCharacter.MaxHp;
+            Attack = playerCharacter.Attack;
+            Defense = playerCharacter.Defense;
+            Agility = playerCharacter.Agility;
+
+            StartingExperience = playerCharacter.StartingExperience;
+            StartingLevel = playerCharacter.StartingLevel;
         }
     }
 }

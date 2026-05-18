@@ -161,6 +161,17 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task AddPlayerCharacter()
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
+            if (playerCharacterEditorPage.BindingContext is PlayerCharacterEditorViewModel playerCharacterEditorViewModel)
+            {
+                playerCharacterEditorViewModel.PrepareNewPlayerCharacter(selectedScenario);
+            }
+
             await Shell.Current.Navigation.PushAsync(playerCharacterEditorPage);
         }
 
@@ -267,12 +278,23 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task EditPlayerCharacter(PlayerCharacterTemplate playerCharacter)
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (playerCharacter == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Modifier personnage", $"L'édition du personnage \"{playerCharacter.Name}\" sera ajoutée plus tard.");
+            if (playerCharacterEditorPage.BindingContext is PlayerCharacterEditorViewModel playerCharacterEditorViewModel)
+            {
+                playerCharacterEditorViewModel.LoadPlayerCharacter(selectedScenario, playerCharacter);
+            }
+
+            await Shell.Current.Navigation.PushAsync(playerCharacterEditorPage);
         }
 
         [RelayCommand()]
