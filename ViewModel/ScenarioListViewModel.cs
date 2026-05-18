@@ -45,7 +45,28 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task DeleteScenario(Scenario scenario)
         {
-            await alertService.ShowAlert("Supprimer scénario", $"La suppression du scénario '{scenario.Title}' sera ajoutée plus tard.");
+            if (scenario == null)
+            {
+                return;
+            }
+
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer scénario",
+                $"Voulez-vous vraiment supprimer le scénario \"{scenario.Title}\" ?",
+                "Supprimer",
+                "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            bool removed = Scenarios.Remove(scenario);
+
+            if (!removed)
+            {
+                await alertService.ShowAlert("Suppression impossible", "Le scénario n'a pas pu être supprimé.");
+            }
         }
 
         [RelayCommand()]

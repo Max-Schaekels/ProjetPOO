@@ -200,12 +200,37 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task DeleteScene(Scene scene)
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (scene == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Supprimer scène", $"La suppression de la scène \"{scene.Title}\" sera ajoutée plus tard.");
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer scène",
+                $"Voulez-vous vraiment supprimer la scène \"{scene.Title}\" ?",
+                "Supprimer",
+                "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            bool removed = selectedScenario.RemoveSceneById(scene.Id);
+
+            if (!removed)
+            {
+                await alertService.ShowAlert("Suppression impossible", "La scène n'a pas pu être supprimée.");
+                return;
+            }
+
+            RefreshCounts();
         }
 
         [RelayCommand()]
@@ -233,12 +258,31 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task DeleteEnemy(Enemy enemy)
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (enemy == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Supprimer ennemi", "La suppression de cet ennemi sera ajoutée plus tard.");
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer ennemi",
+                $"Voulez-vous vraiment supprimer l'ennemi \"{enemy.Name}\" ?",
+                "Supprimer",
+                "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            selectedScenario.RemoveEnemy(enemy.Id);
+
+            RefreshCounts();
         }
 
         [RelayCommand()]
@@ -267,12 +311,31 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task DeleteShop(Shop shop)
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (shop == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Supprimer boutique", $"La suppression de la boutique \"{shop.Name}\" sera ajoutée plus tard.");
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer boutique",
+                $"Voulez-vous vraiment supprimer la boutique \"{shop.Name}\" ?",
+                "Supprimer",
+                "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            selectedScenario.RemoveShop(shop.Id);
+
+            RefreshCounts();
         }
 
         [RelayCommand()]
@@ -300,12 +363,37 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task DeletePlayerCharacter(PlayerCharacterTemplate playerCharacter)
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (playerCharacter == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Supprimer personnage", $"La suppression du personnage \"{playerCharacter.Name}\" sera ajoutée plus tard.");
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer personnage",
+                $"Voulez-vous vraiment supprimer le personnage \"{playerCharacter.Name}\" ?",
+                "Supprimer",
+                "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            bool removed = selectedScenario.RemovePlayerCharacterById(playerCharacter.Id);
+
+            if (!removed)
+            {
+                await alertService.ShowAlert("Suppression impossible", "Le personnage n'a pas pu être supprimé.");
+                return;
+            }
+
+            RefreshCounts();
         }
 
         public void LoadScenario(Scenario scenario)

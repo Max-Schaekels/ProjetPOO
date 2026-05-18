@@ -103,12 +103,34 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task DeleteCondition(Condition condition)
         {
+            if (selectedChoice == null)
+            {
+                await alertService.ShowAlert("Choix manquant", "Impossible de supprimer cette condition car aucun choix n'est sélectionné.");
+                return;
+            }
+
             if (condition == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Supprimer condition", $"La suppression de la condition \"{condition.Type}\" sera ajoutée plus tard.");
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer condition",
+                $"Voulez-vous vraiment supprimer la condition \"{condition.Type}\" ?",
+                "Supprimer",
+                "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            bool removed = selectedChoice.Conditions.RemoveById(condition.Id);
+
+            if (!removed)
+            {
+                await alertService.ShowAlert("Suppression impossible", "La condition n'a pas pu être supprimée.");
+            }
         }
 
         [RelayCommand()]
@@ -153,12 +175,34 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task DeleteEffect(Effect effect)
         {
+            if (selectedChoice == null)
+            {
+                await alertService.ShowAlert("Choix manquant", "Impossible de supprimer cet effet car aucun choix n'est sélectionné.");
+                return;
+            }
+
             if (effect == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Supprimer effet", $"La suppression de l'effet \"{effect.Type}\" sera ajoutée plus tard.");
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer effet",
+                $"Voulez-vous vraiment supprimer l'effet \"{effect.Type}\" ?",
+                "Supprimer",
+                "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            bool removed = selectedChoice.Effects.RemoveById(effect.Id);
+
+            if (!removed)
+            {
+                await alertService.ShowAlert("Suppression impossible", "L'effet n'a pas pu être supprimé.");
+            }
         }
 
         public void LoadChoice(Scenario scenario, Scene scene, Choice choice)

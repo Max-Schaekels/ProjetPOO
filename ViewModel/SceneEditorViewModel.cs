@@ -316,11 +316,34 @@ namespace ProjetPOO.ViewModel
         [RelayCommand]
         private async Task DeleteChoice(Choice choice)
         {
+            if (selectedScene == null)
+            {
+                await alertService.ShowAlert("Scène manquante", "Impossible de supprimer ce choix car la scène courante n'est pas connue.");
+                return;
+            }
+
             if (choice == null)
             {
                 return;
             }
-            await alertService.ShowAlert("Supprimer choix", $"La suppression du choix '{choice.Label}' sera ajoutée plus tard.");
+
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer choix",
+                $"Voulez-vous vraiment supprimer le choix \"{choice.Label}\" ?",
+                "Supprimer",
+                "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            bool removed = selectedScene.Choices.RemoveById(choice.Id);
+
+            if (!removed)
+            {
+                await alertService.ShowAlert("Suppression impossible", "Le choix n'a pas pu être supprimé.");
+            }
         }
 
 

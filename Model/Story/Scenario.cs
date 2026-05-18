@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace ProjetPOO.Model.Story
 {
-    public class Scenario
+    public class Scenario : INotifyPropertyChanged
     {
         private const int MINIMUM_TITLE_LENGTH = 3;
         private const int MAX_TITLE_LENGTH = 200;
@@ -28,7 +30,7 @@ namespace ProjetPOO.Model.Story
         private PlayerCharactersCollection _playerCharacters;
         private EnemyRacesCollection _enemyRaces;
 
-
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public int Id
         {
@@ -178,6 +180,19 @@ namespace ProjetPOO.Model.Story
                 }
 
                 return Shops.Count;
+            }
+        }
+
+        public int PlayerCharactersCount
+        {
+            get
+            {
+                if (PlayerCharacters == null)
+                {
+                    return 0;
+                }
+
+                return PlayerCharacters.Count;
             }
         }
 
@@ -392,14 +407,18 @@ namespace ProjetPOO.Model.Story
             {
                 return;
             }
-
-            foreach (Scene scene in Scenes)
+            else
             {
-                if (scene != null)
-                {
-                    scene.ClearEnemyIfMatches(enemyId);
-                }
+                NotifyCountsChanged();
             }
+
+                foreach (Scene scene in Scenes)
+                {
+                    if (scene != null)
+                    {
+                        scene.ClearEnemyIfMatches(enemyId);
+                    }
+                }
         }
 
 
@@ -411,15 +430,19 @@ namespace ProjetPOO.Model.Story
             {
                 return;
             }
-
-            for (int i = 0; i < Scenes.Count; i++)
+            else
             {
-                Scene scene = Scenes[i];
-                if (scene != null && scene.Type == SceneType.Shop && scene.ShopId == shopId)
-                {
-                    scene.ClearShop();
-                }
+                NotifyCountsChanged();
             }
+
+                for (int i = 0; i < Scenes.Count; i++)
+                {
+                    Scene scene = Scenes[i];
+                    if (scene != null && scene.Type == SceneType.Shop && scene.ShopId == shopId)
+                    {
+                        scene.ClearShop();
+                    }
+                }
         }
 
         public void AssignStartScene(int startSceneId)
@@ -467,6 +490,10 @@ namespace ProjetPOO.Model.Story
             {
                 return false;
             }
+            else
+            {
+                NotifyCountsChanged();
+            }
 
             if (StartSceneId == id)
             {
@@ -474,6 +501,18 @@ namespace ProjetPOO.Model.Story
             }
 
             return true;
+        }
+
+        public bool RemovePlayerCharacterById(int playerCharacterId)
+        {
+            bool removed = PlayerCharacters.RemoveById(playerCharacterId);
+
+            if (removed)
+            {
+                NotifyCountsChanged();
+            }
+
+            return removed;
         }
 
 
@@ -901,6 +940,20 @@ namespace ProjetPOO.Model.Story
             }
 
             return template;
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void NotifyCountsChanged()
+        {
+            OnPropertyChanged(nameof(ScenesCount));
+            OnPropertyChanged(nameof(EnemiesCount));
+            OnPropertyChanged(nameof(EnemyRacesCount));
+            OnPropertyChanged(nameof(ShopsCount));
+            OnPropertyChanged(nameof(PlayerCharactersCount));
         }
     }
 }
