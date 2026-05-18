@@ -22,10 +22,11 @@
                     Padding="0" />
 
                 <Label
-                    Text="Éditeur d'ennemi"
+                    Text="{Binding PageTitle}"
                     FontSize="24"
                     FontAttributes="Bold"
-                    TextColor="#111111" />
+                    TextColor="#111111" 
+                    HorizontalOptions="Center"/>
 
             </VerticalStackLayout>
 

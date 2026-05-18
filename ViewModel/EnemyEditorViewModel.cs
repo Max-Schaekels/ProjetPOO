@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProjetPOO.Model.Combat;
 using ProjetPOO.Model.Combat.Enums;
+using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.Interfaces;
 using ProjetPOO.View;
 using System;
@@ -15,6 +16,8 @@ namespace ProjetPOO.ViewModel
 {
     public partial class EnemyEditorViewModel : BaseViewModel
     {
+        private Scenario? selectedScenario;
+        private Enemy? selectedEnemy;
         public EnemyEditorViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
         {
             PageTitle = "Édition ennemi";
@@ -140,10 +143,17 @@ namespace ProjetPOO.ViewModel
 
                 if (EnemyRaces == null)
                 {
-                    EnemyRaces = new EnemyRacesCollection();
+                    if (selectedScenario != null)
+                    {
+                        EnemyRaces = new EnemyRacesCollection(selectedScenario.Id);
+                    }
+                    else
+                    {
+                        EnemyRaces = new EnemyRacesCollection();
+                    }
                 }
 
-                EnemyRaces.Add(enemyRace);
+                EnemyRaces.AddEnemyRace(enemyRace);
                 SelectedEnemyRace = enemyRace;
 
                 NewEnemyRaceName = string.Empty;
@@ -156,6 +166,112 @@ namespace ProjetPOO.ViewModel
                 await alertService.ShowAlert("Erreur", ex.Message);
                 return false;
             }
+        }
+
+        public void PrepareNewEnemy(Scenario scenario)
+        {
+            if (scenario == null)
+            {
+                return;
+            }
+
+            selectedScenario = scenario;
+            selectedEnemy = null;
+
+            PageTitle = "Nouvel ennemi";
+
+            EnemyName = string.Empty;
+
+            EnemyRaces = scenario.EnemyRaces;
+            SelectedEnemyRace = GetFirstEnemyRace();
+
+            MaxHp = 10;
+            Attack = 1;
+            Defense = 0;
+            Agility = 0;
+
+            RewardExperience = 0;
+            RewardGoldMin = 0;
+            RewardGoldMax = 0;
+
+            PotionDropChance = 0;
+            PotionAmountMin = 0;
+            PotionAmountMax = 0;
+
+            KeyDropChance = 0;
+            KeyAmountMin = 0;
+            KeyAmountMax = 0;
+
+            NewEnemyRaceName = string.Empty;
+            NewEnemyRaceDescription = string.Empty;
+        }
+
+        public void LoadEnemy(Scenario scenario, Enemy enemy)
+        {
+            if (scenario == null || enemy == null)
+            {
+                return;
+            }
+
+            selectedScenario = scenario;
+            selectedEnemy = enemy;
+
+            PageTitle = "Édition ennemi";
+
+            EnemyName = enemy.EnemyName ?? string.Empty;
+
+            EnemyRaces = scenario.EnemyRaces;
+            SelectedEnemyRace = GetEnemyRaceById(enemy.EnemyRaceId);
+
+            MaxHp = enemy.MaxHp;
+            Attack = enemy.Attack;
+            Defense = enemy.Defense;
+            Agility = enemy.Agility;
+
+            RewardExperience = enemy.RewardExperience;
+            RewardGoldMin = enemy.RewardGoldMin;
+            RewardGoldMax = enemy.RewardGoldMax;
+
+            PotionDropChance = enemy.PotionDropChance;
+            PotionAmountMin = enemy.PotionAmountMin;
+            PotionAmountMax = enemy.PotionAmountMax;
+
+            KeyDropChance = enemy.KeyDropChance;
+            KeyAmountMin = enemy.KeyAmountMin;
+            KeyAmountMax = enemy.KeyAmountMax;
+
+            NewEnemyRaceName = string.Empty;
+            NewEnemyRaceDescription = string.Empty;
+        }
+
+        private EnemyRace? GetEnemyRaceById(int enemyRaceId)
+        {
+            if (EnemyRaces == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < EnemyRaces.Count; i++)
+            {
+                EnemyRace enemyRace = EnemyRaces[i];
+
+                if (enemyRace.Id == enemyRaceId)
+                {
+                    return enemyRace;
+                }
+            }
+
+            return null;
+        }
+
+        private EnemyRace? GetFirstEnemyRace()
+        {
+            if (EnemyRaces == null || EnemyRaces.Count == 0)
+            {
+                return null;
+            }
+
+            return EnemyRaces[0];
         }
     }
 }

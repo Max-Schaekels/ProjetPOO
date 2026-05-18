@@ -127,6 +127,17 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task AddEnemy()
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
+            if (enemyEditorPage.BindingContext is EnemyEditorViewModel enemyEditorViewModel)
+            {
+                enemyEditorViewModel.PrepareNewEnemy(selectedScenario);
+            }
+
             await Shell.Current.Navigation.PushAsync(enemyEditorPage);
         }
 
@@ -178,12 +189,23 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task EditEnemy(Enemy enemy)
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (enemy == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Modifier ennemi", "L'édition de cet ennemi sera ajoutée plus tard.");
+            if (enemyEditorPage.BindingContext is EnemyEditorViewModel enemyEditorViewModel)
+            {
+                enemyEditorViewModel.LoadEnemy(selectedScenario, enemy);
+            }
+
+            await Shell.Current.Navigation.PushAsync(enemyEditorPage);
         }
 
         [RelayCommand()]
