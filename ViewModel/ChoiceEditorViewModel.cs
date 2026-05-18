@@ -15,6 +15,9 @@ namespace ProjetPOO.ViewModel
     {
         private readonly ConditionEditorPage conditionEditorPage;
         private readonly EffectEditorPage effectEditorPage;
+        private Scenario? selectedScenario;
+        private Scene? selectedScene;
+        private Choice? selectedChoice;
         public ChoiceEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, ConditionEditorPage conditionEditorPage, EffectEditorPage effectEditorPage) : base(alertService, dataAccessService)
         {
             this.conditionEditorPage = conditionEditorPage;
@@ -68,5 +71,69 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PushAsync(effectEditorPage);
         }
 
+        public void LoadChoice(Scenario scenario, Scene scene, Choice choice)
+        {
+            if (scenario == null || scene == null || choice == null)
+            {
+                return;
+            }
+
+            selectedScenario = scenario;
+            selectedScene = scene;
+            selectedChoice = choice;
+
+            PageTitle = "Édition choix";
+
+            ChoiceLabel = choice.Label;
+            AvailableTargetScenes = BuildAvailableTargetScenes(scene);
+            SelectedTargetScene = GetSceneById(choice.TargetSceneId);
+
+            Conditions = choice.Conditions;
+            Effects = choice.Effects;
+        }
+
+        private ScenesCollection BuildAvailableTargetScenes(Scene currentScene)
+        {
+            ScenesCollection availableTargetScenes = new ScenesCollection();
+
+            if (selectedScenario == null)
+            {
+                return availableTargetScenes;
+            }
+
+            for (int i = 0; i < selectedScenario.Scenes.Count; i++)
+            {
+                Scene scene = selectedScenario.Scenes[i];
+
+                if (scene.Id == currentScene.Id)
+                {
+                    continue;
+                }
+
+                availableTargetScenes.Add(scene);
+            }
+
+            return availableTargetScenes;
+        }
+
+        private Scene? GetSceneById(int sceneId)
+        {
+            if (selectedScenario == null || sceneId <= 0)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < selectedScenario.Scenes.Count; i++)
+            {
+                Scene scene = selectedScenario.Scenes[i];
+
+                if (scene.Id == sceneId)
+                {
+                    return scene;
+                }
+            }
+
+            return null;
+        }
     }
 }

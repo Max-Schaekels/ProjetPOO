@@ -291,7 +291,7 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PushAsync(choiceEditorPage);
         }
 
-        [RelayCommand()]
+        [RelayCommand]
         private async Task EditChoice(Choice choice)
         {
             if (choice == null)
@@ -299,7 +299,18 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            await alertService.ShowAlert("Modifier choix", $"L'édition du choix \"{choice.Label}\" sera ajoutée plus tard.");
+            if (selectedScenario == null || selectedScene == null)
+            {
+                await alertService.ShowAlert("Contexte manquant", "Impossible de modifier ce choix car la scène courante n'est pas connue.");
+                return;
+            }
+
+            if (choiceEditorPage.BindingContext is ChoiceEditorViewModel choiceEditorViewModel)
+            {
+                choiceEditorViewModel.LoadChoice(selectedScenario, selectedScene, choice);
+            }
+
+            await Shell.Current.Navigation.PushAsync(choiceEditorPage);
         }
 
         [RelayCommand]
