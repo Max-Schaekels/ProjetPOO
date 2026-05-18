@@ -22,7 +22,7 @@
                     Padding="0" />
 
                 <Label
-                    Text="Éditeur de boutique"
+                    Text="{Binding PageTitle}"
                     FontSize="24"
                     FontAttributes="Bold"
                     TextColor="#111111" 

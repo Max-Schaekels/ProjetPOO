@@ -144,6 +144,17 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task AddShop()
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
+            if (shopEditorPage.BindingContext is ShopEditorViewModel shopEditorViewModel)
+            {
+                shopEditorViewModel.PrepareNewShop(selectedScenario);
+            }
+
             await Shell.Current.Navigation.PushAsync(shopEditorPage);
         }
 
@@ -222,12 +233,24 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task EditShop(Shop shop)
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (shop == null)
             {
                 return;
             }
 
-            await alertService.ShowAlert("Modifier boutique", $"L'édition de la boutique \"{shop.Name}\" sera ajoutée plus tard.");
+            if (shopEditorPage.BindingContext is ShopEditorViewModel shopEditorViewModel)
+            {
+                shopEditorViewModel.LoadShop(selectedScenario, shop);
+            }
+
+            await Shell.Current.Navigation.PushAsync(shopEditorPage);
+
         }
 
         [RelayCommand()]
