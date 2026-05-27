@@ -10,7 +10,7 @@ using ProjetPOO.Utilities.Randomization;
 
 namespace ProjetPOO.Model.Combat
 {
-    public class Enemy : Character
+    public class Enemy 
     {
         private const int LOW_DROP_CHANCE = 0;
         private const int HIGH_DROP_CHANCE = 100;
@@ -25,6 +25,10 @@ namespace ProjetPOO.Model.Combat
         private string? _enemyName;
         private int _enemyRaceId;
         private int _rewardExperience;
+        private int _maxHp;
+        private int _attack;
+        private int _defense;
+        private int _agility;
 
         private int _rewardGoldMin;
         private int _rewardGoldMax;
@@ -93,6 +97,61 @@ namespace ProjetPOO.Model.Combat
                     _rewardExperience = value;
             }
         }
+
+        public string Name
+        {
+            get => GetCharacterName(EnemyName, EnemyRaceId);
+        }
+
+        public int MaxHp
+        {
+            get => _maxHp;
+            private set
+            {
+                if (ValidUtils.CheckIfPositiveNumber(value))
+                {
+                    _maxHp = value;
+                }
+            }
+        }
+
+        public int Attack
+        {
+            get => _attack;
+            private set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                {
+                    _attack = value;
+                }
+            }
+        }
+
+        public int Defense
+        {
+            get => _defense;
+            private set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                {
+                    _defense = value;
+                }
+            }
+        }
+
+        public int Agility
+        {
+            get => _agility;
+            private set
+            {
+                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                {
+                    _agility = value;
+                }
+            }
+        }
+
+
 
         public int RewardGoldMin
         {
@@ -193,7 +252,7 @@ namespace ProjetPOO.Model.Combat
 
         // Constructeur "normal" (en mémoire)
         public Enemy(string? enemyName, int enemyRaceId, int maxHp, int attack, int defense,  int agility, int rewardExperience, int rewardGoldMin, int rewardGoldMax, int potionDropChance,int potionAmountMin, int potionAmountMax, int keyDropChance, int keyAmountMin,
-            int keyAmountMax) : base(GetCharacterName(enemyName, enemyRaceId), maxHp, attack, defense, agility)
+            int keyAmountMax) 
         {
             Id = GenerateId();
 
@@ -201,6 +260,11 @@ namespace ProjetPOO.Model.Combat
 
             EnemyName = enemyName;
             EnemyRaceId = enemyRaceId;
+
+            MaxHp = maxHp;
+            Attack = attack;
+            Defense = defense;
+            Agility = agility;
 
             RewardExperience = rewardExperience;
 
@@ -220,13 +284,18 @@ namespace ProjetPOO.Model.Combat
 
         // Constructeur privé pour Load (évite de dupliquer la logique)
         private Enemy( int id,int scenarioId, string? enemyName, int enemyRaceId, int maxHp,int attack, int defense,int agility,int rewardExperience,int rewardGoldMin,int rewardGoldMax,int potionDropChance,int potionAmountMin,int potionAmountMax,int keyDropChance,int keyAmountMin,
-            int keyAmountMax) : base(GetCharacterName(enemyName, enemyRaceId), maxHp, attack, defense, agility)
+            int keyAmountMax) 
         {
             Id = id;
             ScenarioId = scenarioId;
 
             EnemyName = enemyName;
             EnemyRaceId = enemyRaceId;
+
+            MaxHp = maxHp;
+            Attack = attack;
+            Defense = defense;
+            Agility = agility;
 
             RewardExperience = rewardExperience;
 
