@@ -1,0 +1,2 @@
+﻿FOLDER,NOT_USED
+CONNECTION_STRING,votre chaine de connexion

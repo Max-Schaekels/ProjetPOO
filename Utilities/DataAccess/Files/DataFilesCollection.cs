@@ -19,5 +19,9 @@ namespace ProjetPOO.Utilities.DataAccess.Files
 
         public string? GetFilePathByCodeFunction(string concern) => this.Find(df => df.Concern.Equals(concern))?.FullPath;
 
+        public string? GetValueByCodeFunction(string concern)
+        {
+            return this.Find(dataFile => dataFile.Concern.Equals(concern))?.FileName;
+        }
     }
 }

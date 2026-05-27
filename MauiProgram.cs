@@ -16,6 +16,10 @@ namespace ProjetPOO
 
         private const string CONFIG_HOME_JSON = @"C:\ProjetPOO\Max-Schaekels\ProjetPOO\Configuration\Datas\ConfigJson.local.txt";
         private const string CONFIG_PORT_JSON = @"C:\POO\ProjetPOO\Configuration\Datas\ConfigJson.local.txt";
+
+        private const string CONFIG_HOME_SQL = @"C:\ProjetPOO\Max-Schaekels\ProjetPOO\Configuration\Datas\ConfigSql.local.txt";
+        private const string CONFIG_PORT_SQL = @"C:\POO\ProjetPOO\Configuration\Datas\ConfigSql.local.txt";
+
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -28,11 +32,13 @@ namespace ProjetPOO
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            builder.Services.AddSingleton<DataFilesManager>(new DataFilesManager(CONFIG_HOME_JSON));
+            builder.Services.AddSingleton<DataFilesManager>(new DataFilesManager(CONFIG_HOME_SQL));
 
             //Singleton for AlertServiceDisplay
             builder.Services.AddSingleton<IAlertService, AlertServiceDisplay>();
-            builder.Services.AddSingleton<IDataAccess, DataAccessJsonFile>();
+            builder.Services.AddSingleton<IDataAccess, DataAccessSqlFile>();
+
+            //builder.Services.AddSingleton<IDataAccess, DataAccessJsonFile>();
 
             builder.Services.AddTransient<MainPageViewModel>();
             builder.Services.AddTransient<MainPage>();

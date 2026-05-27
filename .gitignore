@@ -368,5 +368,8 @@ Configuration/Datas/Config.local.txt
 # Config locale Json (chemins machine)
 Configuration/Datas/ConfigJson.local.txt
 
+# Config local SQL (chemins machine)
+Configuration/Datas/ConfigSql.local.txt
+
 # Image des scenes
 Configuration/Datas/Images/

@@ -36,7 +36,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Colonne gauche : tests -->
-            <VerticalStackLayout Grid.Column="0"
+            <!--<VerticalStackLayout Grid.Column="0"
                                  Padding="10,0"
                                  Spacing="8">
 
@@ -72,7 +72,7 @@
                         Text="Test Json Data"
                         Clicked="buttonTestJson_Clicked"
                         Style="{StaticResource TestButton}" />
-            </VerticalStackLayout>
+            </VerticalStackLayout>-->
 
             <!-- Colonne centre : accueil -->
             <VerticalStackLayout Grid.Column="1"
