@@ -4,6 +4,7 @@ using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Model.Story.Enums;
 using ProjetPOO.Utilities.DataAccess.Files;
+using ProjetPOO.Utilities.DataAccess.Helpers;
 using ProjetPOO.Utilities.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,6 @@ namespace ProjetPOO.Utilities.DataAccess
             {
                 AccessPath = DataFilesManager.DataFiles.GetValueByCodeFunction("CONNECTION_STRING");
 
-
                 SqlConnection = new SqlConnection(AccessPath);
                 SqlConnection.Open();
 
@@ -36,144 +36,6 @@ namespace ProjetPOO.Utilities.DataAccess
         }
 
         public SqlConnection SqlConnection { get; private set; }
-
-        private int ReadInt(SqlDataReader reader, string columnName)
-        {
-            return Convert.ToInt32(reader[columnName]);
-        }
-
-        private int ReadNullableId(SqlDataReader reader, string columnName)
-        {
-            if (reader[columnName] == DBNull.Value)
-            {
-                return 0;
-            }
-
-            return Convert.ToInt32(reader[columnName]);
-        }
-
-        private string ReadString(SqlDataReader reader, string columnName)
-        {
-            return Convert.ToString(reader[columnName]) ?? string.Empty;
-        }
-
-        private string ReadNullableString(SqlDataReader reader, string columnName)
-        {
-            if (reader[columnName] == DBNull.Value)
-            {
-                return string.Empty;
-            }
-
-            return Convert.ToString(reader[columnName]) ?? string.Empty;
-        }
-
-        private object ToDbNullableId(int id)
-        {
-            if (id == 0)
-            {
-                return DBNull.Value;
-            }
-
-            return id;
-        }
-
-        private object ToDbNullableString(string? value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return DBNull.Value;
-            }
-
-            return value;
-        }
-
-        private SceneType ReadSceneType(SqlDataReader reader, string columnName)
-        {
-            int sceneTypeId = ReadInt(reader, columnName);
-
-            switch (sceneTypeId)
-            {
-                case 1:
-                    return SceneType.Normal;
-
-                case 2:
-                    return SceneType.Combat;
-
-                case 3:
-                    return SceneType.Shop;
-
-                case 4:
-                    return SceneType.End;
-
-                default:
-                    throw new InvalidOperationException("SceneTypeId inconnu : " + sceneTypeId);
-            }
-        }
-
-        private int? ReadNullableInt(SqlDataReader reader, string columnName)
-        {
-            if (reader[columnName] == DBNull.Value)
-            {
-                return null;
-            }
-
-            return Convert.ToInt32(reader[columnName]);
-        }
-
-        private ConditionType ReadConditionType(SqlDataReader reader, string columnName)
-        {
-            int conditionTypeId = ReadInt(reader, columnName);
-
-            switch (conditionTypeId)
-            {
-                case 1:
-                    return ConditionType.MinGold;
-
-                case 2:
-                    return ConditionType.HasPotion;
-
-                case 3:
-                    return ConditionType.HasKey;
-
-                default:
-                    throw new InvalidOperationException("ConditionTypeId inconnu : " + conditionTypeId);
-            }
-        }
-
-        private EffectType ReadEffectType(SqlDataReader reader, string columnName)
-        {
-            int effectTypeId = ReadInt(reader, columnName);
-
-            switch (effectTypeId)
-            {
-                case 1:
-                    return EffectType.AddGold;
-
-                case 2:
-                    return EffectType.RemoveGold;
-
-                case 3:
-                    return EffectType.SetFlag;
-
-                case 4:
-                    return EffectType.RemoveFlag;
-
-                case 5:
-                    return EffectType.AddPotion;
-
-                case 6:
-                    return EffectType.RemovePotion;
-
-                case 7:
-                    return EffectType.AddKey;
-
-                case 8:
-                    return EffectType.RemoveKey;
-
-                default:
-                    throw new InvalidOperationException("EffectTypeId inconnu : " + effectTypeId);
-            }
-        }
 
         public override void AddChoice(Choice choice)
         {
@@ -277,16 +139,16 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        int choiceId = ReadInt(reader, "Id");
+                        int choiceId = SqlDataHelper.ReadInt(reader, "Id");
 
                         ConditionsCollection conditions = GetConditionsByChoiceId(choiceId);
                         EffectsCollection effects = GetEffectsByChoiceId(choiceId);
 
                         Choice choice = Choice.Load(
                             choiceId,
-                            ReadString(reader, "Label"),
-                            ReadNullableId(reader, "SceneId"),                           
-                            ReadNullableId(reader, "TargetSceneId"),
+                            SqlDataHelper.ReadString(reader, "Label"),
+                            SqlDataHelper.ReadNullableId(reader, "TargetSceneId"),
+                            SqlDataHelper.ReadNullableId(reader, "SceneId"),
                             conditions,
                             effects
                         );
@@ -311,11 +173,11 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        ProjetPOO.Model.Story.Condition condition = ProjetPOO.Model.Story.Condition.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ChoiceId"),
-                            ReadConditionType(reader, "ConditionTypeId"),
-                            ReadInt(reader, "MinValue")
+                        Model.Story.Condition condition = Model.Story.Condition.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ChoiceId"),
+                            SqlDataHelper.ReadConditionType(reader, "ConditionTypeId"),
+                            SqlDataHelper.ReadInt(reader, "MinValue")
                         );
 
                         conditions.AddCondition(condition);
@@ -338,12 +200,12 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        ProjetPOO.Model.Story.Effect effect = ProjetPOO.Model.Story.Effect.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ChoiceId"),
-                            ReadEffectType(reader, "EffectTypeId"),
-                            ReadNullableId(reader, "Amount"),
-                            ReadNullableString(reader, "FlagKey")
+                        Model.Story.Effect effect = Model.Story.Effect.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ChoiceId"),
+                            SqlDataHelper.ReadEffectType(reader, "EffectTypeId"),
+                            SqlDataHelper.ReadNullableInt(reader, "Amount"),
+                            SqlDataHelper.ReadOptionalString(reader, "FlagKey")
                         );
 
                         effects.AddEffect(effect);
@@ -356,12 +218,46 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override EnemiesCollection GetAllEnemies()
         {
-            throw new NotImplementedException();
+            EnemiesCollection enemies = new EnemiesCollection();
+
+            string query = "SELECT Id, ScenarioId, EnemyName, EnemyRaceId, MaxHp, Attack, Defense, Agility, RewardExperience, RewardGoldMin, RewardGoldMax, PotionDropChance, PotionAmountMin, PotionAmountMax, KeyDropChance, KeyAmountMin, KeyAmountMax FROM Enemy ORDER BY Id";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Enemy enemy = Enemy.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadOptionalString(reader, "EnemyName"),
+                            SqlDataHelper.ReadInt(reader, "EnemyRaceId"),
+                            SqlDataHelper.ReadInt(reader, "MaxHp"),
+                            SqlDataHelper.ReadInt(reader, "Attack"),
+                            SqlDataHelper.ReadInt(reader, "Defense"),
+                            SqlDataHelper.ReadInt(reader, "Agility"),
+                            SqlDataHelper.ReadInt(reader, "RewardExperience"),
+                            SqlDataHelper.ReadInt(reader, "RewardGoldMin"),
+                            SqlDataHelper.ReadInt(reader, "RewardGoldMax"),
+                            SqlDataHelper.ReadInt(reader, "PotionDropChance"),
+                            SqlDataHelper.ReadInt(reader, "PotionAmountMin"),
+                            SqlDataHelper.ReadInt(reader, "PotionAmountMax"),
+                            SqlDataHelper.ReadInt(reader, "KeyDropChance"),
+                            SqlDataHelper.ReadInt(reader, "KeyAmountMin"),
+                            SqlDataHelper.ReadInt(reader, "KeyAmountMax")
+                        );
+
+                        enemies.AddEnemy(enemy);
+                    }
+                }
+            }
+
+            return enemies;
         }
 
         public override EnemyRacesCollection GetAllEnemyRaces()
         {
-
             EnemyRacesCollection enemyRaces = new EnemyRacesCollection();
 
             string query = "SELECT Id, ScenarioId, Name, Description FROM EnemyRace ORDER BY Id";
@@ -373,10 +269,10 @@ namespace ProjetPOO.Utilities.DataAccess
                     while (reader.Read())
                     {
                         EnemyRace enemyRace = EnemyRace.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadString(reader, "Name"),
-                            ReadNullableString(reader, "Description")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadNullableString(reader, "Description")
                         );
 
                         enemyRaces.Add(enemyRace);
@@ -389,7 +285,36 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override PlayerCharactersCollection GetAllPlayerCharacterTemplates()
         {
-            throw new NotImplementedException();
+            PlayerCharactersCollection playerCharacters = new PlayerCharactersCollection();
+
+            string query = "SELECT Id, ScenarioId, Name, ClassName, RaceName, MaxHp, Attack, Defense, Agility, StartingExperience, StartingLevel FROM PlayerCharacterTemplate ORDER BY Id";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        PlayerCharacterTemplate playerCharacter = PlayerCharacterTemplate.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadString(reader, "ClassName"),
+                            SqlDataHelper.ReadString(reader, "RaceName"),
+                            SqlDataHelper.ReadInt(reader, "MaxHp"),
+                            SqlDataHelper.ReadInt(reader, "Attack"),
+                            SqlDataHelper.ReadInt(reader, "Defense"),
+                            SqlDataHelper.ReadInt(reader, "Agility"),
+                            SqlDataHelper.ReadInt(reader, "StartingExperience"),
+                            SqlDataHelper.ReadInt(reader, "StartingLevel")
+                        );
+
+                        playerCharacters.AddPlayer(playerCharacter);
+                    }
+                }
+            }
+
+            return playerCharacters;
         }
 
         public override List<Scenario> GetAllScenarios()
@@ -405,7 +330,7 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        scenarioIds.Add(ReadInt(reader, "Id"));
+                        scenarioIds.Add(SqlDataHelper.ReadInt(reader, "Id"));
                     }
                 }
             }
@@ -435,22 +360,22 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        int sceneId = ReadInt(reader, "Id");
+                        int sceneId = SqlDataHelper.ReadInt(reader, "Id");
 
                         ChoicesCollection choices = GetChoicesBySceneId(sceneId);
 
                         Scene scene = Scene.Load(
                             sceneId,
-                            ReadString(reader, "Title"),
-                            ReadString(reader, "Text"),
-                            ReadSceneType(reader, "SceneTypeId"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadNullableString(reader, "PictureFileName"),
-                            ReadNullableInt(reader, "ShopId"),
-                            ReadNullableInt(reader, "EnemyId"),
-                            ReadNullableInt(reader, "FleeTargetSceneId"),
-                            ReadNullableInt(reader, "DefeatTargetSceneId"),
-                            ReadNullableInt(reader, "VictoryTargetSceneId"),
+                            SqlDataHelper.ReadString(reader, "Title"),
+                            SqlDataHelper.ReadString(reader, "Text"),
+                            SqlDataHelper.ReadSceneType(reader, "SceneTypeId"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadOptionalString(reader, "PictureFileName"),
+                            SqlDataHelper.ReadNullableInt(reader, "ShopId"),
+                            SqlDataHelper.ReadNullableInt(reader, "EnemyId"),
+                            SqlDataHelper.ReadNullableInt(reader, "FleeTargetSceneId"),
+                            SqlDataHelper.ReadNullableInt(reader, "DefeatTargetSceneId"),
+                            SqlDataHelper.ReadNullableInt(reader, "VictoryTargetSceneId"),
                             choices
                         );
 
@@ -464,39 +389,62 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override ShopsCollection GetAllShops()
         {
-            throw new NotImplementedException();
+            ShopsCollection shops = new ShopsCollection();
+
+            string query = "SELECT Id, ScenarioId, Name, PotionPrice, KeyPrice FROM Shop ORDER BY Id";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Shop shop = Shop.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadInt(reader, "PotionPrice"),
+                            SqlDataHelper.ReadInt(reader, "KeyPrice")
+                        );
+
+                        shops.AddShop(shop);
+                    }
+                }
+            }
+
+            return shops;
         }
 
         public override Choice? GetChoiceById(int choiceId)
         {
-                string query = "SELECT Id, SceneId, Label, TargetSceneId FROM Choice WHERE Id = @Id";
+            string query = "SELECT Id, SceneId, Label, TargetSceneId FROM Choice WHERE Id = @Id";
 
-    using (SqlCommand command = new SqlCommand(query, SqlConnection))
-    {
-        command.Parameters.AddWithValue("@Id", choiceId);
-
-        using (SqlDataReader reader = command.ExecuteReader())
-        {
-            if (reader.Read())
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
             {
-                ConditionsCollection conditions = GetConditionsByChoiceId(choiceId);
-                EffectsCollection effects = GetEffectsByChoiceId(choiceId);
+                command.Parameters.AddWithValue("@Id", choiceId);
 
-                Choice choice = Choice.Load(
-                    ReadInt(reader, "Id"),
-                    ReadString(reader, "Label"),
-                    ReadNullableId(reader, "SceneId"),                  
-                    ReadNullableId(reader, "TargetSceneId"),
-                    conditions,
-                    effects
-                );
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        ConditionsCollection conditions = GetConditionsByChoiceId(choiceId);
+                        EffectsCollection effects = GetEffectsByChoiceId(choiceId);
 
-                return choice;
+                        Choice choice = Choice.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadString(reader, "Label"),
+                            SqlDataHelper.ReadNullableId(reader, "TargetSceneId"),
+                            SqlDataHelper.ReadNullableId(reader, "SceneId"),
+                            conditions,
+                            effects
+                        );
+
+                        return choice;
+                    }
+                }
             }
-        }
-    }
 
-    return null;
+            return null;
         }
 
         public override ChoicesCollection GetChoicesBySceneId(int sceneId)
@@ -513,16 +461,16 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        int choiceId = ReadInt(reader, "Id");
+                        int choiceId = SqlDataHelper.ReadInt(reader, "Id");
 
                         ConditionsCollection conditions = GetConditionsByChoiceId(choiceId);
                         EffectsCollection effects = GetEffectsByChoiceId(choiceId);
 
                         Choice choice = Choice.Load(
                             choiceId,
-                            ReadString(reader, "Label"),
-                            ReadNullableId(reader, "SceneId"),                            
-                            ReadNullableId(reader, "TargetSceneId"),
+                            SqlDataHelper.ReadString(reader, "Label"),
+                            SqlDataHelper.ReadNullableId(reader, "TargetSceneId"),
+                            SqlDataHelper.ReadNullableId(reader, "SceneId"),
                             conditions,
                             effects
                         );
@@ -547,11 +495,11 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     if (reader.Read())
                     {
-                        ProjetPOO.Model.Story.Condition condition = ProjetPOO.Model.Story.Condition.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ChoiceId"),
-                            ReadConditionType(reader, "ConditionTypeId"),
-                            ReadInt(reader, "MinValue")
+                        Model.Story.Condition condition = Model.Story.Condition.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ChoiceId"),
+                            SqlDataHelper.ReadConditionType(reader, "ConditionTypeId"),
+                            SqlDataHelper.ReadInt(reader, "MinValue")
                         );
 
                         return condition;
@@ -576,11 +524,11 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        ProjetPOO.Model.Story.Condition condition = ProjetPOO.Model.Story.Condition.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ChoiceId"),
-                            ReadConditionType(reader, "ConditionTypeId"),
-                            ReadInt(reader, "MinValue")
+                        Model.Story.Condition condition = Model.Story.Condition.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ChoiceId"),
+                            SqlDataHelper.ReadConditionType(reader, "ConditionTypeId"),
+                            SqlDataHelper.ReadInt(reader, "MinValue")
                         );
 
                         conditions.AddCondition(condition);
@@ -603,12 +551,12 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     if (reader.Read())
                     {
-                        ProjetPOO.Model.Story.Effect effect = ProjetPOO.Model.Story.Effect.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ChoiceId"),
-                            ReadEffectType(reader, "EffectTypeId"),
-                            ReadNullableId(reader, "Amount"),
-                            ReadNullableString(reader, "FlagKey")
+                        Model.Story.Effect effect = Model.Story.Effect.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ChoiceId"),
+                            SqlDataHelper.ReadEffectType(reader, "EffectTypeId"),
+                            SqlDataHelper.ReadNullableInt(reader, "Amount"),
+                            SqlDataHelper.ReadOptionalString(reader, "FlagKey")
                         );
 
                         return effect;
@@ -633,12 +581,12 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        ProjetPOO.Model.Story.Effect effect = ProjetPOO.Model.Story.Effect.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ChoiceId"),
-                            ReadEffectType(reader, "EffectTypeId"),
-                            ReadNullableId(reader, "Amount"),
-                            ReadNullableString(reader, "FlagKey")
+                        Model.Story.Effect effect = Model.Story.Effect.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ChoiceId"),
+                            SqlDataHelper.ReadEffectType(reader, "EffectTypeId"),
+                            SqlDataHelper.ReadNullableInt(reader, "Amount"),
+                            SqlDataHelper.ReadOptionalString(reader, "FlagKey")
                         );
 
                         effects.AddEffect(effect);
@@ -664,23 +612,23 @@ namespace ProjetPOO.Utilities.DataAccess
                     while (reader.Read())
                     {
                         Enemy enemy = Enemy.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadNullableString(reader, "EnemyName"),
-                            ReadInt(reader, "EnemyRaceId"),
-                            ReadInt(reader, "MaxHp"),
-                            ReadInt(reader, "Attack"),
-                            ReadInt(reader, "Defense"),
-                            ReadInt(reader, "Agility"),
-                            ReadInt(reader, "RewardExperience"),
-                            ReadInt(reader, "RewardGoldMin"),
-                            ReadInt(reader, "RewardGoldMax"),
-                            ReadInt(reader, "PotionDropChance"),
-                            ReadInt(reader, "PotionAmountMin"),
-                            ReadInt(reader, "PotionAmountMax"),
-                            ReadInt(reader, "KeyDropChance"),
-                            ReadInt(reader, "KeyAmountMin"),
-                            ReadInt(reader, "KeyAmountMax")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadOptionalString(reader, "EnemyName"),
+                            SqlDataHelper.ReadInt(reader, "EnemyRaceId"),
+                            SqlDataHelper.ReadInt(reader, "MaxHp"),
+                            SqlDataHelper.ReadInt(reader, "Attack"),
+                            SqlDataHelper.ReadInt(reader, "Defense"),
+                            SqlDataHelper.ReadInt(reader, "Agility"),
+                            SqlDataHelper.ReadInt(reader, "RewardExperience"),
+                            SqlDataHelper.ReadInt(reader, "RewardGoldMin"),
+                            SqlDataHelper.ReadInt(reader, "RewardGoldMax"),
+                            SqlDataHelper.ReadInt(reader, "PotionDropChance"),
+                            SqlDataHelper.ReadInt(reader, "PotionAmountMin"),
+                            SqlDataHelper.ReadInt(reader, "PotionAmountMax"),
+                            SqlDataHelper.ReadInt(reader, "KeyDropChance"),
+                            SqlDataHelper.ReadInt(reader, "KeyAmountMin"),
+                            SqlDataHelper.ReadInt(reader, "KeyAmountMax")
                         );
 
                         enemies.AddEnemy(enemy);
@@ -704,23 +652,23 @@ namespace ProjetPOO.Utilities.DataAccess
                     if (reader.Read())
                     {
                         Enemy enemy = Enemy.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadNullableString(reader, "EnemyName"),
-                            ReadInt(reader, "EnemyRaceId"),
-                            ReadInt(reader, "MaxHp"),
-                            ReadInt(reader, "Attack"),
-                            ReadInt(reader, "Defense"),
-                            ReadInt(reader, "Agility"),
-                            ReadInt(reader, "RewardExperience"),
-                            ReadInt(reader, "RewardGoldMin"),
-                            ReadInt(reader, "RewardGoldMax"),
-                            ReadInt(reader, "PotionDropChance"),
-                            ReadInt(reader, "PotionAmountMin"),
-                            ReadInt(reader, "PotionAmountMax"),
-                            ReadInt(reader, "KeyDropChance"),
-                            ReadInt(reader, "KeyAmountMin"),
-                            ReadInt(reader, "KeyAmountMax")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadOptionalString(reader, "EnemyName"),
+                            SqlDataHelper.ReadInt(reader, "EnemyRaceId"),
+                            SqlDataHelper.ReadInt(reader, "MaxHp"),
+                            SqlDataHelper.ReadInt(reader, "Attack"),
+                            SqlDataHelper.ReadInt(reader, "Defense"),
+                            SqlDataHelper.ReadInt(reader, "Agility"),
+                            SqlDataHelper.ReadInt(reader, "RewardExperience"),
+                            SqlDataHelper.ReadInt(reader, "RewardGoldMin"),
+                            SqlDataHelper.ReadInt(reader, "RewardGoldMax"),
+                            SqlDataHelper.ReadInt(reader, "PotionDropChance"),
+                            SqlDataHelper.ReadInt(reader, "PotionAmountMin"),
+                            SqlDataHelper.ReadInt(reader, "PotionAmountMax"),
+                            SqlDataHelper.ReadInt(reader, "KeyDropChance"),
+                            SqlDataHelper.ReadInt(reader, "KeyAmountMin"),
+                            SqlDataHelper.ReadInt(reader, "KeyAmountMax")
                         );
 
                         return enemy;
@@ -744,10 +692,10 @@ namespace ProjetPOO.Utilities.DataAccess
                     if (reader.Read())
                     {
                         EnemyRace enemyRace = EnemyRace.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadString(reader, "Name"),
-                            ReadNullableString(reader, "Description")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadNullableString(reader, "Description")
                         );
 
                         return enemyRace;
@@ -773,10 +721,10 @@ namespace ProjetPOO.Utilities.DataAccess
                     while (reader.Read())
                     {
                         EnemyRace enemyRace = EnemyRace.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadString(reader, "Name"),
-                            ReadNullableString(reader, "Description")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadNullableString(reader, "Description")
                         );
 
                         enemyRaces.Add(enemyRace);
@@ -800,17 +748,17 @@ namespace ProjetPOO.Utilities.DataAccess
                     if (reader.Read())
                     {
                         PlayerCharacterTemplate playerCharacter = PlayerCharacterTemplate.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadString(reader, "Name"),
-                            ReadString(reader, "ClassName"),
-                            ReadString(reader, "RaceName"),
-                            ReadInt(reader, "MaxHp"),
-                            ReadInt(reader, "Attack"),
-                            ReadInt(reader, "Defense"),
-                            ReadInt(reader, "Agility"),
-                            ReadInt(reader, "StartingExperience"),
-                            ReadInt(reader, "StartingLevel")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadString(reader, "ClassName"),
+                            SqlDataHelper.ReadString(reader, "RaceName"),
+                            SqlDataHelper.ReadInt(reader, "MaxHp"),
+                            SqlDataHelper.ReadInt(reader, "Attack"),
+                            SqlDataHelper.ReadInt(reader, "Defense"),
+                            SqlDataHelper.ReadInt(reader, "Agility"),
+                            SqlDataHelper.ReadInt(reader, "StartingExperience"),
+                            SqlDataHelper.ReadInt(reader, "StartingLevel")
                         );
 
                         return playerCharacter;
@@ -836,17 +784,17 @@ namespace ProjetPOO.Utilities.DataAccess
                     while (reader.Read())
                     {
                         PlayerCharacterTemplate playerCharacter = PlayerCharacterTemplate.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadString(reader, "Name"),
-                            ReadString(reader, "ClassName"),
-                            ReadString(reader, "RaceName"),
-                            ReadInt(reader, "MaxHp"),
-                            ReadInt(reader, "Attack"),
-                            ReadInt(reader, "Defense"),
-                            ReadInt(reader, "Agility"),
-                            ReadInt(reader, "StartingExperience"),
-                            ReadInt(reader, "StartingLevel")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadString(reader, "ClassName"),
+                            SqlDataHelper.ReadString(reader, "RaceName"),
+                            SqlDataHelper.ReadInt(reader, "MaxHp"),
+                            SqlDataHelper.ReadInt(reader, "Attack"),
+                            SqlDataHelper.ReadInt(reader, "Defense"),
+                            SqlDataHelper.ReadInt(reader, "Agility"),
+                            SqlDataHelper.ReadInt(reader, "StartingExperience"),
+                            SqlDataHelper.ReadInt(reader, "StartingLevel")
                         );
 
                         playerCharacters.AddPlayer(playerCharacter);
@@ -859,7 +807,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override Scenario? GetScenarioById(int scenarioId)
         {
-            throw new NotImplementedException();
+            return LoadScenario(scenarioId);
         }
 
         public override Scene? GetSceneById(int sceneId)
@@ -877,17 +825,17 @@ namespace ProjetPOO.Utilities.DataAccess
                         ChoicesCollection choices = GetChoicesBySceneId(sceneId);
 
                         Scene scene = Scene.Load(
-                            ReadInt(reader, "Id"),
-                            ReadString(reader, "Title"),
-                            ReadString(reader, "Text"),
-                            ReadSceneType(reader, "SceneTypeId"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadNullableString(reader, "PictureFileName"),
-                            ReadNullableInt(reader, "ShopId"),
-                            ReadNullableInt(reader, "EnemyId"),
-                            ReadNullableInt(reader, "FleeTargetSceneId"),
-                            ReadNullableInt(reader, "DefeatTargetSceneId"),
-                            ReadNullableInt(reader, "VictoryTargetSceneId"),
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadString(reader, "Title"),
+                            SqlDataHelper.ReadString(reader, "Text"),
+                            SqlDataHelper.ReadSceneType(reader, "SceneTypeId"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadOptionalString(reader, "PictureFileName"),
+                            SqlDataHelper.ReadNullableInt(reader, "ShopId"),
+                            SqlDataHelper.ReadNullableInt(reader, "EnemyId"),
+                            SqlDataHelper.ReadNullableInt(reader, "FleeTargetSceneId"),
+                            SqlDataHelper.ReadNullableInt(reader, "DefeatTargetSceneId"),
+                            SqlDataHelper.ReadNullableInt(reader, "VictoryTargetSceneId"),
                             choices
                         );
 
@@ -913,22 +861,22 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     while (reader.Read())
                     {
-                        int sceneId = ReadInt(reader, "Id");
+                        int sceneId = SqlDataHelper.ReadInt(reader, "Id");
 
                         ChoicesCollection choices = GetChoicesBySceneId(sceneId);
 
                         Scene scene = Scene.Load(
                             sceneId,
-                            ReadString(reader, "Title"),
-                            ReadString(reader, "Text"),
-                            ReadSceneType(reader, "SceneTypeId"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadNullableString(reader, "PictureFileName"),
-                            ReadNullableInt(reader, "ShopId"),
-                            ReadNullableInt(reader, "EnemyId"),
-                            ReadNullableInt(reader, "FleeTargetSceneId"),
-                            ReadNullableInt(reader, "DefeatTargetSceneId"),
-                            ReadNullableInt(reader, "VictoryTargetSceneId"),
+                            SqlDataHelper.ReadString(reader, "Title"),
+                            SqlDataHelper.ReadString(reader, "Text"),
+                            SqlDataHelper.ReadSceneType(reader, "SceneTypeId"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadOptionalString(reader, "PictureFileName"),
+                            SqlDataHelper.ReadNullableInt(reader, "ShopId"),
+                            SqlDataHelper.ReadNullableInt(reader, "EnemyId"),
+                            SqlDataHelper.ReadNullableInt(reader, "FleeTargetSceneId"),
+                            SqlDataHelper.ReadNullableInt(reader, "DefeatTargetSceneId"),
+                            SqlDataHelper.ReadNullableInt(reader, "VictoryTargetSceneId"),
                             choices
                         );
 
@@ -953,11 +901,11 @@ namespace ProjetPOO.Utilities.DataAccess
                     if (reader.Read())
                     {
                         Shop shop = Shop.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadString(reader, "Name"),
-                            ReadInt(reader, "PotionPrice"),
-                            ReadInt(reader, "KeyPrice")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadInt(reader, "PotionPrice"),
+                            SqlDataHelper.ReadInt(reader, "KeyPrice")
                         );
 
                         return shop;
@@ -983,11 +931,11 @@ namespace ProjetPOO.Utilities.DataAccess
                     while (reader.Read())
                     {
                         Shop shop = Shop.Load(
-                            ReadInt(reader, "Id"),
-                            ReadNullableId(reader, "ScenarioId"),
-                            ReadString(reader, "Name"),
-                            ReadInt(reader, "PotionPrice"),
-                            ReadInt(reader, "KeyPrice")
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadNullableId(reader, "ScenarioId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadInt(reader, "PotionPrice"),
+                            SqlDataHelper.ReadInt(reader, "KeyPrice")
                         );
 
                         shops.AddShop(shop);
@@ -1010,10 +958,10 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     if (reader.Read())
                     {
-                        int id = ReadInt(reader, "Id");
-                        string title = ReadString(reader, "Title");
-                        string description = ReadString(reader, "Description");
-                        int startSceneId = ReadNullableId(reader, "StartSceneId");
+                        int id = SqlDataHelper.ReadInt(reader, "Id");
+                        string title = SqlDataHelper.ReadString(reader, "Title");
+                        string description = SqlDataHelper.ReadString(reader, "Description");
+                        int startSceneId = SqlDataHelper.ReadNullableId(reader, "StartSceneId");
 
                         reader.Close();
 
