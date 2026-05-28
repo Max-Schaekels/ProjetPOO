@@ -59,17 +59,66 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override void AddEnemyRace(EnemyRace enemyRace)
         {
-            throw new NotImplementedException();
+            if (enemyRace == null)
+            {
+                throw new ArgumentNullException(nameof(enemyRace));
+            }
+
+            string query = @"INSERT INTO EnemyRace (ScenarioId, Name, Description) VALUES (@ScenarioId, @Name, @Description)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(enemyRace.ScenarioId));
+                command.Parameters.AddWithValue("@Name", enemyRace.Name);
+                command.Parameters.AddWithValue("@Description", SqlDataHelper.ToDbNullableString(enemyRace.Description));
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public override void AddPlayerCharacterTemplate(PlayerCharacterTemplate playerCharacterTemplate)
         {
-            throw new NotImplementedException();
+            if (playerCharacterTemplate == null)
+            {
+                throw new ArgumentNullException(nameof(playerCharacterTemplate));
+            }
+
+            string query = @"INSERT INTO PlayerCharacterTemplate(ScenarioId, Name, ClassName, RaceName, MaxHp, Attack, Defense, Agility, StartingExperience, StartingLevel) VALUES (@ScenarioId, @Name, @ClassName, @RaceName, @MaxHp, @Attack, @Defense, @Agility, @StartingExperience, @StartingLevel)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(playerCharacterTemplate.ScenarioId));
+                command.Parameters.AddWithValue("@Name", playerCharacterTemplate.Name);
+                command.Parameters.AddWithValue("@ClassName", playerCharacterTemplate.ClassName);
+                command.Parameters.AddWithValue("@RaceName", playerCharacterTemplate.RaceName);
+                command.Parameters.AddWithValue("@MaxHp", playerCharacterTemplate.MaxHp);
+                command.Parameters.AddWithValue("@Attack", playerCharacterTemplate.Attack);
+                command.Parameters.AddWithValue("@Defense", playerCharacterTemplate.Defense);
+                command.Parameters.AddWithValue("@Agility", playerCharacterTemplate.Agility);
+                command.Parameters.AddWithValue("@StartingExperience", playerCharacterTemplate.StartingExperience);
+                command.Parameters.AddWithValue("@StartingLevel", playerCharacterTemplate.StartingLevel);
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public override void AddScenario(Scenario scenario)
         {
-            throw new NotImplementedException();
+            if (scenario == null)
+            {
+                throw new ArgumentNullException(nameof(scenario));
+            }
+
+            string query = @"INSERT INTO Scenario (Title, Description, StartSceneId) VALUES (@Title, @Description, @StartSceneId)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@Title", scenario.Title);
+                command.Parameters.AddWithValue("@Description", scenario.Description);
+                command.Parameters.AddWithValue("@StartSceneId", SqlDataHelper.ToDbNullableId(scenario.StartSceneId));
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public override void AddScene(Scene scene)
@@ -79,7 +128,22 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override void AddShop(Shop shop)
         {
-            throw new NotImplementedException();
+            if (shop == null)
+            {
+                throw new ArgumentNullException(nameof(shop));
+            }
+
+            string query = @"INSERT INTO Shop (ScenarioId, Name, PotionPrice, KeyPrice) VALUES (@ScenarioId, @Name, @PotionPrice, @KeyPrice)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(shop.ScenarioId));
+                command.Parameters.AddWithValue("@Name", shop.Name);
+                command.Parameters.AddWithValue("@PotionPrice", shop.PotionPrice);
+                command.Parameters.AddWithValue("@KeyPrice", shop.KeyPrice);
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public override void DeleteChoice(int choiceId)
