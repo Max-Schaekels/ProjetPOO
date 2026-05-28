@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Condition = ProjetPOO.Model.Story.Condition;
+using Effect = ProjetPOO.Model.Story.Effect;
 
 namespace ProjetPOO.Utilities.DataAccess
 {
@@ -39,22 +41,92 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override void AddChoice(Choice choice)
         {
-            throw new NotImplementedException();
+            if (choice == null)
+            {
+                throw new ArgumentNullException(nameof(choice));
+            }
+
+            string query = @"INSERT INTO Choice (SceneId, Label, TargetSceneId) VALUES (@SceneId, @Label, @TargetSceneId)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@SceneId", SqlDataHelper.ToDbNullableId(choice.SceneId));
+                command.Parameters.AddWithValue("@Label", choice.Label);
+                command.Parameters.AddWithValue("@TargetSceneId", SqlDataHelper.ToDbNullableId(choice.TargetSceneId));
+
+                command.ExecuteNonQuery();
+            }
         }
 
-        public override void AddCondition(Model.Story.Condition condition)
+        public override void AddCondition(Condition condition)
         {
-            throw new NotImplementedException();
+            if (condition == null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            string query = @"INSERT INTO Condition (ChoiceId, ConditionTypeId, MinValue) VALUES (@ChoiceId, @ConditionTypeId, @MinValue)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@ChoiceId", SqlDataHelper.ToDbNullableId(condition.ChoiceId));
+                command.Parameters.AddWithValue("@ConditionTypeId", SqlDataHelper.ToDbConditionTypeId(condition.Type));
+                command.Parameters.AddWithValue("@MinValue", condition.MinValue);
+
+                command.ExecuteNonQuery();
+            }
         }
 
-        public override void AddEffect(Model.Story.Effect effect)
+        public override void AddEffect(Effect effect)
         {
-            throw new NotImplementedException();
+            if (effect == null)
+            {
+                throw new ArgumentNullException(nameof(effect));
+            }
+
+            string query = @"INSERT INTO Effect (ChoiceId, EffectTypeId, Amount, FlagKey) VALUES (@ChoiceId, @EffectTypeId, @Amount, @FlagKey)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@ChoiceId", SqlDataHelper.ToDbNullableId(effect.ChoiceId));
+                command.Parameters.AddWithValue("@EffectTypeId", SqlDataHelper.ToDbEffectTypeId(effect.Type));
+                command.Parameters.AddWithValue("@Amount", SqlDataHelper.ToDbNullableInt(effect.Amount));
+                command.Parameters.AddWithValue("@FlagKey", SqlDataHelper.ToDbNullableString(effect.FlagKey));
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public override void AddEnemy(Enemy enemy)
         {
-            throw new NotImplementedException();
+            if (enemy == null)
+            {
+                throw new ArgumentNullException(nameof(enemy));
+            }
+
+            string query = @"INSERT INTO Enemy(ScenarioId, EnemyName, EnemyRaceId, MaxHp, Attack, Defense, Agility,RewardExperience, RewardGoldMin, RewardGoldMax,PotionDropChance, PotionAmountMin, PotionAmountMax,KeyDropChance, KeyAmountMin, KeyAmountMax) VALUES(@ScenarioId, @EnemyName, @EnemyRaceId, @MaxHp, @Attack, @Defense, @Agility, @RewardExperience, @RewardGoldMin, @RewardGoldMax,@PotionDropChance, @PotionAmountMin, @PotionAmountMax, @KeyDropChance, @KeyAmountMin, @KeyAmountMax)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(enemy.ScenarioId));
+                command.Parameters.AddWithValue("@EnemyName", SqlDataHelper.ToDbNullableString(enemy.EnemyName));
+                command.Parameters.AddWithValue("@EnemyRaceId", enemy.EnemyRaceId);
+                command.Parameters.AddWithValue("@MaxHp", enemy.MaxHp);
+                command.Parameters.AddWithValue("@Attack", enemy.Attack);
+                command.Parameters.AddWithValue("@Defense", enemy.Defense);
+                command.Parameters.AddWithValue("@Agility", enemy.Agility);
+                command.Parameters.AddWithValue("@RewardExperience", enemy.RewardExperience);
+                command.Parameters.AddWithValue("@RewardGoldMin", enemy.RewardGoldMin);
+                command.Parameters.AddWithValue("@RewardGoldMax", enemy.RewardGoldMax);
+                command.Parameters.AddWithValue("@PotionDropChance", enemy.PotionDropChance);
+                command.Parameters.AddWithValue("@PotionAmountMin", enemy.PotionAmountMin);
+                command.Parameters.AddWithValue("@PotionAmountMax", enemy.PotionAmountMax);
+                command.Parameters.AddWithValue("@KeyDropChance", enemy.KeyDropChance);
+                command.Parameters.AddWithValue("@KeyAmountMin", enemy.KeyAmountMin);
+                command.Parameters.AddWithValue("@KeyAmountMax", enemy.KeyAmountMax);
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public override void AddEnemyRace(EnemyRace enemyRace)
@@ -123,7 +195,28 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override void AddScene(Scene scene)
         {
-            throw new NotImplementedException();
+            if (scene == null)
+            {
+                throw new ArgumentNullException(nameof(scene));
+            }
+
+            string query = @"INSERT INTO Scene(Title, Text, SceneTypeId, ScenarioId, PictureFileName,ShopId, EnemyId, FleeTargetSceneId, DefeatTargetSceneId, VictoryTargetSceneId) VALUES (@Title, @Text, @SceneTypeId, @ScenarioId, @PictureFileName, @ShopId, @EnemyId, @FleeTargetSceneId, @DefeatTargetSceneId, @VictoryTargetSceneId)";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@Title", scene.Title);
+                command.Parameters.AddWithValue("@Text", scene.Text);
+                command.Parameters.AddWithValue("@SceneTypeId", SqlDataHelper.ToDbSceneTypeId(scene.Type));
+                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(scene.ScenarioId));
+                command.Parameters.AddWithValue("@PictureFileName", SqlDataHelper.ToDbNullableString(scene.PictureFileName));
+                command.Parameters.AddWithValue("@ShopId", SqlDataHelper.ToDbNullableInt(scene.ShopId));
+                command.Parameters.AddWithValue("@EnemyId", SqlDataHelper.ToDbNullableInt(scene.EnemyId));
+                command.Parameters.AddWithValue("@FleeTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.FleeTargetSceneId));
+                command.Parameters.AddWithValue("@DefeatTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.DefeatTargetSceneId));
+                command.Parameters.AddWithValue("@VictoryTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.VictoryTargetSceneId));
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public override void AddShop(Shop shop)
