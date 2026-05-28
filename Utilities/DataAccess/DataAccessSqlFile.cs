@@ -46,16 +46,9 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(choice));
             }
 
-            string query = @"INSERT INTO Choice (SceneId, Label, TargetSceneId) VALUES (@SceneId, @Label, @TargetSceneId)";
+            string query = @"INSERT INTO [Choice] (SceneId, Label, TargetSceneId) VALUES (@SceneId, @Label, @TargetSceneId)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@SceneId", SqlDataHelper.ToDbNullableId(choice.SceneId));
-                command.Parameters.AddWithValue("@Label", choice.Label);
-                command.Parameters.AddWithValue("@TargetSceneId", SqlDataHelper.ToDbNullableId(choice.TargetSceneId));
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery( SqlConnection,query, new SqlParameter("@SceneId", SqlDataHelper.ToDbNullableId(choice.SceneId)), new SqlParameter("@Label", choice.Label), new SqlParameter("@TargetSceneId", SqlDataHelper.ToDbNullableId(choice.TargetSceneId)) );
         }
 
         public override void AddCondition(Condition condition)
@@ -65,16 +58,9 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(condition));
             }
 
-            string query = @"INSERT INTO Condition (ChoiceId, ConditionTypeId, MinValue) VALUES (@ChoiceId, @ConditionTypeId, @MinValue)";
+            string query = @"INSERT INTO [Condition] (ChoiceId, ConditionTypeId, MinValue) VALUES (@ChoiceId, @ConditionTypeId, @MinValue)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@ChoiceId", SqlDataHelper.ToDbNullableId(condition.ChoiceId));
-                command.Parameters.AddWithValue("@ConditionTypeId", SqlDataHelper.ToDbConditionTypeId(condition.Type));
-                command.Parameters.AddWithValue("@MinValue", condition.MinValue);
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery( SqlConnection,query, new SqlParameter("@ChoiceId", SqlDataHelper.ToDbNullableId(condition.ChoiceId)),new SqlParameter("@ConditionTypeId", SqlDataHelper.ToDbConditionTypeId(condition.Type)), new SqlParameter("@MinValue", condition.MinValue) );
         }
 
         public override void AddEffect(Effect effect)
@@ -84,17 +70,10 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(effect));
             }
 
-            string query = @"INSERT INTO Effect (ChoiceId, EffectTypeId, Amount, FlagKey) VALUES (@ChoiceId, @EffectTypeId, @Amount, @FlagKey)";
+            string query = @"INSERT INTO [Effect] (ChoiceId, EffectTypeId, Amount, FlagKey) VALUES (@ChoiceId, @EffectTypeId, @Amount, @FlagKey)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@ChoiceId", SqlDataHelper.ToDbNullableId(effect.ChoiceId));
-                command.Parameters.AddWithValue("@EffectTypeId", SqlDataHelper.ToDbEffectTypeId(effect.Type));
-                command.Parameters.AddWithValue("@Amount", SqlDataHelper.ToDbNullableInt(effect.Amount));
-                command.Parameters.AddWithValue("@FlagKey", SqlDataHelper.ToDbNullableString(effect.FlagKey));
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery( SqlConnection, query,new SqlParameter("@ChoiceId", SqlDataHelper.ToDbNullableId(effect.ChoiceId)), new SqlParameter("@EffectTypeId", SqlDataHelper.ToDbEffectTypeId(effect.Type)), new SqlParameter("@Amount", SqlDataHelper.ToDbNullableInt(effect.Amount)), new SqlParameter("@FlagKey", SqlDataHelper.ToDbNullableString(effect.FlagKey))
+            );
         }
 
         public override void AddEnemy(Enemy enemy)
@@ -104,29 +83,28 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(enemy));
             }
 
-            string query = @"INSERT INTO Enemy(ScenarioId, EnemyName, EnemyRaceId, MaxHp, Attack, Defense, Agility,RewardExperience, RewardGoldMin, RewardGoldMax,PotionDropChance, PotionAmountMin, PotionAmountMax,KeyDropChance, KeyAmountMin, KeyAmountMax) VALUES(@ScenarioId, @EnemyName, @EnemyRaceId, @MaxHp, @Attack, @Defense, @Agility, @RewardExperience, @RewardGoldMin, @RewardGoldMax,@PotionDropChance, @PotionAmountMin, @PotionAmountMax, @KeyDropChance, @KeyAmountMin, @KeyAmountMax)";
+            string query = @"INSERT INTO [Enemy] (ScenarioId, EnemyName, EnemyRaceId, MaxHp, Attack, Defense, Agility, RewardExperience, RewardGoldMin, RewardGoldMax, PotionDropChance, PotionAmountMin, PotionAmountMax, KeyDropChance, KeyAmountMin, KeyAmountMax) VALUES (@ScenarioId, @EnemyName, @EnemyRaceId, @MaxHp, @Attack, @Defense, @Agility, @RewardExperience, @RewardGoldMin, @RewardGoldMax, @PotionDropChance, @PotionAmountMin, @PotionAmountMax, @KeyDropChance, @KeyAmountMin, @KeyAmountMax)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(enemy.ScenarioId));
-                command.Parameters.AddWithValue("@EnemyName", SqlDataHelper.ToDbNullableString(enemy.EnemyName));
-                command.Parameters.AddWithValue("@EnemyRaceId", enemy.EnemyRaceId);
-                command.Parameters.AddWithValue("@MaxHp", enemy.MaxHp);
-                command.Parameters.AddWithValue("@Attack", enemy.Attack);
-                command.Parameters.AddWithValue("@Defense", enemy.Defense);
-                command.Parameters.AddWithValue("@Agility", enemy.Agility);
-                command.Parameters.AddWithValue("@RewardExperience", enemy.RewardExperience);
-                command.Parameters.AddWithValue("@RewardGoldMin", enemy.RewardGoldMin);
-                command.Parameters.AddWithValue("@RewardGoldMax", enemy.RewardGoldMax);
-                command.Parameters.AddWithValue("@PotionDropChance", enemy.PotionDropChance);
-                command.Parameters.AddWithValue("@PotionAmountMin", enemy.PotionAmountMin);
-                command.Parameters.AddWithValue("@PotionAmountMax", enemy.PotionAmountMax);
-                command.Parameters.AddWithValue("@KeyDropChance", enemy.KeyDropChance);
-                command.Parameters.AddWithValue("@KeyAmountMin", enemy.KeyAmountMin);
-                command.Parameters.AddWithValue("@KeyAmountMax", enemy.KeyAmountMax);
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@ScenarioId", SqlDataHelper.ToDbNullableId(enemy.ScenarioId)),
+                new SqlParameter("@EnemyName", SqlDataHelper.ToDbNullableString(enemy.EnemyName)),
+                new SqlParameter("@EnemyRaceId", enemy.EnemyRaceId),
+                new SqlParameter("@MaxHp", enemy.MaxHp),
+                new SqlParameter("@Attack", enemy.Attack),
+                new SqlParameter("@Defense", enemy.Defense),
+                new SqlParameter("@Agility", enemy.Agility),
+                new SqlParameter("@RewardExperience", enemy.RewardExperience),
+                new SqlParameter("@RewardGoldMin", enemy.RewardGoldMin),
+                new SqlParameter("@RewardGoldMax", enemy.RewardGoldMax),
+                new SqlParameter("@PotionDropChance", enemy.PotionDropChance),
+                new SqlParameter("@PotionAmountMin", enemy.PotionAmountMin),
+                new SqlParameter("@PotionAmountMax", enemy.PotionAmountMax),
+                new SqlParameter("@KeyDropChance", enemy.KeyDropChance),
+                new SqlParameter("@KeyAmountMin", enemy.KeyAmountMin),
+                new SqlParameter("@KeyAmountMax", enemy.KeyAmountMax)
+            );
         }
 
         public override void AddEnemyRace(EnemyRace enemyRace)
@@ -136,16 +114,15 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(enemyRace));
             }
 
-            string query = @"INSERT INTO EnemyRace (ScenarioId, Name, Description) VALUES (@ScenarioId, @Name, @Description)";
+            string query = @"INSERT INTO [EnemyRace] (ScenarioId, Name, Description) VALUES (@ScenarioId, @Name, @Description)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(enemyRace.ScenarioId));
-                command.Parameters.AddWithValue("@Name", enemyRace.Name);
-                command.Parameters.AddWithValue("@Description", SqlDataHelper.ToDbNullableString(enemyRace.Description));
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@ScenarioId", SqlDataHelper.ToDbNullableId(enemyRace.ScenarioId)),
+                new SqlParameter("@Name", enemyRace.Name),
+                new SqlParameter("@Description", SqlDataHelper.ToDbNullableString(enemyRace.Description))
+            );
         }
 
         public override void AddPlayerCharacterTemplate(PlayerCharacterTemplate playerCharacterTemplate)
@@ -155,23 +132,22 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(playerCharacterTemplate));
             }
 
-            string query = @"INSERT INTO PlayerCharacterTemplate(ScenarioId, Name, ClassName, RaceName, MaxHp, Attack, Defense, Agility, StartingExperience, StartingLevel) VALUES (@ScenarioId, @Name, @ClassName, @RaceName, @MaxHp, @Attack, @Defense, @Agility, @StartingExperience, @StartingLevel)";
+            string query = @"INSERT INTO [PlayerCharacterTemplate] (ScenarioId, Name, ClassName, RaceName, MaxHp, Attack, Defense, Agility, StartingExperience, StartingLevel) VALUES (@ScenarioId, @Name, @ClassName, @RaceName, @MaxHp, @Attack, @Defense, @Agility, @StartingExperience, @StartingLevel)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(playerCharacterTemplate.ScenarioId));
-                command.Parameters.AddWithValue("@Name", playerCharacterTemplate.Name);
-                command.Parameters.AddWithValue("@ClassName", playerCharacterTemplate.ClassName);
-                command.Parameters.AddWithValue("@RaceName", playerCharacterTemplate.RaceName);
-                command.Parameters.AddWithValue("@MaxHp", playerCharacterTemplate.MaxHp);
-                command.Parameters.AddWithValue("@Attack", playerCharacterTemplate.Attack);
-                command.Parameters.AddWithValue("@Defense", playerCharacterTemplate.Defense);
-                command.Parameters.AddWithValue("@Agility", playerCharacterTemplate.Agility);
-                command.Parameters.AddWithValue("@StartingExperience", playerCharacterTemplate.StartingExperience);
-                command.Parameters.AddWithValue("@StartingLevel", playerCharacterTemplate.StartingLevel);
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@ScenarioId", SqlDataHelper.ToDbNullableId(playerCharacterTemplate.ScenarioId)),
+                new SqlParameter("@Name", playerCharacterTemplate.Name),
+                new SqlParameter("@ClassName", playerCharacterTemplate.ClassName),
+                new SqlParameter("@RaceName", playerCharacterTemplate.RaceName),
+                new SqlParameter("@MaxHp", playerCharacterTemplate.MaxHp),
+                new SqlParameter("@Attack", playerCharacterTemplate.Attack),
+                new SqlParameter("@Defense", playerCharacterTemplate.Defense),
+                new SqlParameter("@Agility", playerCharacterTemplate.Agility),
+                new SqlParameter("@StartingExperience", playerCharacterTemplate.StartingExperience),
+                new SqlParameter("@StartingLevel", playerCharacterTemplate.StartingLevel)
+            );
         }
 
         public override void AddScenario(Scenario scenario)
@@ -181,16 +157,15 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(scenario));
             }
 
-            string query = @"INSERT INTO Scenario (Title, Description, StartSceneId) VALUES (@Title, @Description, @StartSceneId)";
+            string query = @"INSERT INTO [Scenario] (Title, Description, StartSceneId) VALUES (@Title, @Description, @StartSceneId)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@Title", scenario.Title);
-                command.Parameters.AddWithValue("@Description", scenario.Description);
-                command.Parameters.AddWithValue("@StartSceneId", SqlDataHelper.ToDbNullableId(scenario.StartSceneId));
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Title", scenario.Title),
+                new SqlParameter("@Description", scenario.Description),
+                new SqlParameter("@StartSceneId", SqlDataHelper.ToDbNullableId(scenario.StartSceneId))
+            );
         }
 
         public override void AddScene(Scene scene)
@@ -200,23 +175,22 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(scene));
             }
 
-            string query = @"INSERT INTO Scene(Title, Text, SceneTypeId, ScenarioId, PictureFileName,ShopId, EnemyId, FleeTargetSceneId, DefeatTargetSceneId, VictoryTargetSceneId) VALUES (@Title, @Text, @SceneTypeId, @ScenarioId, @PictureFileName, @ShopId, @EnemyId, @FleeTargetSceneId, @DefeatTargetSceneId, @VictoryTargetSceneId)";
+            string query = @"INSERT INTO [Scene] (Title, Text, SceneTypeId, ScenarioId, PictureFileName, ShopId, EnemyId, FleeTargetSceneId, DefeatTargetSceneId, VictoryTargetSceneId) VALUES (@Title, @Text, @SceneTypeId, @ScenarioId, @PictureFileName, @ShopId, @EnemyId, @FleeTargetSceneId, @DefeatTargetSceneId, @VictoryTargetSceneId)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@Title", scene.Title);
-                command.Parameters.AddWithValue("@Text", scene.Text);
-                command.Parameters.AddWithValue("@SceneTypeId", SqlDataHelper.ToDbSceneTypeId(scene.Type));
-                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(scene.ScenarioId));
-                command.Parameters.AddWithValue("@PictureFileName", SqlDataHelper.ToDbNullableString(scene.PictureFileName));
-                command.Parameters.AddWithValue("@ShopId", SqlDataHelper.ToDbNullableInt(scene.ShopId));
-                command.Parameters.AddWithValue("@EnemyId", SqlDataHelper.ToDbNullableInt(scene.EnemyId));
-                command.Parameters.AddWithValue("@FleeTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.FleeTargetSceneId));
-                command.Parameters.AddWithValue("@DefeatTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.DefeatTargetSceneId));
-                command.Parameters.AddWithValue("@VictoryTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.VictoryTargetSceneId));
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Title", scene.Title),
+                new SqlParameter("@Text", scene.Text),
+                new SqlParameter("@SceneTypeId", SqlDataHelper.ToDbSceneTypeId(scene.Type)),
+                new SqlParameter("@ScenarioId", SqlDataHelper.ToDbNullableId(scene.ScenarioId)),
+                new SqlParameter("@PictureFileName", SqlDataHelper.ToDbNullableString(scene.PictureFileName)),
+                new SqlParameter("@ShopId", SqlDataHelper.ToDbNullableInt(scene.ShopId)),
+                new SqlParameter("@EnemyId", SqlDataHelper.ToDbNullableInt(scene.EnemyId)),
+                new SqlParameter("@FleeTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.FleeTargetSceneId)),
+                new SqlParameter("@DefeatTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.DefeatTargetSceneId)),
+                new SqlParameter("@VictoryTargetSceneId", SqlDataHelper.ToDbNullableInt(scene.VictoryTargetSceneId))
+            );
         }
 
         public override void AddShop(Shop shop)
@@ -226,62 +200,216 @@ namespace ProjetPOO.Utilities.DataAccess
                 throw new ArgumentNullException(nameof(shop));
             }
 
-            string query = @"INSERT INTO Shop (ScenarioId, Name, PotionPrice, KeyPrice) VALUES (@ScenarioId, @Name, @PotionPrice, @KeyPrice)";
+            string query = @"INSERT INTO [Shop] (ScenarioId, Name, PotionPrice, KeyPrice) VALUES (@ScenarioId, @Name, @PotionPrice, @KeyPrice)";
 
-            using (SqlCommand command = new SqlCommand(query, SqlConnection))
-            {
-                command.Parameters.AddWithValue("@ScenarioId", SqlDataHelper.ToDbNullableId(shop.ScenarioId));
-                command.Parameters.AddWithValue("@Name", shop.Name);
-                command.Parameters.AddWithValue("@PotionPrice", shop.PotionPrice);
-                command.Parameters.AddWithValue("@KeyPrice", shop.KeyPrice);
-
-                command.ExecuteNonQuery();
-            }
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@ScenarioId", SqlDataHelper.ToDbNullableId(shop.ScenarioId)),
+                new SqlParameter("@Name", shop.Name),
+                new SqlParameter("@PotionPrice", shop.PotionPrice),
+                new SqlParameter("@KeyPrice", shop.KeyPrice)
+            );
         }
 
         public override void DeleteChoice(int choiceId)
         {
-            throw new NotImplementedException();
+            string deleteConditionsQuery = "DELETE FROM [Condition] WHERE ChoiceId = @ChoiceId";
+            string deleteEffectsQuery = "DELETE FROM [Effect] WHERE ChoiceId = @ChoiceId";
+            string deleteChoiceQuery = "DELETE FROM [Choice] WHERE Id = @ChoiceId";
+
+            using (SqlTransaction transaction = SqlConnection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteConditionsQuery, new SqlParameter("@ChoiceId", choiceId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteEffectsQuery, new SqlParameter("@ChoiceId", choiceId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteChoiceQuery, new SqlParameter("@ChoiceId", choiceId));
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public override void DeleteCondition(int conditionId)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM [Condition] WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", conditionId)
+            );
         }
 
         public override void DeleteEffect(int effectId)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM [Effect] WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", effectId)
+            );
         }
 
         public override void DeleteEnemy(int enemyId)
         {
-            throw new NotImplementedException();
+            string clearScenesQuery = @"UPDATE [Scene] SET EnemyId = NULL WHERE EnemyId = @EnemyId";
+
+            string deleteEnemyQuery = "DELETE FROM [Enemy] WHERE Id = @EnemyId";
+
+            using (SqlTransaction transaction = SqlConnection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, clearScenesQuery, new SqlParameter("@EnemyId", enemyId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteEnemyQuery, new SqlParameter("@EnemyId", enemyId));
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public override void DeleteEnemyRace(int enemyRaceId)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM [EnemyRace] WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", enemyRaceId)
+            );
         }
 
         public override void DeletePlayerCharacterTemplate(int playerCharacterTemplateId)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM [PlayerCharacterTemplate] WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", playerCharacterTemplateId)
+            );
         }
 
         public override void DeleteScenario(int scenarioId)
         {
-            throw new NotImplementedException();
+            string clearStartSceneQuery = @"UPDATE [Scenario] SET StartSceneId = NULL WHERE Id = @ScenarioId";
+
+            string clearSceneTargetReferencesQuery = @"UPDATE [Scene] SET FleeTargetSceneId = NULL, DefeatTargetSceneId = NULL, VictoryTargetSceneId = NULL WHERE ScenarioId = @ScenarioId";
+
+            string clearChoiceTargetReferencesQuery = @"UPDATE [Choice] SET TargetSceneId = NULL WHERE SceneId IN (SELECT Id FROM [Scene] WHERE ScenarioId = @ScenarioId)";
+
+            string deleteConditionsQuery = @"DELETE FROM [Condition] WHERE ChoiceId IN (SELECT Id FROM [Choice] WHERE SceneId IN ( SELECT Id FROM [Scene] WHERE ScenarioId = @ScenarioId))";
+
+            string deleteEffectsQuery = @"DELETE FROM [Effect] WHERE ChoiceId IN (SELECT Id FROM [Choice] WHERE SceneId IN (SELECT Id FROM [Scene] WHERE ScenarioId = @ScenarioId) )";
+
+            string deleteChoicesQuery = @"DELETE FROM [Choice] WHERE SceneId IN (SELECT Id FROM [Scene] WHERE ScenarioId = @ScenarioId)";
+
+            string deleteScenesQuery = "DELETE FROM [Scene] WHERE ScenarioId = @ScenarioId";
+            string deleteEnemiesQuery = "DELETE FROM [Enemy] WHERE ScenarioId = @ScenarioId";
+            string deleteEnemyRacesQuery = "DELETE FROM [EnemyRace] WHERE ScenarioId = @ScenarioId";
+            string deleteShopsQuery = "DELETE FROM [Shop] WHERE ScenarioId = @ScenarioId";
+            string deletePlayerCharactersQuery = "DELETE FROM [PlayerCharacterTemplate] WHERE ScenarioId = @ScenarioId";
+            string deleteScenarioQuery = "DELETE FROM [Scenario] WHERE Id = @ScenarioId";
+
+            using (SqlTransaction transaction = SqlConnection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, clearStartSceneQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, clearSceneTargetReferencesQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, clearChoiceTargetReferencesQuery, new SqlParameter("@ScenarioId", scenarioId));
+
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteConditionsQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteEffectsQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteChoicesQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteScenesQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteEnemiesQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteEnemyRacesQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteShopsQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deletePlayerCharactersQuery, new SqlParameter("@ScenarioId", scenarioId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteScenarioQuery, new SqlParameter("@ScenarioId", scenarioId));
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public override void DeleteScene(int sceneId)
         {
-            throw new NotImplementedException();
+            string clearScenarioStartSceneQuery = @"UPDATE [Scenario] SET StartSceneId = NULL WHERE StartSceneId = @SceneId";
+
+            string clearChoiceTargetSceneQuery = @"UPDATE [Choice] SET TargetSceneId = NULL WHERE TargetSceneId = @SceneId";
+
+            string clearSceneTargetReferencesQuery = @"UPDATE [Scene] SET FleeTargetSceneId = CASE WHEN FleeTargetSceneId = @SceneId THEN NULL ELSE FleeTargetSceneId END, DefeatTargetSceneId = CASE WHEN DefeatTargetSceneId = @SceneId THEN NULL ELSE DefeatTargetSceneId END, VictoryTargetSceneId = CASE WHEN VictoryTargetSceneId = @SceneId THEN NULL ELSE VictoryTargetSceneId END WHERE FleeTargetSceneId = @SceneId OR DefeatTargetSceneId = @SceneId OR VictoryTargetSceneId = @SceneId";
+
+            string deleteConditionsQuery = @"DELETE FROM [Condition] WHERE ChoiceId IN ( SELECT Id FROM [Choice] WHERE SceneId = @SceneId )";
+
+            string deleteEffectsQuery = @"DELETE FROM [Effect] WHERE ChoiceId IN ( SELECT Id FROM [Choice] WHERE SceneId = @SceneId )";
+
+            string deleteChoicesQuery = "DELETE FROM [Choice] WHERE SceneId = @SceneId";
+            string deleteSceneQuery = "DELETE FROM [Scene] WHERE Id = @SceneId";
+
+            using (SqlTransaction transaction = SqlConnection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, clearScenarioStartSceneQuery, new SqlParameter("@SceneId", sceneId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, clearChoiceTargetSceneQuery, new SqlParameter("@SceneId", sceneId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, clearSceneTargetReferencesQuery, new SqlParameter("@SceneId", sceneId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteConditionsQuery, new SqlParameter("@SceneId", sceneId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteEffectsQuery, new SqlParameter("@SceneId", sceneId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteChoicesQuery, new SqlParameter("@SceneId", sceneId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteSceneQuery, new SqlParameter("@SceneId", sceneId));
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public override void DeleteShop(int shopId)
         {
-            throw new NotImplementedException();
+            string clearScenesQuery = @"UPDATE [Scene] SET ShopId = NULL WHERE ShopId = @ShopId";
+
+            string deleteShopQuery = "DELETE FROM [Shop] WHERE Id = @ShopId";
+
+            using (SqlTransaction transaction = SqlConnection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, clearScenesQuery, new SqlParameter("@ShopId", shopId));
+                    SqlCommandHelper.ExecuteNonQuery(SqlConnection, transaction, deleteShopQuery, new SqlParameter("@ShopId", shopId));
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public override ChoicesCollection GetAllChoices()
