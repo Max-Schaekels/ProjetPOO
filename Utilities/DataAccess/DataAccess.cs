@@ -1,4 +1,5 @@
 ﻿using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Game;
 using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.DataAccess.Files;
@@ -144,6 +145,32 @@ namespace ProjetPOO.Utilities.DataAccess
         public abstract void UpdatePlayerCharacterTemplate(PlayerCharacterTemplate playerCharacterTemplate);
         public abstract void UpdateAllPlayerCharacterTemplates(PlayerCharactersCollection playerCharacterTemplates);
         public abstract void DeletePlayerCharacterTemplate(int playerCharacterTemplateId);
+
+        public abstract Inventory? GetInventoryById(int inventoryId);
+        public abstract int AddInventory(Inventory inventory);
+        public abstract void UpdateInventory(Inventory inventory);
+        public abstract void DeleteInventory(int inventoryId);
+
+        public abstract PlayerCharacterInstance? GetPlayerCharacterInstanceById(int playerCharacterInstanceId);
+        public abstract int AddPlayerCharacterInstance(PlayerCharacterInstance playerCharacterInstance);
+        public abstract void UpdatePlayerCharacterInstance(PlayerCharacterInstance playerCharacterInstance);
+        public abstract void DeletePlayerCharacterInstance(int playerCharacterInstanceId);
+
+        public abstract GameState? GetGameStateById(int gameStateId);
+        public abstract int AddGameState(GameState gameState, int inventoryId, int playerCharacterInstanceId);
+        public abstract void UpdateGameState(GameState gameState);
+        public abstract void DeleteGameState(int gameStateId);
+
+        public abstract List<string> GetGameStateFlagsByGameStateId(int gameStateId);
+        public abstract void AddGameStateFlag(int gameStateId, string flagKey);
+        public abstract void DeleteGameStateFlagsByGameStateId(int gameStateId);
+
+        public abstract List<SaveGame> GetAllSaveGames();
+        public abstract SaveGame? GetSaveGameById(int saveGameId);
+        public abstract int AddSaveGame(SaveGame saveGame, int gameStateId);
+        public abstract void UpdateSaveGame(SaveGame saveGame);
+        public abstract void DeleteSaveGame(int saveGameId);
+
 
         /// <summary>
         /// Check AccessPath to the data source file. File path must exist and if

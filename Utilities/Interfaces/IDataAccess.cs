@@ -1,4 +1,5 @@
 ﻿using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Game;
 using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story;
 using System;
@@ -88,5 +89,30 @@ namespace ProjetPOO.Utilities.Interfaces
         void UpdatePlayerCharacterTemplate(PlayerCharacterTemplate playerCharacterTemplate);
         void UpdateAllPlayerCharacterTemplates(PlayerCharactersCollection playerCharacterTemplates);
         void DeletePlayerCharacterTemplate(int playerCharacterTemplateId);
+
+        Inventory? GetInventoryById(int inventoryId);
+        int AddInventory(Inventory inventory);
+        void UpdateInventory(Inventory inventory);
+        void DeleteInventory(int inventoryId);
+
+        PlayerCharacterInstance? GetPlayerCharacterInstanceById(int playerCharacterInstanceId);
+        int AddPlayerCharacterInstance(PlayerCharacterInstance playerCharacterInstance);
+        void UpdatePlayerCharacterInstance(PlayerCharacterInstance playerCharacterInstance);
+        void DeletePlayerCharacterInstance(int playerCharacterInstanceId);
+
+        GameState? GetGameStateById(int gameStateId);
+        int AddGameState(GameState gameState, int inventoryId, int playerCharacterInstanceId);
+        void UpdateGameState(GameState gameState);
+        void DeleteGameState(int gameStateId);
+
+        List<string> GetGameStateFlagsByGameStateId(int gameStateId);
+        void AddGameStateFlag(int gameStateId, string flagKey);
+        void DeleteGameStateFlagsByGameStateId(int gameStateId);
+
+        List<SaveGame> GetAllSaveGames();
+        SaveGame? GetSaveGameById(int saveGameId);
+        int AddSaveGame(SaveGame saveGame, int gameStateId);
+        void UpdateSaveGame(SaveGame saveGame);
+        void DeleteSaveGame(int saveGameId);
     }
 }

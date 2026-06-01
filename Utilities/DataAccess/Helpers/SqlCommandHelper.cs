@@ -26,5 +26,39 @@ namespace ProjetPOO.Utilities.DataAccess.Helpers
                 command.ExecuteNonQuery();
             }
         }
+
+        public static int ExecuteScalarInt(SqlConnection sqlConnection, string query, params SqlParameter[] parameters)
+        {
+            using (SqlCommand command = new SqlCommand(query, sqlConnection))
+            {
+                command.Parameters.AddRange(parameters);
+
+                object? result = command.ExecuteScalar();
+
+                if (result == null || result == DBNull.Value)
+                {
+                    throw new InvalidOperationException("La requête SQL n'a retourné aucun identifiant.");
+                }
+
+                return Convert.ToInt32(result);
+            }
+        }
+
+        public static int ExecuteScalarInt(SqlConnection sqlConnection, SqlTransaction transaction, string query, params SqlParameter[] parameters)
+        {
+            using (SqlCommand command = new SqlCommand(query, sqlConnection, transaction))
+            {
+                command.Parameters.AddRange(parameters);
+
+                object? result = command.ExecuteScalar();
+
+                if (result == null || result == DBNull.Value)
+                {
+                    throw new InvalidOperationException("La requête SQL n'a retourné aucun identifiant.");
+                }
+
+                return Convert.ToInt32(result);
+            }
+        }
     }
 }

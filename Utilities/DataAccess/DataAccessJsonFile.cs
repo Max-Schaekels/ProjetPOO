@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Game;
 using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.DataAccess.Files;
@@ -1060,6 +1061,106 @@ namespace ProjetPOO.Utilities.DataAccess
         }
 
         public override void SaveScenario(Scenario scenario)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Inventory? GetInventoryById(int inventoryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int AddInventory(Inventory inventory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateInventory(Inventory inventory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteInventory(int inventoryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlayerCharacterInstance? GetPlayerCharacterInstanceById(int playerCharacterInstanceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int AddPlayerCharacterInstance(PlayerCharacterInstance playerCharacterInstance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdatePlayerCharacterInstance(PlayerCharacterInstance playerCharacterInstance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeletePlayerCharacterInstance(int playerCharacterInstanceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override GameState? GetGameStateById(int gameStateId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int AddGameState(GameState gameState, int inventoryId, int playerCharacterInstanceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateGameState(GameState gameState)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteGameState(int gameStateId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override List<string> GetGameStateFlagsByGameStateId(int gameStateId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void AddGameStateFlag(int gameStateId, string flagKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteGameStateFlagsByGameStateId(int gameStateId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override List<SaveGame> GetAllSaveGames()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override SaveGame? GetSaveGameById(int saveGameId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int AddSaveGame(SaveGame saveGame, int gameStateId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateSaveGame(SaveGame saveGame)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteSaveGame(int saveGameId)
         {
             throw new NotImplementedException();
         }

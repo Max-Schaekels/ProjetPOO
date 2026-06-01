@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Game;
 using ProjetPOO.Model.Gameplay;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Model.Story.Enums;
@@ -1552,8 +1553,577 @@ namespace ProjetPOO.Utilities.DataAccess
         public override void UpdateAllShops(ShopsCollection shops)
         {
             throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Inventory region
+        public override Inventory? GetInventoryById(int inventoryId)
+        {
+            string query = "SELECT Id, PotionsCount, KeysCount FROM [Inventory] WHERE Id = @Id";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@Id", inventoryId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Inventory inventory = Inventory.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadInt(reader, "PotionsCount"),
+                            SqlDataHelper.ReadInt(reader, "KeysCount")
+                        );
+
+                        return inventory;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public override int AddInventory(Inventory inventory)
+        {
+            if (inventory == null)
+            {
+                throw new ArgumentNullException(nameof(inventory));
+            }
+
+            string query = @"INSERT INTO [Inventory] (PotionsCount, KeysCount) OUTPUT INSERTED.Id VALUES (@PotionsCount, @KeysCount)";
+
+            return SqlCommandHelper.ExecuteScalarInt(
+                SqlConnection,
+                query,
+                new SqlParameter("@PotionsCount", inventory.PotionsCount),
+                new SqlParameter("@KeysCount", inventory.KeysCount)
+            );
+        }
+
+        public override void UpdateInventory(Inventory inventory)
+        {
+            if (inventory == null)
+            {
+                throw new ArgumentNullException(nameof(inventory));
+            }
+
+            string query = @"UPDATE [Inventory] SET PotionsCount = @PotionsCount, KeysCount = @KeysCount WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", inventory.Id),
+                new SqlParameter("@PotionsCount", inventory.PotionsCount),
+                new SqlParameter("@KeysCount", inventory.KeysCount)
+            );
+        }
+
+        public override void DeleteInventory(int inventoryId)
+        {
+            string query = "DELETE FROM [Inventory] WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", inventoryId)
+            );
+        }
+        #endregion
+
+        #region PlayerCharacterInstance region
+        public override PlayerCharacterInstance? GetPlayerCharacterInstanceById(int playerCharacterInstanceId)
+        {
+            string query = @"SELECT Id, TemplateId, Name, ClassName, RaceName, MaxHp, CurrentHp, Attack, Defense, Agility, Experience, Level FROM [PlayerCharacterInstance] WHERE Id = @Id";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@Id", playerCharacterInstanceId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        PlayerCharacterInstance playerCharacterInstance = PlayerCharacterInstance.Load(
+                            SqlDataHelper.ReadInt(reader, "Id"),
+                            SqlDataHelper.ReadInt(reader, "TemplateId"),
+                            SqlDataHelper.ReadString(reader, "Name"),
+                            SqlDataHelper.ReadString(reader, "ClassName"),
+                            SqlDataHelper.ReadString(reader, "RaceName"),
+                            SqlDataHelper.ReadInt(reader, "MaxHp"),
+                            SqlDataHelper.ReadInt(reader, "CurrentHp"),
+                            SqlDataHelper.ReadInt(reader, "Attack"),
+                            SqlDataHelper.ReadInt(reader, "Defense"),
+                            SqlDataHelper.ReadInt(reader, "Agility"),
+                            SqlDataHelper.ReadInt(reader, "Experience"),
+                            SqlDataHelper.ReadInt(reader, "Level")
+                        );
+
+                        return playerCharacterInstance;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public override int AddPlayerCharacterInstance(PlayerCharacterInstance playerCharacterInstance)
+        {
+            if (playerCharacterInstance == null)
+            {
+                throw new ArgumentNullException(nameof(playerCharacterInstance));
+            }
+
+            string query = @"INSERT INTO [PlayerCharacterInstance] (TemplateId, Name, ClassName, RaceName, MaxHp, CurrentHp, Attack, Defense, Agility, Experience, Level) OUTPUT INSERTED.Id VALUES (@TemplateId, @Name, @ClassName, @RaceName, @MaxHp, @CurrentHp, @Attack, @Defense, @Agility, @Experience, @Level)";
+
+            return SqlCommandHelper.ExecuteScalarInt(
+                SqlConnection,
+                query,
+                new SqlParameter("@TemplateId", playerCharacterInstance.TemplateId),
+                new SqlParameter("@Name", playerCharacterInstance.Name),
+                new SqlParameter("@ClassName", playerCharacterInstance.ClassName),
+                new SqlParameter("@RaceName", playerCharacterInstance.RaceName),
+                new SqlParameter("@MaxHp", playerCharacterInstance.MaxHp),
+                new SqlParameter("@CurrentHp", playerCharacterInstance.CurrentHp),
+                new SqlParameter("@Attack", playerCharacterInstance.Attack),
+                new SqlParameter("@Defense", playerCharacterInstance.Defense),
+                new SqlParameter("@Agility", playerCharacterInstance.Agility),
+                new SqlParameter("@Experience", playerCharacterInstance.Experience),
+                new SqlParameter("@Level", playerCharacterInstance.Level)
+            );
+        }
+
+        public override void UpdatePlayerCharacterInstance(PlayerCharacterInstance playerCharacterInstance)
+        {
+            if (playerCharacterInstance == null)
+            {
+                throw new ArgumentNullException(nameof(playerCharacterInstance));
+            }
+
+            string query = @"UPDATE [PlayerCharacterInstance] SET TemplateId = @TemplateId, Name = @Name, ClassName = @ClassName, RaceName = @RaceName, MaxHp = @MaxHp, CurrentHp = @CurrentHp, Attack = @Attack, Defense = @Defense, Agility = @Agility, Experience = @Experience,Level = @Level WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", playerCharacterInstance.Id),
+                new SqlParameter("@TemplateId", playerCharacterInstance.TemplateId),
+                new SqlParameter("@Name", playerCharacterInstance.Name),
+                new SqlParameter("@ClassName", playerCharacterInstance.ClassName),
+                new SqlParameter("@RaceName", playerCharacterInstance.RaceName),
+                new SqlParameter("@MaxHp", playerCharacterInstance.MaxHp),
+                new SqlParameter("@CurrentHp", playerCharacterInstance.CurrentHp),
+                new SqlParameter("@Attack", playerCharacterInstance.Attack),
+                new SqlParameter("@Defense", playerCharacterInstance.Defense),
+                new SqlParameter("@Agility", playerCharacterInstance.Agility),
+                new SqlParameter("@Experience", playerCharacterInstance.Experience),
+                new SqlParameter("@Level", playerCharacterInstance.Level)
+            );
+        }
+
+        public override void DeletePlayerCharacterInstance(int playerCharacterInstanceId)
+        {
+            string query = "DELETE FROM [PlayerCharacterInstance] WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", playerCharacterInstanceId)
+            );
+        }
+        #endregion
+
+        #region GameStateFlag region
+        public override List<string> GetGameStateFlagsByGameStateId(int gameStateId)
+        {
+            List<string> flags = new List<string>();
+
+            string query = @"SELECT FlagKey FROM [GameStateFlag] WHERE GameStateId = @GameStateId ORDER BY Id";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@GameStateId", gameStateId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        flags.Add(SqlDataHelper.ReadString(reader, "FlagKey"));
+                    }
+                }
+            }
+
+            return flags;
+        }
+
+        public override void AddGameStateFlag(int gameStateId, string flagKey)
+        {
+            if (string.IsNullOrWhiteSpace(flagKey))
+            {
+                throw new ArgumentException("Le flag ne peut pas être vide.", nameof(flagKey));
+            }
+
+            string query = @"IF NOT EXISTS (SELECT 1 FROM [GameStateFlag] WHERE GameStateId = @GameStateId AND FlagKey = @FlagKey) BEGIN INSERT INTO [GameStateFlag] (GameStateId, FlagKey) VALUES (@GameStateId, @FlagKey) END";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@GameStateId", gameStateId),
+                new SqlParameter("@FlagKey", flagKey)
+            );
+        }
+
+        public override void DeleteGameStateFlagsByGameStateId(int gameStateId)
+        {
+            string query = "DELETE FROM [GameStateFlag] WHERE GameStateId = @GameStateId";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@GameStateId", gameStateId)
+            );
+        }
+        #endregion
+
+
+        #region GameState region
+        public override GameState? GetGameStateById(int gameStateId)
+        {
+            string query = @"SELECT Id, ScenarioId, CurrentSceneId, Gold, InventoryId, PlayerCharacterInstanceId, SelectedPlayerCharacterTemplateId FROM [GameState] WHERE Id = @Id";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@Id", gameStateId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        int id = SqlDataHelper.ReadInt(reader, "Id");
+                        int scenarioId = SqlDataHelper.ReadInt(reader, "ScenarioId");
+                        int currentSceneId = SqlDataHelper.ReadInt(reader, "CurrentSceneId");
+                        int gold = SqlDataHelper.ReadInt(reader, "Gold");
+                        int inventoryId = SqlDataHelper.ReadInt(reader, "InventoryId");
+                        int playerCharacterInstanceId = SqlDataHelper.ReadInt(reader, "PlayerCharacterInstanceId");
+
+                        reader.Close();
+
+                        Inventory? inventory = GetInventoryById(inventoryId);
+                        PlayerCharacterInstance? playerCharacterInstance = GetPlayerCharacterInstanceById(playerCharacterInstanceId);
+                        List<string> flags = GetGameStateFlagsByGameStateId(id);
+
+                        if (inventory == null)
+                        {
+                            throw new InvalidOperationException($"Inventory Id={inventoryId} introuvable pour GameState Id={id}.");
+                        }
+
+                        if (playerCharacterInstance == null)
+                        {
+                            throw new InvalidOperationException($"PlayerCharacterInstance Id={playerCharacterInstanceId} introuvable pour GameState Id={id}.");
+                        }
+
+                        GameState gameState = GameState.Load(
+                            id,
+                            currentSceneId,
+                            scenarioId,
+                            gold,
+                            inventory,
+                            playerCharacterInstance,
+                            flags
+                        );
+
+                        return gameState;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public override int AddGameState(GameState gameState, int inventoryId, int playerCharacterInstanceId)
+        {
+            if (gameState == null)
+            {
+                throw new ArgumentNullException(nameof(gameState));
+            }
+
+            string query = @"INSERT INTO [GameState] (ScenarioId, CurrentSceneId, Gold, InventoryId, PlayerCharacterInstanceId, SelectedPlayerCharacterTemplateId) OUTPUT INSERTED.Id VALUES (@ScenarioId, @CurrentSceneId, @Gold, @InventoryId, @PlayerCharacterInstanceId, @SelectedPlayerCharacterTemplateId)";
+
+            return SqlCommandHelper.ExecuteScalarInt(
+                SqlConnection,
+                query,
+                new SqlParameter("@ScenarioId", gameState.ScenarioId),
+                new SqlParameter("@CurrentSceneId", gameState.CurrentSceneId),
+                new SqlParameter("@Gold", gameState.Gold),
+                new SqlParameter("@InventoryId", inventoryId),
+                new SqlParameter("@PlayerCharacterInstanceId", playerCharacterInstanceId),
+                new SqlParameter("@SelectedPlayerCharacterTemplateId", gameState.SelectedPlayerCharacterTemplateId)
+            );
+        }
+
+        public override void UpdateGameState(GameState gameState)
+        {
+            if (gameState == null)
+            {
+                throw new ArgumentNullException(nameof(gameState));
+            }
+
+            string query = @"UPDATE [GameState] SET ScenarioId = @ScenarioId, CurrentSceneId = @CurrentSceneId, Gold = @Gold, InventoryId = @InventoryId, PlayerCharacterInstanceId = @PlayerCharacterInstanceId, SelectedPlayerCharacterTemplateId = @SelectedPlayerCharacterTemplateId WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", gameState.Id),
+                new SqlParameter("@ScenarioId", gameState.ScenarioId),
+                new SqlParameter("@CurrentSceneId", gameState.CurrentSceneId),
+                new SqlParameter("@Gold", gameState.Gold),
+                new SqlParameter("@InventoryId", gameState.PlayerInventory.Id),
+                new SqlParameter("@PlayerCharacterInstanceId", gameState.PlayerCharacter.Id),
+                new SqlParameter("@SelectedPlayerCharacterTemplateId", gameState.SelectedPlayerCharacterTemplateId)
+            );
+        }
+
+        public override void DeleteGameState(int gameStateId)
+        {
+            string selectQuery = @"SELECT InventoryId, PlayerCharacterInstanceId FROM [GameState] WHERE Id = @Id";
+
+            string deleteSaveGameQuery = "DELETE FROM [SaveGame] WHERE GameStateId = @Id";
+            string deleteFlagsQuery = "DELETE FROM [GameStateFlag] WHERE GameStateId = @Id";
+            string deleteGameStateQuery = "DELETE FROM [GameState] WHERE Id = @Id";
+            string deleteInventoryQuery = "DELETE FROM [Inventory] WHERE Id = @InventoryId";
+            string deletePlayerCharacterInstanceQuery = "DELETE FROM [PlayerCharacterInstance] WHERE Id = @PlayerCharacterInstanceId";
+
+            using (SqlTransaction transaction = SqlConnection.BeginTransaction())
+            {
+                try
+                {
+                    int inventoryId = 0;
+                    int playerCharacterInstanceId = 0;
+
+                    using (SqlCommand command = new SqlCommand(selectQuery, SqlConnection, transaction))
+                    {
+                        command.Parameters.AddWithValue("@Id", gameStateId);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                inventoryId = SqlDataHelper.ReadInt(reader, "InventoryId");
+                                playerCharacterInstanceId = SqlDataHelper.ReadInt(reader, "PlayerCharacterInstanceId");
+                            }
+                        }
+                    }
+
+                    SqlCommandHelper.ExecuteNonQuery(
+                        SqlConnection,
+                        transaction,
+                        deleteSaveGameQuery,
+                        new SqlParameter("@Id", gameStateId)
+                    );
+
+                    SqlCommandHelper.ExecuteNonQuery(
+                        SqlConnection,
+                        transaction,
+                        deleteFlagsQuery,
+                        new SqlParameter("@Id", gameStateId)
+                    );
+
+                    SqlCommandHelper.ExecuteNonQuery(
+                        SqlConnection,
+                        transaction,
+                        deleteGameStateQuery,
+                        new SqlParameter("@Id", gameStateId)
+                    );
+
+                    if (inventoryId > 0)
+                    {
+                        SqlCommandHelper.ExecuteNonQuery(
+                            SqlConnection,
+                            transaction,
+                            deleteInventoryQuery,
+                            new SqlParameter("@InventoryId", inventoryId)
+                        );
+                    }
+
+                    if (playerCharacterInstanceId > 0)
+                    {
+                        SqlCommandHelper.ExecuteNonQuery(
+                            SqlConnection,
+                            transaction,
+                            deletePlayerCharacterInstanceQuery,
+                            new SqlParameter("@PlayerCharacterInstanceId", playerCharacterInstanceId)
+                        );
+                    }
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+        #endregion
+
+        #region SaveGame region
+        public override List<SaveGame> GetAllSaveGames()
+        {
+            List<int> saveGameIds = new List<int>();
+            List<SaveGame> saveGames = new List<SaveGame>();
+
+            string query = "SELECT Id FROM [SaveGame] ORDER BY LastSavedAt DESC";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        saveGameIds.Add(SqlDataHelper.ReadInt(reader, "Id"));
+                    }
+                }
+            }
+
+            for (int i = 0; i < saveGameIds.Count; i++)
+            {
+                SaveGame? saveGame = GetSaveGameById(saveGameIds[i]);
+
+                if (saveGame != null)
+                {
+                    saveGames.Add(saveGame);
+                }
+            }
+
+            return saveGames;
+        }
+
+        public override SaveGame? GetSaveGameById(int saveGameId)
+        {
+            string query = @"SELECT Id, Name, CreatedAt, LastSavedAt, GameStateId FROM [SaveGame] WHERE Id = @Id";
+
+            using (SqlCommand command = new SqlCommand(query, SqlConnection))
+            {
+                command.Parameters.AddWithValue("@Id", saveGameId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        int id = SqlDataHelper.ReadInt(reader, "Id");
+                        string name = SqlDataHelper.ReadString(reader, "Name");
+                        DateTime createdAt = (DateTime)reader["CreatedAt"];
+                        DateTime lastSavedAt = (DateTime)reader["LastSavedAt"];
+                        int gameStateId = SqlDataHelper.ReadInt(reader, "GameStateId");
+
+                        reader.Close();
+
+                        GameState? gameState = GetGameStateById(gameStateId);
+
+                        if (gameState == null)
+                        {
+                            throw new InvalidOperationException($"GameState Id={gameStateId} introuvable pour SaveGame Id={id}.");
+                        }
+
+                        SaveGame saveGame = SaveGame.Load(
+                            id,
+                            name,
+                            createdAt,
+                            lastSavedAt,
+                            gameState
+                        );
+
+                        return saveGame;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public override int AddSaveGame(SaveGame saveGame, int gameStateId)
+        {
+            if (saveGame == null)
+            {
+                throw new ArgumentNullException(nameof(saveGame));
+            }
+
+            string query = @"INSERT INTO [SaveGame] (Name, CreatedAt, LastSavedAt, GameStateId)  OUTPUT INSERTED.Id VALUES (@Name, @CreatedAt, @LastSavedAt, @GameStateId)";
+
+            return SqlCommandHelper.ExecuteScalarInt(
+                SqlConnection,
+                query,
+                new SqlParameter("@Name", saveGame.Name),
+                new SqlParameter("@CreatedAt", saveGame.CreatedAt),
+                new SqlParameter("@LastSavedAt", saveGame.LastSavedAt),
+                new SqlParameter("@GameStateId", gameStateId)
+            );
+        }
+
+        public override void UpdateSaveGame(SaveGame saveGame)
+        {
+            if (saveGame == null)
+            {
+                throw new ArgumentNullException(nameof(saveGame));
+            }
+
+            string query = @"UPDATE [SaveGame] SET Name = @Name,  CreatedAt = @CreatedAt, LastSavedAt = @LastSavedAt,  GameStateId = @GameStateId WHERE Id = @Id";
+
+            SqlCommandHelper.ExecuteNonQuery(
+                SqlConnection,
+                query,
+                new SqlParameter("@Id", saveGame.Id),
+                new SqlParameter("@Name", saveGame.Name),
+                new SqlParameter("@CreatedAt", saveGame.CreatedAt),
+                new SqlParameter("@LastSavedAt", saveGame.LastSavedAt),
+                new SqlParameter("@GameStateId", saveGame.State.Id)
+            );
+        }
+
+        public override void DeleteSaveGame(int saveGameId)
+        {
+            string selectQuery = @"SELECT GameStateId FROM [SaveGame] WHERE Id = @Id";
+
+            string deleteSaveGameQuery = "DELETE FROM [SaveGame] WHERE Id = @Id";
+
+            using (SqlTransaction transaction = SqlConnection.BeginTransaction())
+            {
+                try
+                {
+                    int gameStateId = 0;
+
+                    using (SqlCommand command = new SqlCommand(selectQuery, SqlConnection, transaction))
+                    {
+                        command.Parameters.AddWithValue("@Id", saveGameId);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                gameStateId = SqlDataHelper.ReadInt(reader, "GameStateId");
+                            }
+                        }
+                    }
+
+                    SqlCommandHelper.ExecuteNonQuery(
+                        SqlConnection,
+                        transaction,
+                        deleteSaveGameQuery,
+                        new SqlParameter("@Id", saveGameId)
+                    );
+
+                    transaction.Commit();
+
+                    if (gameStateId > 0)
+                    {
+                        DeleteGameState(gameStateId);
+                    }
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         } 
         #endregion
-      
     }
 }
