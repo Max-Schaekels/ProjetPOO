@@ -62,7 +62,7 @@
                     Grid.Column="1"
                     Text="Créer"
                     Clicked="CreateButton_Clicked"
-                    BackgroundColor="#3B82F6"
+                    BackgroundColor="#3A6EA5"
                     TextColor="White"
                     CornerRadius="8" />
 

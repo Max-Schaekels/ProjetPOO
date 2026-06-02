@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.Interfaces;
 using ProjetPOO.View;
@@ -17,11 +18,14 @@ namespace ProjetPOO.ViewModel
         public ScenarioListViewModel(IAlertService alertService, IDataAccess dataAccess, ScenarioEditorPage scenarioEditorPage) : base(alertService, dataAccess)
         {
             PageTitle = "Liste des scénarios";
-            Scenarios = new ObservableCollection<Scenario>(dataAccess.GetAllScenarios());
+            scenarios = new ObservableCollection<Scenario>();
+            RefreshScenarios();
             this.scenarioEditorPage = scenarioEditorPage;
         }
 
-        public ObservableCollection<Scenario> Scenarios { get; set; }
+
+        [ObservableProperty]
+        private ObservableCollection<Scenario> scenarios;
 
         [RelayCommand()]
         private async Task NewScenario()
@@ -50,22 +54,24 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool confirm = await alertService.ShowConfirmation(
-                "Supprimer scénario",
-                $"Voulez-vous vraiment supprimer le scénario \"{scenario.Title}\" ?",
-                "Supprimer",
-                "Annuler");
+            bool confirm = await alertService.ShowConfirmation( "Supprimer scénario", $"Voulez-vous vraiment supprimer le scénario \"{scenario.Title}\" ?",  "Supprimer", "Annuler");
 
             if (!confirm)
             {
                 return;
             }
 
-            bool removed = Scenarios.Remove(scenario);
-
-            if (!removed)
+            try
             {
-                await alertService.ShowAlert("Suppression impossible", "Le scénario n'a pas pu être supprimé.");
+                dataAccess.DeleteScenario(scenario.Id);
+
+                RefreshScenarios();
+
+                await alertService.ShowAlert("Scénario supprimé", "Le scénario a bien été supprimé.");
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur suppression", exception.Message);
             }
         }
 
@@ -75,5 +81,10 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PopAsync();
         }
 
+
+        public void RefreshScenarios()
+        {
+            Scenarios = new ObservableCollection<Scenario>(dataAccess.GetAllScenarios());
+        }
     }
 }

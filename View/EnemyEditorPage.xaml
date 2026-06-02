@@ -87,7 +87,7 @@
                                         Grid.Column="1"
                                         Text="+ Nouvelle race"
                                         Command="{Binding NewEnemyRaceCommand}"
-                                        BackgroundColor="#25252D"
+                                        BackgroundColor="#3A6EA5"
                                         TextColor="White"
                                         CornerRadius="8"
                                         Padding="15,0" />
@@ -265,7 +265,7 @@
                         Text="Sauvegarder l'ennemi"
                         Command="{Binding SaveCommand}"
                         HeightRequest="50"
-                        BackgroundColor="#3B82F6"
+                        BackgroundColor="#3A6EA5"
                         TextColor="White"
                         CornerRadius="10"
                         FontAttributes="Bold"

@@ -83,7 +83,7 @@
                             Grid.Column="1"
                             Text="+ Nouvelle condition"
                             Command="{Binding NewConditionCommand}"
-                            BackgroundColor="#25252d"
+                            BackgroundColor="#3A6EA5"
                             TextColor="White"
                             CornerRadius="8" />
                     </Grid>
@@ -186,7 +186,7 @@
                             Grid.Column="1"
                             Text="+ Nouvel effet"
                             Command="{Binding NewEffectCommand}"
-                            BackgroundColor="#25252d"
+                            BackgroundColor="#3A6EA5"
                             TextColor="White"
                             CornerRadius="8" />
                     </Grid>
@@ -277,7 +277,7 @@
                 Text="Sauvegarder le choix"
                 Command="{Binding SaveCommand}"
                 HeightRequest="55"
-                BackgroundColor="#3b82f6"
+                BackgroundColor="#3A6EA5"
                 TextColor="White"
                 CornerRadius="8"
                 FontAttributes="Bold" />

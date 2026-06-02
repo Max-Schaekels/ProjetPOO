@@ -120,7 +120,7 @@
                         Text="Sauvegarder la boutique"
                         Command="{Binding SaveCommand}"
                         HeightRequest="50"
-                        BackgroundColor="#3B82F6"
+                        BackgroundColor="#3A6EA5"
                         TextColor="White"
                         CornerRadius="10"
                         FontAttributes="Bold"

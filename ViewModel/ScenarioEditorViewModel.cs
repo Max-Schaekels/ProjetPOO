@@ -21,7 +21,6 @@ namespace ProjetPOO.ViewModel
         private readonly PlayerCharacterEditorPage playerCharacterEditorPage;
 
         private Scenario? selectedScenario;
-        private Scene? selectedScene;
 
         public ScenarioEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, SceneEditorPage sceneEditorPage, EnemyEditorPage enemyEditorPage, ShopEditorPage shopEditorPage, PlayerCharacterEditorPage playerCharacterEditorPage) : base(alertService, dataAccessService)
         {
@@ -50,6 +49,8 @@ namespace ProjetPOO.ViewModel
             isEnemiesEmpty = true;
             isShopsEmpty = true;
             isPlayerCharactersEmpty = true;
+
+            canEditScenarioContent = false;
         }
 
 
@@ -95,6 +96,9 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private bool isPlayerCharactersEmpty;
 
+        [ObservableProperty]
+        private bool canEditScenarioContent;
+
         [RelayCommand()]
         private async Task Back()
         {
@@ -104,7 +108,65 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task Save()
         {
-            await alertService.ShowAlert("Sauvegarder scénario", "La sauvegarde du scénario sera ajoutée plus tard.");
+            if (string.IsNullOrWhiteSpace(ScenarioTitle))
+            {
+                await alertService.ShowAlert("Titre invalide", "Le titre du scénario ne peut pas être vide.");
+                return;
+            }
+
+            if (ScenarioTitle.Trim().Length < 3)
+            {
+                await alertService.ShowAlert("Titre invalide", "Le titre du scénario doit contenir au moins 3 caractères.");
+                return;
+            }
+
+            if (ScenarioTitle.Trim().Length > 200)
+            {
+                await alertService.ShowAlert("Titre invalide", "Le titre du scénario ne peut pas dépasser 200 caractères.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ScenarioDescription))
+            {
+                await alertService.ShowAlert("Description invalide", "La description du scénario ne peut pas être vide.");
+                return;
+            }
+
+            if (ScenarioDescription.Trim().Length < 30)
+            {
+                await alertService.ShowAlert("Description invalide", "La description du scénario doit contenir au moins 30 caractères.");
+                return;
+            }
+
+            try
+            {
+                if (selectedScenario == null)
+                {
+                    Scenario scenario = new Scenario(
+                        ScenarioTitle.Trim(),
+                        ScenarioDescription.Trim()
+                    );
+
+                    dataAccess.AddScenario(scenario);
+
+                    await alertService.ShowAlert("Scénario sauvegardé", "Le nouveau scénario a bien été créé.");
+
+                    await Shell.Current.Navigation.PopAsync();
+                    return;
+                }
+
+                selectedScenario.Rename(ScenarioTitle.Trim());
+                selectedScenario.ChangeDescription(ScenarioDescription.Trim());
+
+                dataAccess.UpdateScenario(selectedScenario);
+
+                await alertService.ShowAlert("Scénario sauvegardé", "Le scénario a bien été mis à jour.");
+
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur sauvegarde", exception.Message);
+            }
         }
 
         [RelayCommand()]
@@ -211,11 +273,7 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool confirm = await alertService.ShowConfirmation(
-                "Supprimer scène",
-                $"Voulez-vous vraiment supprimer la scène \"{scene.Title}\" ?",
-                "Supprimer",
-                "Annuler");
+            bool confirm = await alertService.ShowConfirmation( "Supprimer scène", $"Voulez-vous vraiment supprimer la scène \"{scene.Title}\" ?", "Supprimer","Annuler");
 
             if (!confirm)
             {
@@ -269,11 +327,7 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool confirm = await alertService.ShowConfirmation(
-                "Supprimer ennemi",
-                $"Voulez-vous vraiment supprimer l'ennemi \"{enemy.Name}\" ?",
-                "Supprimer",
-                "Annuler");
+            bool confirm = await alertService.ShowConfirmation( "Supprimer ennemi", $"Voulez-vous vraiment supprimer l'ennemi \"{enemy.Name}\" ?", "Supprimer", "Annuler");
 
             if (!confirm)
             {
@@ -410,6 +464,8 @@ namespace ProjetPOO.ViewModel
             Shops = scenario.Shops;
             PlayerCharacters = scenario.PlayerCharacters;
 
+            CanEditScenarioContent = true;
+
             RefreshCounts();
         }
 
@@ -421,6 +477,8 @@ namespace ProjetPOO.ViewModel
 
             ScenarioTitle = string.Empty;
             ScenarioDescription = string.Empty;
+
+            CanEditScenarioContent = false;
 
             Scenes = new ScenesCollection();
             Enemies = new EnemiesCollection();

@@ -94,7 +94,7 @@
                 Text="Sauvegarder l'effet"
                 Command="{Binding SaveCommand}"
                 HeightRequest="55"
-                BackgroundColor="#3b82f6"
+                BackgroundColor="#3A6EA5"
                 TextColor="White"
                 CornerRadius="8"
                 FontAttributes="Bold" />

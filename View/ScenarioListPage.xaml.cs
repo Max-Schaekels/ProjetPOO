@@ -14,4 +14,14 @@ public partial class ScenarioListPage : ContentPage
     {
         ScenarioCollectionView.ScrollTo(0, position: ScrollToPosition.Start, animate: true);
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (BindingContext is ScenarioListViewModel scenarioListViewModel)
+        {
+            scenarioListViewModel.RefreshScenarios();
+        }
+    }
 }

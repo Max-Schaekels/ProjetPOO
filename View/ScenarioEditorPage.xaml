@@ -9,7 +9,7 @@
 
             <Style x:Key="PrimaryButtonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="BackgroundColor" Value="#3B82F6" />
+                <Setter Property="BackgroundColor" Value="#3A6EA5" />
                 <Setter Property="CornerRadius" Value="10" />
                 <Setter Property="Padding" Value="18,10" />
                 <Setter Property="FontSize" Value="14" />
@@ -67,7 +67,7 @@
                         Padding="0"
                         HorizontalOptions="Start" />
 
-                <Label Text="Éditeur de Scénario"
+                <Label Text="{Binding PageTitle}"
                        FontSize="24"
                        FontAttributes="Bold"
                        TextColor="#111111"
@@ -113,10 +113,11 @@
                 </Frame>
             </Grid>
 
-            <!-- Sections -->
+            
+                <!-- Sections -->
             <VerticalStackLayout Grid.Row="2"
                                  Spacing="18">
-
+                <VerticalStackLayout IsVisible="{Binding CanEditScenarioContent}">
                 <!-- Scènes -->
                 <Grid ColumnDefinitions="1*,8*,1*">
                     <Frame Grid.Column="1"
@@ -180,7 +181,7 @@
 
                                                 <Label Grid.Row="1"
                                                        Grid.Column="0"
-                                                       Text="{Binding SceneType, StringFormat='Type : {0}'}"
+                                                       Text="{Binding Type, StringFormat='Type : {0}'}"
                                                        FontSize="13"
                                                        TextColor="#6B7280" />
 
@@ -508,6 +509,7 @@
                         </VerticalStackLayout>
                     </Frame>
                 </Grid>
+                </VerticalStackLayout>
 
                 <!-- Sauvegarde -->
                 <Grid ColumnDefinitions="1*,8*,1*"

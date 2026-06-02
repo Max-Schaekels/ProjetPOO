@@ -9,7 +9,7 @@
 
             <Style x:Key="PrimaryButtonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="BackgroundColor" Value="#3B82F6" />
+                <Setter Property="BackgroundColor" Value="#3A6EA5" />
                 <Setter Property="CornerRadius" Value="10" />
                 <Setter Property="Padding" Value="18,10" />
                 <Setter Property="FontSize" Value="14" />
@@ -18,7 +18,7 @@
 
             <Style x:Key="DarkButtonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="BackgroundColor" Value="#2D2D32" />
+                <Setter Property="BackgroundColor" Value="#3A6EA5" />
                 <Setter Property="CornerRadius" Value="10" />
                 <Setter Property="Padding" Value="18,10" />
                 <Setter Property="FontSize" Value="14" />
