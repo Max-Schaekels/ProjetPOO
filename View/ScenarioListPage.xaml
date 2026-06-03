@@ -147,6 +147,14 @@
                            FontSize="13"
                            TextColor="#7A7A7A" />
 
+                                        <Label Text="{Binding PlayerCharactersCount, StringFormat='{}{0} personnages'}"
+                            FontSize="13"
+                            TextColor="#7A7A7A" />
+
+                                        <Label Text="•"
+                            FontSize="13"
+                            TextColor="#7A7A7A" />
+
                                         <Label Text="{Binding ShopsCount, StringFormat='{}{0} boutiques'}"
                            FontSize="13"
                            TextColor="#7A7A7A" />

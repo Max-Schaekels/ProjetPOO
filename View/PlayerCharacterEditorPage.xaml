@@ -57,7 +57,7 @@
 
                                 <Entry
                                     Text="{Binding PlayerName}"
-                                    Placeholder="Exemple : Aventurier"
+                                    Placeholder="Exemple : Arthur"
                                     BackgroundColor="#F5F5F7"
                                     HeightRequest="50" />
                             </VerticalStackLayout>
@@ -170,10 +170,6 @@
 
                             </Grid>
 
-                            <Label
-                                Text="La validation et la sauvegarde réelle seront ajoutées avec la base de données."
-                                TextColor="#888888"
-                                FontSize="13" />
 
                         </VerticalStackLayout>
                     </Frame>

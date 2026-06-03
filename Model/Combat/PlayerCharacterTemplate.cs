@@ -229,12 +229,74 @@ namespace ProjetPOO.Model.Combat
         {
             if (!ValidUtils.CheckEntryName(name, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
             {
-                throw new ArgumentException(
-                    $"Name doit être compris entre {MINIMUM_NAME_LENGTH} et {MAXIMUM_NAME_LENGTH} caractères.",
-                    nameof(name));
+                throw new ArgumentException( $"Name doit être compris entre {MINIMUM_NAME_LENGTH} et {MAXIMUM_NAME_LENGTH} caractères.",nameof(name));
             }
 
             Name = name;
+        }
+
+        public void ChangeClassName(string className)
+        {
+            if (!ValidUtils.CheckEntryName(className, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
+            {
+                throw new ArgumentException( $"ClassName doit être compris entre {MINIMUM_NAME_LENGTH} et {MAXIMUM_NAME_LENGTH} caractères.",nameof(className));
+            }
+
+            ClassName = className;
+        }
+
+        public void ChangeRaceName(string raceName)
+        {
+            if (!ValidUtils.CheckEntryName(raceName, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
+            {
+                throw new ArgumentException( $"RaceName doit être compris entre {MINIMUM_NAME_LENGTH} et {MAXIMUM_NAME_LENGTH} caractères.", nameof(raceName));
+            }
+
+            RaceName = raceName;
+        }
+
+        public void UpdateStats(int maxHp, int attack, int defense, int agility)
+        {
+            if (!ValidUtils.CheckIfPositiveNumber(maxHp))
+            {
+                throw new ArgumentException("MaxHp doit être un nombre positif.", nameof(maxHp));
+            }
+
+            if (!ValidUtils.CheckIfNonNegativeNumber(attack))
+            {
+                throw new ArgumentException("Attack doit être un nombre non négatif.", nameof(attack));
+            }
+
+            if (!ValidUtils.CheckIfNonNegativeNumber(defense))
+            {
+                throw new ArgumentException("Defense doit être un nombre non négatif.", nameof(defense));
+            }
+
+            if (!ValidUtils.CheckIfNonNegativeNumber(agility))
+            {
+                throw new ArgumentException("Agility doit être un nombre non négatif.", nameof(agility));
+            }
+
+            MaxHp = maxHp;
+            Attack = attack;
+            Defense = defense;
+            Agility = agility;
+        }
+
+        public void UpdateStartingProgression(int startingExperience, int startingLevel)
+        {
+            if (!ValidUtils.CheckIfNonNegativeNumber(startingExperience))
+            {
+                throw new ArgumentException("StartingExperience doit être un nombre non négatif.", nameof(startingExperience));
+            }
+
+            if (!ValidUtils.CheckIfPositiveNumber(startingLevel))
+            {
+                throw new ArgumentException("StartingLevel doit être un nombre positif.", nameof(startingLevel));
+            }
+
+            StartingExperience = startingExperience;
+            StartingLevel = startingLevel;
         }
 
         public void SetScenario(int scenarioId)
