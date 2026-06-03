@@ -44,11 +44,10 @@ namespace ProjetPOO.Model.Combat
             private set => _enemyName = value;
         }
 
-        public EnemyInstance(Enemy template)
-            : base(template.Name, template.MaxHp, template.Attack, template.Defense, template.Agility)
+        public EnemyInstance(Enemy template) : base(template.DisplayName, template.MaxHp, template.Attack, template.Defense, template.Agility)
         {
             TemplateId = template.Id;
-            EnemyName = template.EnemyName;
+            EnemyName = template.DisplayName;
             EnemyRaceId = template.EnemyRaceId;
         }
 

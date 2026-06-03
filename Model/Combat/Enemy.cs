@@ -132,7 +132,10 @@ namespace ProjetPOO.Model.Combat
 
         public string Name
         {
-            get => GetCharacterName(EnemyName, EnemyRaceId);
+            get
+            {
+                return DisplayName;
+            }
         }
 
         public int MaxHp
@@ -453,15 +456,6 @@ namespace ProjetPOO.Model.Combat
             }
         }
 
-        private static string GetCharacterName(string? enemyName, int enemyRaceId)
-        {
-            if (!string.IsNullOrWhiteSpace(enemyName))
-            {
-                return enemyName;
-            }
-
-            return "Ennemi race " + enemyRaceId;
-        }
 
         public void RenameEnemy(string? enemyName)
         {
