@@ -99,6 +99,9 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private Scene? selectedFleeTargetScene;
 
+        [ObservableProperty]
+        private bool canEditSceneChoices;
+
         public bool IsNormalScene
         {
             get
@@ -135,7 +138,7 @@ namespace ProjetPOO.ViewModel
         {
             get
             {
-                return SelectedSceneType == SceneType.Normal;
+                return CanEditSceneChoices && (SelectedSceneType == SceneType.Normal || SelectedSceneType == SceneType.Shop);
             }
         }
 
@@ -282,7 +285,113 @@ namespace ProjetPOO.ViewModel
         [RelayCommand]
         private async Task Save()
         {
-            await alertService.ShowAlert("Sauvegarder scène", "La sauvegarde de la scène sera ajoutée plus tard.");
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(SceneTitle))
+            {
+                await alertService.ShowAlert("Titre invalide", "Le titre de la scène ne peut pas être vide.");
+                return;
+            }
+
+            if (SceneTitle.Trim().Length < 3)
+            {
+                await alertService.ShowAlert("Titre invalide", "Le titre de la scène doit contenir au moins 3 caractères.");
+                return;
+            }
+
+            if (SceneTitle.Trim().Length > 200)
+            {
+                await alertService.ShowAlert("Titre invalide", "Le titre de la scène ne peut pas dépasser 200 caractères.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(SceneText))
+            {
+                await alertService.ShowAlert("Texte invalide", "Le texte de la scène ne peut pas être vide.");
+                return;
+            }
+
+            if (SceneText.Trim().Length < 10)
+            {
+                await alertService.ShowAlert("Texte invalide", "Le texte de la scène doit contenir au moins 10 caractères.");
+                return;
+            }
+
+            if (SelectedSceneType == SceneType.Shop && SelectedShop == null)
+            {
+                await alertService.ShowAlert("Boutique manquante", "Veuillez sélectionner une boutique pour une scène de type Shop.");
+                return;
+            }
+
+            if (SelectedSceneType == SceneType.Combat)
+            {
+                if (SelectedEnemy == null)
+                {
+                    await alertService.ShowAlert("Ennemi manquant", "Veuillez sélectionner un ennemi pour une scène de combat.");
+                    return;
+                }
+
+                if (SelectedVictoryTargetScene == null)
+                {
+                    await alertService.ShowAlert("Scène manquante", "Veuillez sélectionner une scène en cas de victoire.");
+                    return;
+                }
+
+                if (SelectedDefeatTargetScene == null)
+                {
+                    await alertService.ShowAlert("Scène manquante", "Veuillez sélectionner une scène en cas de défaite.");
+                    return;
+                }
+
+                if (SelectedFleeTargetScene == null)
+                {
+                    await alertService.ShowAlert("Scène manquante", "Veuillez sélectionner une scène en cas de fuite.");
+                    return;
+                }
+            }
+
+            try
+            {
+                if (selectedScene == null)
+                {
+                    Scene scene = new Scene(
+                        SceneTitle.Trim(),
+                        SceneText.Trim(),
+                        SelectedSceneType
+                    );
+
+                    scene.AssignToScenario(selectedScenario.Id);
+
+                    ApplySceneDetails(scene);
+
+                    dataAccess.AddScene(scene);
+
+                    await alertService.ShowAlert("Scène sauvegardée", "La nouvelle scène a bien été créée.");
+
+                    await Shell.Current.Navigation.PopAsync();
+                    return;
+                }
+
+                selectedScene.Rename(SceneTitle.Trim());
+                selectedScene.UpdateText(SceneText.Trim());
+                selectedScene.ChangeType(SelectedSceneType);
+
+                ApplySceneDetails(selectedScene);
+
+                dataAccess.UpdateScene(selectedScene);
+
+                await alertService.ShowAlert("Scène sauvegardée", "La scène a bien été mise à jour.");
+
+                await Shell.Current.Navigation.PopAsync();
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur sauvegarde", exception.Message);
+            }
         }
 
         [RelayCommand]
@@ -327,11 +436,7 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool confirm = await alertService.ShowConfirmation(
-                "Supprimer choix",
-                $"Voulez-vous vraiment supprimer le choix \"{choice.Label}\" ?",
-                "Supprimer",
-                "Annuler");
+            bool confirm = await alertService.ShowConfirmation("Supprimer choix", $"Voulez-vous vraiment supprimer le choix \"{choice.Label}\" ?", "Supprimer", "Annuler");
 
             if (!confirm)
             {
@@ -431,6 +536,7 @@ namespace ProjetPOO.ViewModel
 
             SelectedImageFileName = "Aucune image sélectionnée";
             SceneImagePreview = null;
+            CanEditSceneChoices = false;
 
             RefreshSceneTypeVisibility();
         }
@@ -469,6 +575,8 @@ namespace ProjetPOO.ViewModel
             SelectedFleeTargetScene = GetSceneById(scene.FleeTargetSceneId);
 
             LoadSceneImagePreview(scene.PictureFileName);
+
+            CanEditSceneChoices = true;
 
             RefreshSceneTypeVisibility();
         }
@@ -589,6 +697,81 @@ namespace ProjetPOO.ViewModel
             OnPropertyChanged(nameof(IsShopSelectionVisible));
         }
 
+        private void ApplySceneDetails(Scene scene)
+        {
+            if (scene == null)
+            {
+                throw new ArgumentNullException(nameof(scene));
+            }
+
+            if (string.IsNullOrWhiteSpace(PictureFileName))
+            {
+                scene.ClearPicture();
+            }
+            else
+            {
+                scene.SetPicture(PictureFileName);
+            }
+
+            if (SelectedSceneType == SceneType.Normal)
+            {
+                scene.ChangeType(SceneType.Normal);
+                scene.ClearShop();
+                scene.ClearCombat();
+                return;
+            }
+
+            if (SelectedSceneType == SceneType.Shop)
+            {
+                if (SelectedShop == null)
+                {
+                    throw new InvalidOperationException("Une scène de type Shop doit avoir une boutique.");
+                }
+
+                scene.ClearCombat();
+                scene.ChangeType(SceneType.Shop);
+                scene.SetShop(SelectedShop.Id);
+                return;
+            }
+
+            if (SelectedSceneType == SceneType.Combat)
+            {
+                if (SelectedEnemy == null)
+                {
+                    throw new InvalidOperationException("Une scène de combat doit avoir un ennemi.");
+                }
+
+                if (SelectedVictoryTargetScene == null)
+                {
+                    throw new InvalidOperationException("Une scène de combat doit avoir une scène de victoire.");
+                }
+
+                if (SelectedDefeatTargetScene == null)
+                {
+                    throw new InvalidOperationException("Une scène de combat doit avoir une scène de défaite.");
+                }
+
+                if (SelectedFleeTargetScene == null)
+                {
+                    throw new InvalidOperationException("Une scène de combat doit avoir une scène de fuite.");
+                }
+
+                scene.ClearShop();
+                scene.ChangeType(SceneType.Combat);
+
+                scene.SetCombat( SelectedEnemy.Id, SelectedFleeTargetScene.Id, SelectedDefeatTargetScene.Id,SelectedVictoryTargetScene.Id );
+
+                return;
+            }
+
+            if (SelectedSceneType == SceneType.End)
+            {
+                scene.ClearShop();
+                scene.ClearCombat();
+                scene.ChangeType(SceneType.End);
+                return;
+            }
+        }
 
     }
 }
