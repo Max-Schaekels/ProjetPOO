@@ -497,6 +497,9 @@ namespace ProjetPOO.ViewModel
 
             Scenes = scenario.Scenes;
             Enemies = scenario.Enemies;
+
+            SetEnemyDisplayRaceNames();
+
             Shops = scenario.Shops;
             PlayerCharacters = scenario.PlayerCharacters;
 
@@ -560,6 +563,30 @@ namespace ProjetPOO.ViewModel
 
             ScenarioTitle = currentTitle;
             ScenarioDescription = currentDescription;
+        }
+
+        private void SetEnemyDisplayRaceNames()
+        {
+            if (Enemies == null || selectedScenario == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < Enemies.Count; i++)
+            {
+                Enemy enemy = Enemies[i];
+
+                for (int j = 0; j < selectedScenario.EnemyRaces.Count; j++)
+                {
+                    EnemyRace enemyRace = selectedScenario.EnemyRaces[j];
+
+                    if (enemyRace.Id == enemy.EnemyRaceId)
+                    {
+                        enemy.SetEnemyRaceName(enemyRace.Name);
+                        break;
+                    }
+                }
+            }
         }
 
     }

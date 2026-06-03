@@ -23,6 +23,7 @@ namespace ProjetPOO.Model.Combat
         private int _scenarioId;
 
         private string? _enemyName;
+        private string? enemyRaceName;
         private int _enemyRaceId;
         private int _rewardExperience;
         private int _maxHp;
@@ -72,6 +73,37 @@ namespace ProjetPOO.Model.Combat
                 {
                     _enemyName = value;
                 }
+            }
+        }
+
+        public string? EnemyRaceName
+        {
+            get
+            {
+                return enemyRaceName;
+            }
+
+            private set
+            {
+                enemyRaceName = value;
+            }
+        }
+
+        public string DisplayName
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(EnemyName))
+                {
+                    return EnemyName;
+                }
+
+                if (!string.IsNullOrWhiteSpace(EnemyRaceName))
+                {
+                    return EnemyRaceName;
+                }
+
+                return "Ennemi générique";
             }
         }
 
@@ -446,5 +478,44 @@ namespace ProjetPOO.Model.Combat
             EnemyRaceId = enemyRaceId;
         }
 
+        public void UpdateStats(int maxHp, int attack, int defense, int agility)
+        {
+            MaxHp = maxHp;
+            Attack = attack;
+            Defense = defense;
+            Agility = agility;
+        }
+
+        public void UpdateRewards(int rewardExperience, int rewardGoldMin, int rewardGoldMax)
+        {
+            RewardExperience = rewardExperience;
+            RewardGoldMin = rewardGoldMin;
+            RewardGoldMax = rewardGoldMax;
+
+            ValidateRewardRanges();
+        }
+
+        public void UpdatePotionLoot(int potionDropChance, int potionAmountMin, int potionAmountMax)
+        {
+            PotionDropChance = potionDropChance;
+            PotionAmountMin = potionAmountMin;
+            PotionAmountMax = potionAmountMax;
+
+            ValidateRewardRanges();
+        }
+
+        public void UpdateKeyLoot(int keyDropChance, int keyAmountMin, int keyAmountMax)
+        {
+            KeyDropChance = keyDropChance;
+            KeyAmountMin = keyAmountMin;
+            KeyAmountMax = keyAmountMax;
+
+            ValidateRewardRanges();
+        }
+
+        public void SetEnemyRaceName(string? raceName)
+        {
+            EnemyRaceName = raceName;
+        }
     }
 }

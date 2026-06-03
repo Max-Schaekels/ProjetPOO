@@ -126,44 +126,202 @@ namespace ProjetPOO.ViewModel
         [RelayCommand]
         private async Task Save()
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
             if (SelectedEnemyRace == null)
             {
                 await alertService.ShowAlert("Race manquante", "Veuillez sélectionner ou créer une race d'ennemi.");
                 return;
             }
 
-            await alertService.ShowAlert("Sauvegarder ennemi", "La sauvegarde de l'ennemi sera ajoutée plus tard.");
+            if (!string.IsNullOrWhiteSpace(EnemyName) && EnemyName.Trim().Length < 3)
+            {
+                await alertService.ShowAlert("Nom invalide", "Le nom de l'ennemi doit contenir au moins 3 caractères s'il est renseigné.");
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(EnemyName) && EnemyName.Trim().Length > 50)
+            {
+                await alertService.ShowAlert("Nom invalide", "Le nom de l'ennemi ne peut pas dépasser 50 caractères.");
+                return;
+            }
+
+            if (MaxHp <= 0)
+            {
+                await alertService.ShowAlert("PV invalides", "Les PV maximum doivent être supérieurs à 0.");
+                return;
+            }
+
+            if (Attack < 0)
+            {
+                await alertService.ShowAlert("Attaque invalide", "L'attaque ne peut pas être négative.");
+                return;
+            }
+
+            if (Defense < 0)
+            {
+                await alertService.ShowAlert("Défense invalide", "La défense ne peut pas être négative.");
+                return;
+            }
+
+            if (Agility < 0)
+            {
+                await alertService.ShowAlert("Agilité invalide", "L'agilité ne peut pas être négative.");
+                return;
+            }
+
+            if (RewardExperience < 0)
+            {
+                await alertService.ShowAlert("Expérience invalide", "L'expérience donnée ne peut pas être négative.");
+                return;
+            }
+
+            if (RewardGoldMin < 0 || RewardGoldMax < 0)
+            {
+                await alertService.ShowAlert("Or invalide", "Les récompenses en or ne peuvent pas être négatives.");
+                return;
+            }
+
+            if (RewardGoldMin > RewardGoldMax)
+            {
+                await alertService.ShowAlert("Or invalide", "L'or minimum ne peut pas être supérieur à l'or maximum.");
+                return;
+            }
+
+            if (PotionDropChance < 0 || PotionDropChance > 100)
+            {
+                await alertService.ShowAlert("Chance invalide", "La chance de drop de potion doit être comprise entre 0 et 100.");
+                return;
+            }
+
+            if (PotionAmountMin < 0 || PotionAmountMax < 0)
+            {
+                await alertService.ShowAlert("Potion invalide", "Les quantités de potions ne peuvent pas être négatives.");
+                return;
+            }
+
+            if (PotionAmountMin > PotionAmountMax)
+            {
+                await alertService.ShowAlert("Potion invalide", "La quantité minimum de potions ne peut pas être supérieure au maximum.");
+                return;
+            }
+
+            if (PotionDropChance > 0 && PotionAmountMax == 0)
+            {
+                await alertService.ShowAlert("Potion invalide", "Si une potion peut être obtenue, la quantité maximum doit être supérieure à 0.");
+                return;
+            }
+
+            if (KeyDropChance < 0 || KeyDropChance > 100)
+            {
+                await alertService.ShowAlert("Chance invalide", "La chance de drop de clé doit être comprise entre 0 et 100.");
+                return;
+            }
+
+            if (KeyAmountMin < 0 || KeyAmountMax < 0)
+            {
+                await alertService.ShowAlert("Clé invalide", "Les quantités de clés ne peuvent pas être négatives.");
+                return;
+            }
+
+            if (KeyAmountMin > KeyAmountMax)
+            {
+                await alertService.ShowAlert("Clé invalide", "La quantité minimum de clés ne peut pas être supérieure au maximum.");
+                return;
+            }
+
+            if (KeyDropChance > 0 && KeyAmountMax == 0)
+            {
+                await alertService.ShowAlert("Clé invalide", "Si une clé peut être obtenue, la quantité maximum doit être supérieure à 0.");
+                return;
+            }
+
+            try
+            {
+                string? normalizedEnemyName = null;
+
+                if (!string.IsNullOrWhiteSpace(EnemyName))
+                {
+                    normalizedEnemyName = EnemyName.Trim();
+                }
+
+                if (selectedEnemy == null)
+                {
+                    Enemy enemy = new Enemy(normalizedEnemyName, SelectedEnemyRace.Id, MaxHp, Attack, Defense, Agility, RewardExperience, RewardGoldMin, RewardGoldMax, PotionDropChance, PotionAmountMin, PotionAmountMax, KeyDropChance, KeyAmountMin, KeyAmountMax );
+
+                    enemy.AssignToScenario(selectedScenario.Id);
+
+                    dataAccess.AddEnemy(enemy);
+
+                    await alertService.ShowAlert("Ennemi sauvegardé", "Le nouvel ennemi a bien été créé.");
+
+                    await Shell.Current.Navigation.PopAsync();
+                    return;
+                }
+
+                selectedEnemy.RenameEnemy(normalizedEnemyName);
+                selectedEnemy.ChangeEnemyRace(SelectedEnemyRace.Id);
+                selectedEnemy.UpdateStats(MaxHp, Attack, Defense, Agility);
+                selectedEnemy.UpdateRewards(RewardExperience, RewardGoldMin, RewardGoldMax);
+                selectedEnemy.UpdatePotionLoot(PotionDropChance, PotionAmountMin, PotionAmountMax);
+                selectedEnemy.UpdateKeyLoot(KeyDropChance, KeyAmountMin, KeyAmountMax);
+
+                dataAccess.UpdateEnemy(selectedEnemy);
+
+                await alertService.ShowAlert("Ennemi sauvegardé", "L'ennemi a bien été mis à jour.");
+
+                await Shell.Current.Navigation.PopAsync();
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur sauvegarde", exception.Message);
+            }
         }
 
         public async Task<bool> SaveNewEnemyRace()
         {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewEnemyRaceName))
+            {
+                await alertService.ShowAlert("Nom invalide", "Le nom de la race ne peut pas être vide.");
+                return false;
+            }
+
+            if (EnemyRaces != null && EnemyRaces.ContainsName(NewEnemyRaceName.Trim()))
+            {
+                await alertService.ShowAlert("Race déjà existante", "Une race avec ce nom existe déjà dans ce scénario.");
+                return false;
+            }
+
             try
             {
-                EnemyRace enemyRace = new EnemyRace(NewEnemyRaceName, NewEnemyRaceDescription);
+                EnemyRace enemyRace = new EnemyRace(NewEnemyRaceName.Trim(),NewEnemyRaceDescription.Trim());
 
-                if (EnemyRaces == null)
-                {
-                    if (selectedScenario != null)
-                    {
-                        EnemyRaces = new EnemyRacesCollection(selectedScenario.Id);
-                    }
-                    else
-                    {
-                        EnemyRaces = new EnemyRacesCollection();
-                    }
-                }
+                enemyRace.AssignToScenario(selectedScenario.Id);
 
-                EnemyRaces.AddEnemyRace(enemyRace);
-                SelectedEnemyRace = enemyRace;
+                dataAccess.AddEnemyRace(enemyRace);
+
+                EnemyRaces = dataAccess.GetEnemyRacesByScenarioId(selectedScenario.Id);
+
+                SelectedEnemyRace = GetEnemyRaceByName(NewEnemyRaceName.Trim());
 
                 NewEnemyRaceName = string.Empty;
                 NewEnemyRaceDescription = string.Empty;
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                await alertService.ShowAlert("Erreur", ex.Message);
+                await alertService.ShowAlert("Erreur", exception.Message);
                 return false;
             }
         }
@@ -256,6 +414,26 @@ namespace ProjetPOO.ViewModel
                 EnemyRace enemyRace = EnemyRaces[i];
 
                 if (enemyRace.Id == enemyRaceId)
+                {
+                    return enemyRace;
+                }
+            }
+
+            return null;
+        }
+
+        private EnemyRace? GetEnemyRaceByName(string enemyRaceName)
+        {
+            if (EnemyRaces == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < EnemyRaces.Count; i++)
+            {
+                EnemyRace enemyRace = EnemyRaces[i];
+
+                if (enemyRace.Name.Equals(enemyRaceName, StringComparison.OrdinalIgnoreCase))
                 {
                     return enemyRace;
                 }

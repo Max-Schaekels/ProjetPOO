@@ -272,7 +272,7 @@
 
                                                 <Label Grid.Row="0"
                                                        Grid.Column="0"
-                                                       Text="{Binding EnemyName, TargetNullValue='Ennemi générique'}"
+                                                       Text="{Binding DisplayName}"
                                                        FontSize="15"
                                                        FontAttributes="Bold"
                                                        TextColor="#111111" />

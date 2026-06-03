@@ -253,10 +253,6 @@
 
                             </Grid>
 
-                            <Label
-                                Text="La validation et la sauvegarde réelle seront ajoutées avec la base de données."
-                                TextColor="#888888"
-                                FontSize="13" />
 
                         </VerticalStackLayout>
                     </Frame>
