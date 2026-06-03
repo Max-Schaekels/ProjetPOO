@@ -24,4 +24,13 @@ public partial class ScenarioEditorPage : ContentPage
         viewModel.PrepareNewScenario();
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (BindingContext is ScenarioEditorViewModel scenarioEditorViewModel)
+        {
+            scenarioEditorViewModel.RefreshLoadedScenario();
+        }
+    }
 }

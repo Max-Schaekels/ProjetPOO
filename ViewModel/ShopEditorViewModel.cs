@@ -41,7 +41,70 @@ namespace ProjetPOO.ViewModel
         [RelayCommand]
         private async Task Save()
         {
-            await alertService.ShowAlert("Sauvegarder boutique", "La sauvegarde de la boutique sera ajoutée plus tard.");
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ShopName))
+            {
+                await alertService.ShowAlert("Nom invalide", "Le nom de la boutique ne peut pas être vide.");
+                return;
+            }
+
+            if (ShopName.Trim().Length < 3)
+            {
+                await alertService.ShowAlert("Nom invalide", "Le nom de la boutique doit contenir au moins 3 caractères.");
+                return;
+            }
+
+            if (ShopName.Trim().Length > 50)
+            {
+                await alertService.ShowAlert("Nom invalide", "Le nom de la boutique ne peut pas dépasser 50 caractères.");
+                return;
+            }
+
+            if (PotionPrice <= 0)
+            {
+                await alertService.ShowAlert("Prix invalide", "Le prix d'une potion doit être supérieur à 0.");
+                return;
+            }
+
+            if (KeyPrice <= 0)
+            {
+                await alertService.ShowAlert("Prix invalide", "Le prix d'une clé doit être supérieur à 0.");
+                return;
+            }
+
+            try
+            {
+                if (selectedShop == null)
+                {
+                    Shop shop = new Shop(ShopName.Trim(),PotionPrice, KeyPrice );
+
+                    shop.AssignToScenario(selectedScenario.Id);
+
+                    dataAccess.AddShop(shop);
+
+                    await alertService.ShowAlert("Boutique sauvegardée", "La nouvelle boutique a bien été créée.");
+
+                    await Shell.Current.Navigation.PopAsync();
+                    return;
+                }
+
+                selectedShop.Rename(ShopName.Trim());
+                selectedShop.UpdatePotionPrice(PotionPrice);
+                selectedShop.UpdateKeyPrice(KeyPrice);
+
+                dataAccess.UpdateShop(selectedShop);
+
+                await alertService.ShowAlert("Boutique sauvegardée", "La boutique a bien été mise à jour.");
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur sauvegarde", exception.Message);
+            }
         }
 
         public void PrepareNewShop(Scenario scenario)

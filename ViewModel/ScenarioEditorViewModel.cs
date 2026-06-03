@@ -537,7 +537,30 @@ namespace ProjetPOO.ViewModel
             IsPlayerCharactersEmpty = PlayerCharactersCount == 0;
         }
 
+        public void RefreshLoadedScenario()
+        {
+            if (selectedScenario == null)
+            {
+                return;
+            }
 
+            int scenarioId = selectedScenario.Id;
+
+            string currentTitle = ScenarioTitle;
+            string currentDescription = ScenarioDescription;
+
+            Scenario? refreshedScenario = dataAccess.GetScenarioById(scenarioId);
+
+            if (refreshedScenario == null)
+            {
+                return;
+            }
+
+            LoadScenario(refreshedScenario);
+
+            ScenarioTitle = currentTitle;
+            ScenarioDescription = currentDescription;
+        }
 
     }
 }
