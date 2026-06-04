@@ -397,6 +397,17 @@ namespace ProjetPOO.ViewModel
         [RelayCommand]
         private async Task NewChoice()
         {
+            if (selectedScenario == null || selectedScene == null)
+            {
+                await alertService.ShowAlert("Contexte manquant", "Impossible de créer un choix car la scène courante n'est pas connue.");
+                return;
+            }
+
+            if (choiceEditorPage.BindingContext is ChoiceEditorViewModel choiceEditorViewModel)
+            {
+                choiceEditorViewModel.PrepareNewChoice(selectedScenario, selectedScene);
+            }
+
             await Shell.Current.Navigation.PushAsync(choiceEditorPage);
         }
 
@@ -443,11 +454,25 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool removed = selectedScene.Choices.RemoveById(choice.Id);
-
-            if (!removed)
+            try
             {
-                await alertService.ShowAlert("Suppression impossible", "Le choix n'a pas pu être supprimé.");
+                dataAccess.DeleteChoice(choice.Id);
+
+                bool removed = selectedScene.Choices.RemoveById(choice.Id);
+
+                if (!removed)
+                {
+                    await alertService.ShowAlert("Suppression impossible", "Le choix a été supprimé en base, mais pas trouvé dans la scène chargée.");
+                    return;
+                }
+
+                
+
+                await alertService.ShowAlert("Choix supprimé", "Le choix a bien été supprimé.");
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur suppression", exception.Message);
             }
         }
 
@@ -773,5 +798,63 @@ namespace ProjetPOO.ViewModel
             }
         }
 
+        public void RefreshLoadedScene()
+        {
+            if (selectedScene == null)
+            {
+                return;
+            }
+
+            int sceneId = selectedScene.Id;
+
+            string currentTitle = SceneTitle;
+            string currentText = SceneText;
+            string currentPictureFileName = PictureFileName;
+            string currentSelectedImageFileName = SelectedImageFileName;
+
+            SceneType currentSceneType = SelectedSceneType;
+
+            int? currentShopId = SelectedShop == null ? null : SelectedShop.Id;
+            int? currentEnemyId = SelectedEnemy == null ? null : SelectedEnemy.Id;
+            int? currentFleeTargetSceneId = SelectedFleeTargetScene == null ? null : SelectedFleeTargetScene.Id;
+            int? currentDefeatTargetSceneId = SelectedDefeatTargetScene == null ? null : SelectedDefeatTargetScene.Id;
+            int? currentVictoryTargetSceneId = SelectedVictoryTargetScene == null ? null : SelectedVictoryTargetScene.Id;
+
+            Scene? refreshedScene = dataAccess.GetSceneById(sceneId);
+
+            if (refreshedScene == null)
+            {
+                return;
+            }
+
+            if (selectedScenario == null)
+            {
+                return;
+            }
+
+            Scenario? refreshedScenario = dataAccess.GetScenarioById(selectedScenario.Id);
+
+            if (refreshedScenario == null)
+            {
+                return;
+            }
+
+            LoadScene(refreshedScenario, refreshedScene);
+
+            SceneTitle = currentTitle;
+            SceneText = currentText;
+            PictureFileName = currentPictureFileName;
+            SelectedImageFileName = currentSelectedImageFileName;
+
+            SelectedSceneType = currentSceneType;
+
+            SelectedShop = GetShopById(currentShopId);
+            SelectedEnemy = GetEnemyById(currentEnemyId);
+            SelectedFleeTargetScene = GetSceneById(currentFleeTargetSceneId);
+            SelectedDefeatTargetScene = GetSceneById(currentDefeatTargetSceneId);
+            SelectedVictoryTargetScene = GetSceneById(currentVictoryTargetSceneId);
+
+            RefreshSceneTypeVisibility();
+        }
     }
 }

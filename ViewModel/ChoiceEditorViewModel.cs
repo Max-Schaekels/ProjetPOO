@@ -26,6 +26,8 @@ namespace ProjetPOO.ViewModel
             this.effectEditorPage = effectEditorPage;
             PageTitle = "Édition choix";
 
+            canEditChoiceDetails = false;
+
             choiceLabel = string.Empty;
             availableTargetScenes = new ScenesCollection();
             selectedTargetScene = null;
@@ -49,6 +51,9 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private EffectsCollection effects;
 
+        [ObservableProperty]
+        private bool canEditChoiceDetails;
+
         [RelayCommand()]
         private async Task Back()
         {
@@ -58,7 +63,74 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task Save()
         {
-            await alertService.ShowAlert("Sauvegarder choix", $"La sauvegarde du choix sera ajoutée plus tard.");
+            if (selectedScene == null)
+            {
+                await alertService.ShowAlert("Scène manquante", "Aucune scène n'est sélectionnée.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ChoiceLabel))
+            {
+                await alertService.ShowAlert("Texte invalide", "Le texte du choix ne peut pas être vide.");
+                return;
+            }
+
+            if (ChoiceLabel.Trim().Length < 3)
+            {
+                await alertService.ShowAlert("Texte invalide", "Le texte du choix doit contenir au moins 3 caractères.");
+                return;
+            }
+
+            if (ChoiceLabel.Trim().Length > 200)
+            {
+                await alertService.ShowAlert("Texte invalide", "Le texte du choix ne peut pas dépasser 200 caractères.");
+                return;
+            }
+
+            if (SelectedTargetScene == null)
+            {
+                await alertService.ShowAlert("Destination manquante", "Veuillez sélectionner une scène de destination.");
+                return;
+            }
+
+            if (SelectedTargetScene.Id == selectedScene.Id)
+            {
+                await alertService.ShowAlert("Destination invalide", "Un choix ne peut pas pointer vers sa propre scène.");
+                return;
+            }
+
+            try
+            {
+                if (selectedChoice == null)
+                {
+                    Choice choice = new Choice(
+                        ChoiceLabel.Trim(),
+                        SelectedTargetScene.Id,
+                        selectedScene.Id
+                    );
+
+                    dataAccess.AddChoice(choice);
+
+                    await alertService.ShowAlert("Choix sauvegardé", "Le nouveau choix a bien été créé.");
+
+                    await Shell.Current.Navigation.PopAsync();
+                    return;
+                }
+
+                selectedChoice.Rename(ChoiceLabel.Trim());
+                selectedChoice.AssignToScene(selectedScene.Id);
+                selectedChoice.SetTargetScene(SelectedTargetScene.Id);
+
+                dataAccess.UpdateChoice(selectedChoice);
+
+                await alertService.ShowAlert("Choix sauvegardé", "Le choix a bien été mis à jour.");
+
+                await Shell.Current.Navigation.PopAsync();
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur sauvegarde", exception.Message);
+            }
         }
 
         [RelayCommand()]
@@ -114,11 +186,7 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool confirm = await alertService.ShowConfirmation(
-                "Supprimer condition",
-                $"Voulez-vous vraiment supprimer la condition \"{condition.Type}\" ?",
-                "Supprimer",
-                "Annuler");
+            bool confirm = await alertService.ShowConfirmation( "Supprimer condition", $"Voulez-vous vraiment supprimer la condition \"{condition.Type}\" ?","Supprimer", "Annuler");
 
             if (!confirm)
             {
@@ -186,11 +254,7 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool confirm = await alertService.ShowConfirmation(
-                "Supprimer effet",
-                $"Voulez-vous vraiment supprimer l'effet \"{effect.Type}\" ?",
-                "Supprimer",
-                "Annuler");
+            bool confirm = await alertService.ShowConfirmation( "Supprimer effet", $"Voulez-vous vraiment supprimer l'effet \"{effect.Type}\" ?", "Supprimer","Annuler");
 
             if (!confirm)
             {
@@ -203,6 +267,30 @@ namespace ProjetPOO.ViewModel
             {
                 await alertService.ShowAlert("Suppression impossible", "L'effet n'a pas pu être supprimé.");
             }
+        }
+
+        public void PrepareNewChoice(Scenario scenario, Scene scene)
+        {
+            if (scenario == null || scene == null)
+            {
+                return;
+            }
+
+            selectedScenario = scenario;
+            selectedScene = scene;
+            selectedChoice = null;
+
+            PageTitle = "Nouveau choix";
+
+            ChoiceLabel = string.Empty;
+
+            AvailableTargetScenes = BuildAvailableTargetScenes(scene);
+            SelectedTargetScene = null;
+
+            Conditions = new ConditionsCollection();
+            Effects = new EffectsCollection();
+
+            CanEditChoiceDetails = false;
         }
 
         public void LoadChoice(Scenario scenario, Scene scene, Choice choice)
@@ -224,6 +312,8 @@ namespace ProjetPOO.ViewModel
 
             Conditions = choice.Conditions;
             Effects = choice.Effects;
+
+            CanEditChoiceDetails = true;
         }
 
         private ScenesCollection BuildAvailableTargetScenes(Scene currentScene)

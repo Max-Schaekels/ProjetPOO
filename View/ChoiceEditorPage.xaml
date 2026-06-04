@@ -65,7 +65,8 @@
                 BackgroundColor="White"
                 Stroke="#dddddd"
                 StrokeThickness="1"
-                Padding="0">
+                Padding="0"
+                IsVisible="{Binding CanEditChoiceDetails}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12" />
                 </Border.StrokeShape>
@@ -168,7 +169,8 @@
                 BackgroundColor="White"
                 Stroke="#dddddd"
                 StrokeThickness="1"
-                Padding="0">
+                Padding="0"
+                IsVisible="{Binding CanEditChoiceDetails}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12" />
                 </Border.StrokeShape>
