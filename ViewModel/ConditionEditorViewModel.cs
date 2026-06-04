@@ -49,7 +49,50 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task Save()
         {
-            await alertService.ShowAlert("Sauvegarder condition", $"La sauvegarde de la condition sera ajoutée plus tard.");
+            if (selectedChoice == null)
+            {
+                await alertService.ShowAlert("Choix manquant", "Aucun choix n'est sélectionné.");
+                return;
+            }
+
+            if (Value <= 0)
+            {
+                await alertService.ShowAlert("Valeur invalide", "La valeur de la condition doit être supérieure à 0.");
+                return;
+            }
+
+            try
+            {
+                if (selectedCondition == null)
+                {
+                    Condition condition = new Condition(
+                        SelectedConditionType,
+                        Value
+                    );
+
+                    condition.SetChoice(selectedChoice.Id);
+
+                    dataAccess.AddCondition(condition);
+
+                    await alertService.ShowAlert("Condition sauvegardée", "La nouvelle condition a bien été créée.");
+
+                    await Shell.Current.Navigation.PopAsync();
+                    return;
+                }
+
+                selectedCondition.ChangeType(SelectedConditionType);
+                selectedCondition.ChangeMinValue(Value);
+
+                dataAccess.UpdateCondition(selectedCondition);
+
+                await alertService.ShowAlert("Condition sauvegardée", "La condition a bien été mise à jour.");
+
+                await Shell.Current.Navigation.PopAsync();
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur sauvegarde", exception.Message);
+            }
         }
 
         public void PrepareNewCondition(Choice choice)

@@ -193,11 +193,23 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool removed = selectedChoice.Conditions.RemoveById(condition.Id);
-
-            if (!removed)
+            try
             {
-                await alertService.ShowAlert("Suppression impossible", "La condition n'a pas pu être supprimée.");
+                dataAccess.DeleteCondition(condition.Id);
+
+                bool removed = selectedChoice.Conditions.RemoveById(condition.Id);
+
+                if (!removed)
+                {
+                    await alertService.ShowAlert("Suppression impossible", "La condition a été supprimée en base, mais pas trouvée dans le choix chargé.");
+                    return;
+                }
+
+                await alertService.ShowAlert("Condition supprimée", "La condition a bien été supprimée.");
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur suppression", exception.Message);
             }
         }
 
@@ -261,11 +273,23 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool removed = selectedChoice.Effects.RemoveById(effect.Id);
-
-            if (!removed)
+            try
             {
-                await alertService.ShowAlert("Suppression impossible", "L'effet n'a pas pu être supprimé.");
+                dataAccess.DeleteEffect(effect.Id);
+
+                bool removed = selectedChoice.Effects.RemoveById(effect.Id);
+
+                if (!removed)
+                {
+                    await alertService.ShowAlert("Suppression impossible", "L'effet a été supprimé en base, mais pas trouvé dans le choix chargé.");
+                    return;
+                }
+
+                await alertService.ShowAlert("Effet supprimé", "L'effet a bien été supprimé.");
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur suppression", exception.Message);
             }
         }
 
@@ -358,6 +382,42 @@ namespace ProjetPOO.ViewModel
             }
 
             return null;
+        }
+
+        public void RefreshLoadedChoice()
+        {
+            if (selectedChoice == null)
+            {
+                return;
+            }
+
+            int choiceId = selectedChoice.Id;
+
+            string currentLabel = ChoiceLabel;
+            int currentTargetSceneId = SelectedTargetScene == null ? 0 : SelectedTargetScene.Id;
+
+            Choice? refreshedChoice = dataAccess.GetChoiceById(choiceId);
+
+            if (refreshedChoice == null)
+            {
+                return;
+            }
+
+            if (selectedScenario == null || selectedScene == null)
+            {
+                return;
+            }
+
+            selectedChoice = refreshedChoice;
+
+            ChoiceLabel = currentLabel;
+            AvailableTargetScenes = BuildAvailableTargetScenes(selectedScene);
+            SelectedTargetScene = GetSceneById(currentTargetSceneId);
+
+            Conditions = refreshedChoice.Conditions;
+            Effects = refreshedChoice.Effects;
+
+            CanEditChoiceDetails = true;
         }
     }
 }
