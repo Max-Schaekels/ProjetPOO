@@ -18,6 +18,8 @@ namespace ProjetPOO.ViewModel
     {
         private Scenario? selectedScenario;
         private Enemy? selectedEnemy;
+        private EnemyRace? selectedEnemyRaceForEdit;
+
         public EnemyEditorViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
         {
             PageTitle = "Édition ennemi";
@@ -51,6 +53,10 @@ namespace ProjetPOO.ViewModel
 
             newEnemyRaceName = string.Empty;
             newEnemyRaceDescription = string.Empty;
+
+            enemyRacePopupTitle = "Nouvelle race ennemie";
+            enemyRacePopupSaveButtonText = "Créer";
+            canManageSelectedEnemyRace = selectedEnemyRace != null;
         }
 
         [ObservableProperty]
@@ -107,6 +113,15 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private string newEnemyRaceDescription;
 
+        [ObservableProperty]
+        private string enemyRacePopupTitle;
+
+        [ObservableProperty]
+        private string enemyRacePopupSaveButtonText;
+
+        [ObservableProperty]
+        private bool canManageSelectedEnemyRace;
+
         [RelayCommand]
         private async Task Back()
         {
@@ -116,11 +131,80 @@ namespace ProjetPOO.ViewModel
         [RelayCommand]
         private void NewEnemyRace()
         {
+            selectedEnemyRaceForEdit = null;
+
+            EnemyRacePopupTitle = "Nouvelle race ennemie";
+            EnemyRacePopupSaveButtonText = "Créer";
+
             NewEnemyRaceName = string.Empty;
             NewEnemyRaceDescription = string.Empty;
 
             EnemyRacePopup popup = new EnemyRacePopup(this);
             Shell.Current.CurrentPage.ShowPopup(popup);
+        }
+
+        [RelayCommand]
+        private async Task EditEnemyRace()
+        {
+            if (SelectedEnemyRace == null)
+            {
+                await alertService.ShowAlert("Race manquante", "Veuillez sélectionner une race à modifier.");
+                return;
+            }
+
+            selectedEnemyRaceForEdit = SelectedEnemyRace;
+
+            EnemyRacePopupTitle = "Modifier race ennemie";
+            EnemyRacePopupSaveButtonText = "Modifier";
+
+            NewEnemyRaceName = SelectedEnemyRace.Name;
+            NewEnemyRaceDescription = SelectedEnemyRace.Description;
+
+            EnemyRacePopup popup = new EnemyRacePopup(this);
+            Shell.Current.CurrentPage.ShowPopup(popup);
+        }
+
+        [RelayCommand]
+        private async Task DeleteEnemyRace()
+        {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Scénario manquant", "Aucun scénario n'est sélectionné.");
+                return;
+            }
+
+            if (SelectedEnemyRace == null)
+            {
+                await alertService.ShowAlert("Race manquante", "Veuillez sélectionner une race à supprimer.");
+                return;
+            }
+
+            if (IsEnemyRaceUsed(SelectedEnemyRace.Id))
+            {
+                await alertService.ShowAlert("Suppression impossible", "Cette race est utilisée par au moins un ennemi. Supprimez ou modifiez d'abord les ennemis concernés.");
+                return;
+            }
+
+            bool confirm = await alertService.ShowConfirmation( "Supprimer race",$"Voulez-vous vraiment supprimer la race \"{SelectedEnemyRace.Name}\" ?", "Supprimer", "Annuler");
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            try
+            {
+                dataAccess.DeleteEnemyRace(SelectedEnemyRace.Id);
+
+                EnemyRaces = dataAccess.GetEnemyRacesByScenarioId(selectedScenario.Id);
+                SelectedEnemyRace = GetFirstEnemyRace();
+
+                await alertService.ShowAlert("Race supprimée", "La race a bien été supprimée.");
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur suppression", exception.Message);
+            }
         }
 
         [RelayCommand]
@@ -282,7 +366,7 @@ namespace ProjetPOO.ViewModel
             }
         }
 
-        public async Task<bool> SaveNewEnemyRace()
+        public async Task<bool> SaveEnemyRace()
         {
             if (selectedScenario == null)
             {
@@ -296,23 +380,54 @@ namespace ProjetPOO.ViewModel
                 return false;
             }
 
-            if (EnemyRaces != null && EnemyRaces.ContainsName(NewEnemyRaceName.Trim()))
+            if (NewEnemyRaceName.Trim().Length < 3)
             {
-                await alertService.ShowAlert("Race déjà existante", "Une race avec ce nom existe déjà dans ce scénario.");
+                await alertService.ShowAlert("Nom invalide", "Le nom de la race doit contenir au moins 3 caractères.");
+                return false;
+            }
+
+            if (NewEnemyRaceName.Trim().Length > 50)
+            {
+                await alertService.ShowAlert("Nom invalide", "Le nom de la race ne peut pas dépasser 50 caractères.");
+                return false;
+            }
+
+            if (EnemyRaceNameExistsForOtherRace(NewEnemyRaceName.Trim()))
+            {
+                await alertService.ShowAlert("Race déjà existante", "Une autre race avec ce nom existe déjà dans ce scénario.");
                 return false;
             }
 
             try
             {
-                EnemyRace enemyRace = new EnemyRace(NewEnemyRaceName.Trim(),NewEnemyRaceDescription.Trim());
+                string normalizedName = NewEnemyRaceName.Trim();
+                string normalizedDescription = NewEnemyRaceDescription.Trim();
 
-                enemyRace.AssignToScenario(selectedScenario.Id);
+                if (selectedEnemyRaceForEdit == null)
+                {
+                    EnemyRace enemyRace = new EnemyRace(normalizedName, normalizedDescription);
 
-                dataAccess.AddEnemyRace(enemyRace);
+                    enemyRace.AssignToScenario(selectedScenario.Id);
 
-                EnemyRaces = dataAccess.GetEnemyRacesByScenarioId(selectedScenario.Id);
+                    dataAccess.AddEnemyRace(enemyRace);
 
-                SelectedEnemyRace = GetEnemyRaceByName(NewEnemyRaceName.Trim());
+                    EnemyRaces = dataAccess.GetEnemyRacesByScenarioId(selectedScenario.Id);
+                    SelectedEnemyRace = GetEnemyRaceByName(normalizedName);
+                }
+                else
+                {
+                    int editedEnemyRaceId = selectedEnemyRaceForEdit.Id;
+
+                    selectedEnemyRaceForEdit.Rename(normalizedName);
+                    selectedEnemyRaceForEdit.ChangeDescription(normalizedDescription);
+
+                    dataAccess.UpdateEnemyRace(selectedEnemyRaceForEdit);
+
+                    EnemyRaces = dataAccess.GetEnemyRacesByScenarioId(selectedScenario.Id);
+                    SelectedEnemyRace = GetEnemyRaceById(editedEnemyRaceId);
+                }
+
+                selectedEnemyRaceForEdit = null;
 
                 NewEnemyRaceName = string.Empty;
                 NewEnemyRaceDescription = string.Empty;
@@ -450,6 +565,61 @@ namespace ProjetPOO.ViewModel
             }
 
             return EnemyRaces[0];
+        }
+
+        partial void OnSelectedEnemyRaceChanged(EnemyRace? value)
+        {
+            CanManageSelectedEnemyRace = value != null;
+        }
+
+        private bool EnemyRaceNameExistsForOtherRace(string enemyRaceName)
+        {
+            if (EnemyRaces == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < EnemyRaces.Count; i++)
+            {
+                EnemyRace enemyRace = EnemyRaces[i];
+
+                if (!enemyRace.Name.Equals(enemyRaceName, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (selectedEnemyRaceForEdit == null)
+                {
+                    return true;
+                }
+
+                if (enemyRace.Id != selectedEnemyRaceForEdit.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool IsEnemyRaceUsed(int enemyRaceId)
+        {
+            if (selectedScenario == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < selectedScenario.Enemies.Count; i++)
+            {
+                Enemy enemy = selectedScenario.Enemies[i];
+
+                if (enemy.EnemyRaceId == enemyRaceId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

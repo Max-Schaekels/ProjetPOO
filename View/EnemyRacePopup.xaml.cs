@@ -20,9 +20,9 @@ public partial class EnemyRacePopup : Popup
 
     private async void CreateButton_Clicked(object sender, EventArgs e)
     {
-        bool isCreated = await viewModel.SaveNewEnemyRace();
+        bool isSaved = await viewModel.SaveEnemyRace();
 
-        if (isCreated)
+        if (isSaved)
         {
             Close();
         }

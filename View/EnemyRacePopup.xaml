@@ -16,7 +16,7 @@
         <VerticalStackLayout Spacing="16">
 
             <Label
-                Text="Nouvelle race ennemie"
+                Text="{Binding EnemyRacePopupTitle}"
                 FontSize="22"
                 FontAttributes="Bold"
                 HorizontalOptions="Center" />
@@ -60,7 +60,7 @@
 
                 <Button
                     Grid.Column="1"
-                    Text="Créer"
+                    Text="{Binding EnemyRacePopupSaveButtonText}"
                     Clicked="CreateButton_Clicked"
                     BackgroundColor="#3A6EA5"
                     TextColor="White"

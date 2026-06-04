@@ -72,25 +72,49 @@
                                     Text="Race de l'ennemi"
                                     FontAttributes="Bold" />
 
-                                <Grid ColumnDefinitions="*,Auto"
-                                      ColumnSpacing="10">
+                                <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+      ColumnSpacing="10">
 
                                     <Picker
-                                        Grid.Column="0"
-                                        Title="Choisir une race"
-                                        ItemsSource="{Binding EnemyRaces}"
-                                        SelectedItem="{Binding SelectedEnemyRace}"
-                                        ItemDisplayBinding="{Binding Name}"
-                                        BackgroundColor="#F5F5F7" />
+        Grid.Column="0"
+        Title="Choisir une race"
+        ItemsSource="{Binding EnemyRaces}"
+        SelectedItem="{Binding SelectedEnemyRace}"
+        ItemDisplayBinding="{Binding Name}"
+        BackgroundColor="#F5F5F7" />
 
                                     <Button
-                                        Grid.Column="1"
-                                        Text="+ Nouvelle race"
-                                        Command="{Binding NewEnemyRaceCommand}"
-                                        BackgroundColor="#3A6EA5"
-                                        TextColor="White"
-                                        CornerRadius="8"
-                                        Padding="15,0" />
+        Grid.Column="1"
+        Text="+ Nouvelle race"
+        Command="{Binding NewEnemyRaceCommand}"
+        BackgroundColor="#3A6EA5"
+        TextColor="White"
+        CornerRadius="8"
+        Padding="15,0" />
+
+                                    <Button
+        Grid.Column="2"
+        Text="✎"
+        Command="{Binding EditEnemyRaceCommand}"
+        IsEnabled="{Binding CanManageSelectedEnemyRace}"
+        BackgroundColor="#2D2D32"
+        TextColor="White"
+        CornerRadius="8"
+        WidthRequest="42"
+        HeightRequest="42"
+        Padding="0" />
+
+                                    <Button
+        Grid.Column="3"
+        Text="🗑"
+        Command="{Binding DeleteEnemyRaceCommand}"
+        IsEnabled="{Binding CanManageSelectedEnemyRace}"
+        BackgroundColor="#F04438"
+        TextColor="White"
+        CornerRadius="8"
+        WidthRequest="42"
+        HeightRequest="42"
+        Padding="0" />
 
                                 </Grid>
                             </VerticalStackLayout>
