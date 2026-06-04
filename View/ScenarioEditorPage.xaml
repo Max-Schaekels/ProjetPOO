@@ -52,13 +52,12 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <Grid Padding="20"
-              RowDefinitions="Auto,Auto,*">
+        <VerticalStackLayout Padding="20"
+                             Spacing="18">
 
             <!-- Header -->
-            <VerticalStackLayout Grid.Row="0"
-                                 Spacing="10"
-                                 Margin="0,0,0,20">
+            <VerticalStackLayout Spacing="10"
+                                 Margin="0,0,0,2">
 
                 <Button Text="← Retour à la liste"
                         Command="{Binding BackCommand}"
@@ -76,12 +75,10 @@
             </VerticalStackLayout>
 
             <!-- Formulaire principal -->
-            <Grid Grid.Row="1"
-                  ColumnDefinitions="1*,8*,1*">
+            <Grid ColumnDefinitions="1*,8*,1*">
 
                 <Frame Grid.Column="1"
-                       Style="{StaticResource SectionFrameStyle}"
-                       Margin="0,0,0,20">
+                       Style="{StaticResource SectionFrameStyle}">
 
                     <VerticalStackLayout Padding="20"
                                          Spacing="18">
@@ -113,11 +110,48 @@
                 </Frame>
             </Grid>
 
-            
-                <!-- Sections -->
-            <VerticalStackLayout Grid.Row="2"
+            <!-- Scène de départ -->
+            <Grid ColumnDefinitions="1*,8*,1*"
+                  IsVisible="{Binding CanEditScenarioContent}">
+
+                <Frame Grid.Column="1"
+                       Style="{StaticResource SectionFrameStyle}">
+
+                    <VerticalStackLayout>
+
+                        <Grid Padding="20,16">
+
+                            <Label Text="Scène de départ"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#111111"
+                                   VerticalOptions="Center" />
+
+                        </Grid>
+
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="#E5E5E5" />
+
+                        <VerticalStackLayout Padding="20,16"
+                                             Spacing="8">
+
+                            <Picker ItemsSource="{Binding Scenes}"
+                                    SelectedItem="{Binding SelectedStartScene}"
+                                    ItemDisplayBinding="{Binding Title}"
+                                    Title="Sélectionner la scène de départ"
+                                    BackgroundColor="#F5F5F7"
+                                    TextColor="#111111"
+                                    HeightRequest="60" />
+
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <VerticalStackLayout IsVisible="{Binding CanEditScenarioContent}"
                                  Spacing="18">
-                <VerticalStackLayout IsVisible="{Binding CanEditScenarioContent}">
+
                 <!-- Scènes -->
                 <Grid ColumnDefinitions="1*,8*,1*">
                     <Frame Grid.Column="1"
@@ -509,21 +543,21 @@
                         </VerticalStackLayout>
                     </Frame>
                 </Grid>
-                </VerticalStackLayout>
-
-                <!-- Sauvegarde -->
-                <Grid ColumnDefinitions="1*,8*,1*"
-                      Margin="0,20,0,30">
-
-                    <Button Grid.Column="1"
-                            Text="Sauvegarder le scénario"
-                            Command="{Binding SaveCommand}"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            HeightRequest="50" />
-
-                </Grid>
 
             </VerticalStackLayout>
-        </Grid>
+
+            <!-- Sauvegarde -->
+            <Grid ColumnDefinitions="1*,8*,1*"
+                  Margin="0,2,0,30">
+
+                <Button Grid.Column="1"
+                        Text="Sauvegarder le scénario"
+                        Command="{Binding SaveCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        HeightRequest="50" />
+
+            </Grid>
+
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

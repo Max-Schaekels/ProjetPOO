@@ -99,6 +99,9 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private bool canEditScenarioContent;
 
+        [ObservableProperty]
+        private Scene? selectedStartScene;
+
         [RelayCommand()]
         private async Task Back()
         {
@@ -157,6 +160,15 @@ namespace ProjetPOO.ViewModel
 
                 selectedScenario.Rename(ScenarioTitle.Trim());
                 selectedScenario.ChangeDescription(ScenarioDescription.Trim());
+
+                if (SelectedStartScene != null)
+                {
+                    selectedScenario.AssignStartScene(SelectedStartScene.Id);
+                }
+                else
+                {
+                    selectedScenario.ClearStartScene();
+                }
 
                 dataAccess.UpdateScenario(selectedScenario);
 
@@ -504,6 +516,8 @@ namespace ProjetPOO.ViewModel
 
             CanEditScenarioContent = true;
 
+            SelectedStartScene = GetSceneById(scenario.StartSceneId);
+
             RefreshCounts();
         }
 
@@ -522,6 +536,8 @@ namespace ProjetPOO.ViewModel
             Enemies = new EnemiesCollection();
             Shops = new ShopsCollection();
             PlayerCharacters = new PlayerCharactersCollection();
+
+            SelectedStartScene = null;
 
             RefreshCounts();
         }
@@ -586,6 +602,26 @@ namespace ProjetPOO.ViewModel
                     }
                 }
             }
+        }
+
+        private Scene? GetSceneById(int sceneId)
+        {
+            if (sceneId <= 0 || Scenes == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < Scenes.Count; i++)
+            {
+                Scene scene = Scenes[i];
+
+                if (scene.Id == sceneId)
+                {
+                    return scene;
+                }
+            }
+
+            return null;
         }
 
     }
