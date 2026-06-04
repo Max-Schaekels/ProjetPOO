@@ -546,15 +546,27 @@
 
             </VerticalStackLayout>
 
-            <!-- Sauvegarde -->
-            <Grid ColumnDefinitions="1*,8*,1*"
-                  Margin="0,2,0,30">
+            <!-- Actions -->
+            <Grid ColumnDefinitions="1*,4*,4*,1*"
+      ColumnSpacing="12"
+      Margin="0,2,0,30">
 
                 <Button Grid.Column="1"
-                        Text="Sauvegarder le scénario"
-                        Command="{Binding SaveCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        HeightRequest="50" />
+            Text="Sauvegarder"
+            Command="{Binding SaveCommand}"
+            Style="{StaticResource PrimaryButtonStyle}"
+            HeightRequest="50" />
+
+                <Button Grid.Column="2"
+            Text="Vérifier la cohérence"
+            Command="{Binding CheckConsistencyCommand}"
+            BackgroundColor="#2D2D32"
+            TextColor="White"
+            CornerRadius="10"
+            Padding="18,10"
+            FontSize="14"
+            FontAttributes="Bold"
+            HeightRequest="50" />
 
             </Grid>
 

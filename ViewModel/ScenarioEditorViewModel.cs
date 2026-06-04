@@ -624,5 +624,79 @@ namespace ProjetPOO.ViewModel
             return null;
         }
 
+        [RelayCommand()]
+        private async Task CheckConsistency()
+        {
+            if (selectedScenario == null)
+            {
+                await alertService.ShowAlert("Vérification impossible", "Le scénario doit d'abord être sauvegardé.");
+                return;
+            }
+
+            try
+            {
+                int startSceneId = 0;
+
+                if (SelectedStartScene != null)
+                {
+                    startSceneId = SelectedStartScene.Id;
+                }
+
+                Scenario scenarioToValidate = Scenario.Load(
+                    selectedScenario.Id,
+                    ScenarioTitle.Trim(),
+                    ScenarioDescription.Trim(),
+                    startSceneId,
+                    selectedScenario.Scenes,
+                    selectedScenario.Enemies,
+                    selectedScenario.EnemyRaces,
+                    selectedScenario.Shops,
+                    selectedScenario.PlayerCharacters
+                );
+
+                List<string> errors;
+                bool isPlayable = scenarioToValidate.ValidatePlayable(out errors);
+
+                if (isPlayable)
+                {
+                    await alertService.ShowAlert("Vérification terminée","Aucun problème détecté. Le scénario semble cohérent et jouable." );
+
+                    return;
+                }
+
+                string message = BuildValidationMessage(errors);
+
+                await alertService.ShowAlert("Problèmes détectés", message);
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur de vérification", exception.Message);
+            }
+        }
+
+        private string BuildValidationMessage(List<string> errors)
+        {
+            if (errors == null || errors.Count == 0)
+            {
+                return "Aucun problème détecté.";
+            }
+
+            StringBuilder messageBuilder = new StringBuilder();
+
+            int maximumDisplayedErrors = 12;
+
+            for (int i = 0; i < errors.Count && i < maximumDisplayedErrors; i++)
+            {
+                messageBuilder.AppendLine($"• {errors[i]}");
+            }
+
+            if (errors.Count > maximumDisplayedErrors)
+            {
+                messageBuilder.AppendLine();
+                messageBuilder.AppendLine($"... et {errors.Count - maximumDisplayedErrors} autre(s) problème(s).");
+            }
+
+            return messageBuilder.ToString();
+        }
     }
 }
