@@ -139,7 +139,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task Back()
         {
-            bool confirm = await alertService.ShowConfirmation("Quitter la partie","Voulez-vous vraiment quitter la partie en cours ? La sauvegarde sera ajoutée plus tard.","Quitter", "Annuler");
+            bool confirm = await alertService.ShowConfirmation("Quitter la partie", "Voulez-vous vraiment quitter la partie en cours ? Pensez à sauvegarder avant de quitter.", "Quitter", "Annuler");
 
             if (!confirm)
             {
@@ -147,6 +147,65 @@ namespace ProjetPOO.ViewModel
             }
 
             await Shell.Current.Navigation.PopAsync();
+        }
+
+        [RelayCommand()]
+        private async Task SaveGame()
+        {
+            if (gameEngine == null)
+            {
+                await alertService.ShowAlert("Erreur", "Aucune partie n'est chargée.");
+                return;
+            }
+
+            GameState state = gameEngine.State;
+
+            if (state.IsInCombat())
+            {
+                await alertService.ShowAlert( "Sauvegarde impossible", "La sauvegarde pendant un combat n'est pas encore prise en charge.");
+
+                return;
+            }
+
+            try
+            {
+                Scene currentScene = gameEngine.GetCurrentScene(selectedScenario);
+
+                string automaticSaveName = $"{selectedScenario.Title} - {currentScene.Title} - {DateTime.Now:dd/MM HH:mm}";
+
+                string customSaveName = await alertService.ShowPrompt(
+                    "Nom de la sauvegarde",
+                    $"Nom proposé : {automaticSaveName}"
+                );
+
+                string saveName = automaticSaveName;
+
+                if (!string.IsNullOrWhiteSpace(customSaveName))
+                {
+                    saveName = customSaveName.Trim();
+                }
+
+                int inventoryId = dataAccess.AddInventory(state.PlayerInventory);
+                int playerCharacterInstanceId = dataAccess.AddPlayerCharacterInstance(state.PlayerCharacter);
+                int gameStateId = dataAccess.AddGameState(state, inventoryId, playerCharacterInstanceId);
+
+                IReadOnlyList<string> flags = state.Flags;
+
+                for (int i = 0; i < flags.Count; i++)
+                {
+                    dataAccess.AddGameStateFlag(gameStateId, flags[i]);
+                }
+
+                SaveGame saveGame = new SaveGame(saveName, state);
+
+                dataAccess.AddSaveGame(saveGame, gameStateId);
+
+                await alertService.ShowAlert("Sauvegarde", $"La partie a été sauvegardée :\n{saveName}");
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur sauvegarde", exception.Message);
+            }
         }
 
         [RelayCommand()]
