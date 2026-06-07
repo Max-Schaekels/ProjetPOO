@@ -94,12 +94,7 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            bool confirm = await alertService.ShowConfirmation(
-                "Supprimer la sauvegarde",
-                $"Voulez-vous vraiment supprimer la sauvegarde \"{saveGame.Name}\" ?",
-                "Supprimer",
-                "Annuler"
-            );
+            bool confirm = await alertService.ShowConfirmation("Supprimer la sauvegarde", $"Voulez-vous vraiment supprimer la sauvegarde \"{saveGame.Name}\" ?","Supprimer", "Annuler" );
 
             if (!confirm)
             {

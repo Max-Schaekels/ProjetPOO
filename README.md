@@ -1,208 +1,436 @@
-# 🎮 Narrative Scenario Editor & Test Engine
+# 🎮 Narrative Scenario Editor & RPG Test Engine
 
-> Projet C# orienté objet – Éditeur et moteur de scénarios narratifs (type RPG / livre dont vous êtes le héros)
+> Projet C# / .NET MAUI orienté objet – Éditeur et moteur de scénarios narratifs de type RPG / livre dont vous êtes le héros.
 
 ---
 
 ## 📌 Description
 
-Ce projet consiste à développer une application permettant de :
+Ce projet est une application .NET MAUI permettant de créer, gérer et tester des scénarios narratifs interactifs.
 
-- ✏️ **Créer des scénarios narratifs** (éditeur)
-- ▶️ **Tester ces scénarios en les jouant** (moteur de test)
+L’application contient deux grandes parties :
 
-Un scénario est composé de **scènes** reliées par des **choix**.  
-Chaque choix peut être soumis à des **conditions** et produire des **effets** sur l’état du joueur.
+* ✏️ **Une partie édition**, permettant de créer et modifier les éléments d’un scénario.
+* ▶️ **Une partie jeu**, permettant de lancer un scénario, choisir un personnage, parcourir les scènes, faire des choix, acheter en boutique et combattre des ennemis.
 
-Certaines scènes permettent également :
-- ⚔️ des **combats**
-- 🛒 des **interactions avec une boutique**
+Un scénario est composé de scènes reliées par des choix.
+Chaque choix peut être soumis à des conditions et produire des effets sur l’état du joueur.
 
-👉 Le projet est conçu comme un **éditeur + moteur de test**, et non comme un jeu complet.
+Certaines scènes peuvent également contenir :
+
+* ⚔️ un combat
+* 🛒 une boutique
+* 🏁 une fin de scénario
+
+Le projet est conçu comme un **outil de création et de test de scénarios narratifs**, avec une architecture simple adaptée à un cours de programmation orientée objet.
 
 ---
 
 ## 🎯 Objectifs pédagogiques
 
-- Appliquer les principes de la **programmation orientée objet**
-- Mettre en place :
-  - encapsulation (champs privés + propriétés)
-  - validation des données
-  - séparation des responsabilités
-- Concevoir un modèle :
-  - cohérent
-  - extensible
-  - réutilisable
-- Préparer une base pour une future **persistance des données**
+Ce projet a pour objectif de mettre en pratique les principes de la programmation orientée objet :
+
+* Encapsulation
+* Validation des données dans les modèles
+* Utilisation de propriétés avec backing fields privés
+* Séparation entre modèle, vue et logique d’affichage
+* Utilisation de collections spécialisées
+* Gestion d’un état de jeu runtime
+* Persistance des données avec SQL Server
+* Navigation entre différentes pages MAUI
+* Utilisation du pattern MVVM avec CommunityToolkit.Mvvm
 
 ---
 
-⚙️ Configuration locale requise
+## 🛠️ Technologies utilisées
 
-Ce projet utilise un fichier de configuration local pour accéder aux données.
-
-Après avoir cloné le dépôt, vous devez créer le fichier suivant :
-
-Configuration/Datas/Config.local.txt
-
-Vous pouvez vous baser sur le fichier Config.txt présent dans le projet, puis adapter le chemin FOLDER en fonction de votre environnement local.
-
----
-
-## 🧱 Architecture
-
-Le projet est structuré en deux parties principales :
-
-### ✏️ Éditeur (modèle de données)
-
-- `Scenario`
-- `Scene`
-- `Choice`
-- `Condition`
-- `Effect`
-- `Enemy` (template)
-- `Shop`
-- `PlayerCharacterTemplate`
-
-👉 Représente la **création du contenu**
+* C#
+* .NET 8
+* .NET MAUI
+* CommunityToolkit.Mvvm
+* CommunityToolkit.Maui
+* SQL Server
+* Microsoft.Data.SqlClient
+* Microsoft SQL Server Management Studio 2019
+* XAML
 
 ---
 
-### ▶️ Runtime (exécution du scénario)
+## 🧱 Architecture du projet
 
-- `GameState`
-- `GameEngine`
-- `CombatState`
-- `EnemyInstance`
-- `PlayerCharacterInstance`
+Le projet suit une architecture volontairement simple, adaptée au contexte scolaire.
 
-👉 Représente **l’exécution du scénario**
+```text
+Model/
+    Combat/
+    Game/
+    Gameplay/
+    Story/
 
----
+ViewModel/
 
-### 💾 Sauvegarde
+View/
 
-- `SaveGame`
-- `DataAccess`
+Utilities/
+    DataAccess/
+    Interfaces/
+    Services/
+    Randomization/
+    EntriesValidation/
 
----
+Configuration/
+    Datas/
+```
 
-## ⚙️ Concepts clés
+### Model
 
-### 🔒 Encapsulation
-
-- Champs privés (backing fields)
-- Accès via propriétés
-- Validation directement dans les setters
-
----
-
-### 📦 Collections spécialisées
-
-Le projet utilise des collections héritant de `ObservableCollection<T>` :
-
-- `ScenesCollection`
-- `ChoicesCollection`
-- `ConditionsCollection`
-- `EffectsCollection`
-- `EnemiesCollection`
-- `ShopsCollection`
-- `PlayerCharactersCollection`
-
-Ces collections gèrent :
-- la cohérence des relations
-- les doublons
-- le rattachement au parent
-
----
-
-### 🔄 Séparation Template / Runtime
+Contient les classes métier du projet.
 
 Exemples :
 
-- `Enemy` → modèle du scénario  
-- `EnemyInstance` → utilisé en combat  
+* `Scenario`
+* `Scene`
+* `Choice`
+* `Condition`
+* `Effect`
+* `Shop`
+* `Enemy`
+* `EnemyRace`
+* `PlayerCharacterTemplate`
+* `GameState`
+* `GameEngine`
+* `SaveGame`
 
-- `PlayerCharacterTemplate` → modèle  
-- `PlayerCharacterInstance` → utilisé en jeu  
-
-👉 Permet :
-- la rejouabilité
-- une meilleure gestion de l’état du jeu
-- une séparation claire des responsabilités
-
----
-
-### ✔ Validation du scénario
-
-Deux niveaux de validation :
-
-- `ValidateSafe()` → scénario en cours d’édition  
-- `ValidatePlayable()` → scénario prêt à être testé  
+Les modèles contiennent une partie importante de la logique métier ainsi que les validations.
 
 ---
 
-## 🎮 Fonctionnement
+### ViewModel
 
-1. Création d’un scénario
-2. Ajout de scènes
-3. Ajout de choix entre les scènes
-4. Ajout de conditions et effets
-5. Ajout d’ennemis, boutiques, personnages
-6. Lancement du mode test
+Contient la logique d’affichage, les commandes et la navigation.
 
----
+Exemples :
 
-## 🧪 Test rapide (MainPage)
+* `ScenarioListViewModel`
+* `ScenarioEditorViewModel`
+* `SceneEditorViewModel`
+* `ChoiceEditorViewModel`
+* `EnemyEditorViewModel`
+* `GameScenarioListViewModel`
+* `PlayerCharacterSelectionViewModel`
+* `GameViewModel`
+* `SaveGameListViewModel`
 
-Un bouton permet d’instancier :
-
-- toutes les classes principales
-- avec des données de test cohérentes
-
-👉 Objectifs :
-- vérifier les constructeurs
-- vérifier les relations entre objets
-- démontrer la cohérence du modèle
+Les ViewModels héritent de `BaseViewModel`.
 
 ---
 
-## 📊 État actuel
+### View
 
-- ✅ Modèle de données complet
-- ✅ Navigation entre scènes
-- ✅ Système de choix
-- ✅ Conditions et effets
-- ✅ Système de combat
-- ✅ Inventaire et boutique
-- ✅ Séparation template / runtime
-- ✅ Sauvegarde simple
-- ✅ Collections spécialisées
+Contient les pages XAML de l’application.
 
----
+Exemples :
 
-## 🚧 Améliorations prévues
-
-### Court terme
-- corrections mineures de cohérence
-- amélioration des validations
-
-### Moyen terme
-- amélioration du `GameEngine`
-
-### Long terme
-- interface utilisateur complète (éditeur)
-- persistance (JSON / base de données)
-- évolution vers un projet plus complet 
+* `MainPage`
+* `ScenarioListPage`
+* `ScenarioEditorPage`
+* `SceneEditorPage`
+* `ChoiceEditorPage`
+* `EnemyEditorPage`
+* `GameScenarioListPage`
+* `PlayerCharacterSelectionPage`
+* `GamePage`
+* `SaveGameListPage`
 
 ---
 
-## 🛠️ Technologies
+### Utilities / DataAccess
 
-- C#
-- .NET
-- Programmation orientée objet
-- ObservableCollection
+Contient les classes liées à l’accès aux données, aux services et aux helpers.
+
+La classe principale utilisée actuellement est :
+
+* `DataAccessSqlFile`
+
+Elle permet de gérer les opérations SQL de création, lecture, modification et suppression.
+
+---
+
+## 🗃️ Persistance des données
+
+Le projet utilise actuellement **SQL Server** comme stockage principal.
+
+Les données sont manipulées via `DataAccessSqlFile`.
+
+La persistance SQL permet notamment de gérer :
+
+* les scénarios
+* les scènes
+* les choix
+* les conditions
+* les effets
+* les boutiques
+* les personnages joueurs
+* les ennemis
+* les races ennemies
+* les inventaires runtime
+* les personnages runtime
+* les états de jeu
+* les sauvegardes
+
+Des anciennes classes d’accès aux données CSV / JSON sont encore présentes dans le projet, mais ne sont plus utilisées dans l’application actuelle. Elles représentent les anciennes étapes d’évolution du projet.
+
+---
+
+## ⚙️ Configuration locale
+
+Le projet utilise un fichier de configuration local pour accéder à SQL Server.
+
+Après avoir cloné le dépôt, il faut créer le fichier suivant :
+
+```text
+Configuration/Datas/ConfigSql.local.txt
+```
+
+Il est possible de se baser sur :
+
+```text
+Configuration/Datas/ConfigSql.txt
+```
+
+Le fichier local doit contenir les informations nécessaires à la connexion SQL Server.
+
+Exemple de chaîne de connexion :
+
+```text
+Server=localhost;Database=ProjetPOO;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True;
+```
+
+Le nom exact du serveur et de la base de données doit être adapté selon l’environnement local.
+
+---
+
+## ✏️ Fonctionnalités de l’éditeur
+
+La partie édition permet de gérer les éléments nécessaires à la création d’un scénario narratif.
+
+Fonctionnalités principales :
+
+* Création, modification et suppression de scénarios
+* Création, modification et suppression de scènes
+* Gestion de la scène de départ d’un scénario
+* Création, modification et suppression de choix
+* Création, modification et suppression de conditions
+* Création, modification et suppression d’effets
+* Création, modification et suppression de boutiques
+* Création, modification et suppression de personnages joueurs
+* Création, modification et suppression d’ennemis
+* Création et modification des races ennemies via popup
+* Suppression des races ennemies bloquée si elles sont utilisées
+* Vérification de cohérence d’un scénario
+* Affichage des erreurs de validation dans une popup dédiée
+* Rafraîchissement des pages lors du retour de navigation
+* Boutons permettant de remonter en haut des pages longues
+
+---
+
+## ✔️ Validation des scénarios
+
+Le projet distingue deux types de validation :
+
+### `ValidateSafe()`
+
+Utilisée pour vérifier qu’un scénario ou un élément est globalement cohérent pendant l’édition.
+
+### `ValidatePlayable()`
+
+Utilisée pour vérifier qu’un scénario peut réellement être joué.
+
+Dans l’éditeur, la validation de jouabilité est informative.
+Elle permet d’aider l’utilisateur à repérer les problèmes, sans empêcher la sauvegarde.
+
+Dans la partie jeu, la validation de jouabilité est bloquante.
+Un scénario non jouable ne peut pas être lancé.
+
+Cette logique permet de respecter l’idée suivante :
+
+* Sauvegarder = enregistrer un état de travail
+* Vérifier la cohérence = aider l’utilisateur à corriger le scénario
+* Jouer = autoriser uniquement un scénario jouable
+
+---
+
+## ▶️ Fonctionnalités de la partie jeu
+
+La partie jeu permet de tester les scénarios créés dans l’éditeur.
+
+Fonctionnalités principales :
+
+* Affichage de la liste des scénarios disponibles
+* Lancement d’une nouvelle partie
+* Validation du scénario avant lancement
+* Sélection d’un personnage joueur
+* Création d’un état de jeu initial
+* Affichage de la scène courante
+* Affichage de l’image de scène si elle existe
+* Affichage des choix disponibles
+* Application des conditions et effets
+* Gestion de l’inventaire
+* Gestion de l’or, des potions et des clés
+* Gestion des boutiques
+* Achat de potions
+* Achat de clés
+* Gestion des combats
+* Attaque
+* Défense
+* Utilisation de potion
+* Fuite
+* Affichage du résultat des rounds
+* Passage automatique aux scènes de victoire, défaite ou fuite
+
+---
+
+## 💾 Sauvegarde et chargement de partie
+
+Le projet permet de sauvegarder et de charger une partie.
+
+Une sauvegarde contient notamment :
+
+* l’état de jeu
+* le scénario lié
+* la scène courante
+* l’inventaire du joueur
+* le personnage runtime
+* les flags actifs
+* le nom de la sauvegarde
+* la date de création
+* la date de dernière sauvegarde
+
+Depuis la partie jeu, il est possible de :
+
+* créer une nouvelle sauvegarde
+* donner un nom personnalisé à la sauvegarde
+* afficher la liste des sauvegardes existantes
+* charger une sauvegarde
+* supprimer une sauvegarde
+
+La sauvegarde pendant un combat est volontairement bloquée pour le moment, car l’état complet du combat n’est pas encore persisté en SQL.
+
+---
+
+## 🔄 Séparation Template / Runtime
+
+Le projet distingue les objets de création et les objets utilisés pendant l’exécution.
+
+Exemples :
+
+```text
+Enemy                → modèle d’ennemi dans le scénario
+EnemyInstance        → ennemi utilisé pendant un combat
+
+PlayerCharacterTemplate  → personnage disponible dans l’éditeur
+PlayerCharacterInstance  → personnage utilisé pendant une partie
+```
+
+Cette séparation permet de ne pas modifier directement les modèles du scénario pendant l’exécution du jeu.
+
+---
+
+## 📦 Collections spécialisées
+
+Le projet utilise plusieurs collections spécialisées héritant de `ObservableCollection<T>`.
+
+Exemples :
+
+* `ScenesCollection`
+* `ChoicesCollection`
+* `ConditionsCollection`
+* `EffectsCollection`
+* `EnemiesCollection`
+* `EnemyRacesCollection`
+* `ShopsCollection`
+* `PlayerCharactersCollection`
+
+Ces collections permettent de centraliser certaines règles de cohérence :
+
+* éviter les doublons
+* rattacher correctement les éléments à leur parent
+* gérer certaines suppressions
+* regrouper la logique liée aux listes métier
+
+---
+
+## 🧪 Scénario de test
+
+La base de données contient un scénario de test permettant de vérifier le fonctionnement global de l’application.
+
+Ce scénario permet notamment de tester :
+
+* la navigation entre scènes
+* les choix
+* les conditions
+* les effets
+* la boutique
+* les combats
+* les sauvegardes
+* le chargement de partie
+
+---
+
+## 📊 État actuel du projet
+
+Fonctionnalités terminées :
+
+* ✅ Modèle métier principal
+* ✅ Éditeur de scénarios
+* ✅ Éditeur de scènes
+* ✅ Éditeur de choix
+* ✅ Éditeur de conditions
+* ✅ Éditeur d’effets
+* ✅ Éditeur de boutiques
+* ✅ Éditeur de personnages joueurs
+* ✅ Éditeur d’ennemis
+* ✅ Gestion des races ennemies
+* ✅ Validation de cohérence
+* ✅ Partie jeu
+* ✅ Sélection de personnage
+* ✅ Navigation narrative
+* ✅ Conditions et effets
+* ✅ Inventaire
+* ✅ Boutique
+* ✅ Combat
+* ✅ Sauvegarde SQL
+* ✅ Chargement SQL
+* ✅ Suppression des sauvegardes
+* ✅ Interface MAUI fonctionnelle
+
+---
+
+## 🚧 Limites actuelles
+
+Le projet est fonctionnel pour l’objectif prévu, mais certaines limites sont connues :
+
+* La sauvegarde pendant un combat est bloquée.
+* L’or de départ est encore défini de manière temporaire pour faciliter les tests.
+* Les anciens accès CSV / JSON sont conservés, mais ne sont plus utilisés dans la version actuelle.
+* L’interface reste volontairement simple.
+* Le projet est un moteur de test et non un jeu complet finalisé.
+
+---
+
+## 🔮 Améliorations possibles
+
+Améliorations envisageables :
+
+* Sauvegarder également l’état exact d’un combat en cours
+* Ajouter une gestion plus avancée des objets
+* Ajouter d’autres types d’effets
+* Ajouter d’autres types de conditions
+* Améliorer l’équilibrage des combats
+* Ajouter une meilleure gestion des images
+* Améliorer le design général de l’interface
+* Ajouter un export/import de scénarios
+* Ajouter une documentation technique plus détaillée
 
 ---
 
@@ -214,4 +442,6 @@ Projet réalisé dans le cadre d’un cours de programmation orientée objet.
 
 ## 💡 Remarque
 
-Le projet est volontairement conçu comme un **outil de création et de test de scénarios narratifs**, avec une architecture simple mais évolutive adaptée à un contexte pédagogique.
+Le projet est volontairement conçu avec une architecture simple et lisible.
+
+L’objectif principal est de démontrer la maîtrise des concepts de programmation orientée objet, de structuration d’un projet MAUI, de manipulation de données SQL et de gestion d’un moteur narratif interactif.
