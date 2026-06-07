@@ -10,6 +10,11 @@ public partial class SceneEditorPage : ContentPage
 		BindingContext = viewModel;
 	}
 
+    private async void ButtonScrollToTop_Clicked(object sender, EventArgs e)
+    {
+        await SceneEditorScrollView.ScrollToAsync(0, 0, true);
+    }
+
     protected override void OnAppearing()
     {
         base.OnAppearing();

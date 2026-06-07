@@ -33,4 +33,9 @@ public partial class ScenarioEditorPage : ContentPage
             scenarioEditorViewModel.RefreshLoadedScenario();
         }
     }
+
+    private async void ButtonScrollToTop_Clicked(object sender, EventArgs e)
+    {
+        await ScenarioEditorScrollView.ScrollToAsync(0, 0, true);
+    }
 }

@@ -9,4 +9,9 @@ public partial class EnemyEditorPage : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
     }
+
+    private async void ButtonScrollToTop_Clicked(object sender, EventArgs e)
+    {
+        await EnemyEditorScrollView.ScrollToAsync(0, 0, true);
+    }
 }

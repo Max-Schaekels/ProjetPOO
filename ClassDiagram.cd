@@ -3,9 +3,10 @@
   <Class Name="ProjetPOO.Model.Story.Scenario">
     <Position X="0.5" Y="0.5" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AEQKgAB0AYQgAEAEmABAAACAWIEEQAABMjgAUICAkAE=</HashCode>
+      <HashCode>AEQKgAB0AYQwAEAEuABAQACA2YEEQAABMjgAUICAkAE=</HashCode>
       <FileName>Model\Story\Scenario.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="ProjetPOO.Model.Story.Scene">
     <Position X="4.25" Y="0.5" Width="3.25" />
@@ -17,9 +18,10 @@
   <Class Name="ProjetPOO.Model.Combat.Character">
     <Position X="13.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ARAAIBAAAAgQABCBAIQAADQAAIAAAAAQBMAAAgAAgEA=</HashCode>
+      <HashCode>ARAAIBAAAAgQABCBIIQAADQAgIAAAAAQBMAAAgAAgEA=</HashCode>
       <FileName>Model\Combat\Character.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="ProjetPOO.Model.Combat.Combat">
     <Position X="24.5" Y="4.25" Width="2" />
@@ -36,9 +38,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="ProjetPOO.Model.Combat.Enemy">
-    <Position X="13.5" Y="7" Width="2.5" />
+    <Position X="13.5" Y="7.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>CCQCgggABIACAI2goSBAAAAAQIAAAAAQE2EQIAAIqQQ=</HashCode>
+      <HashCode>CDQCkhoAFICCBI2hoSDAAAQAQIAAAAAQF2GQIgAIoUQ=</HashCode>
       <FileName>Model\Combat\Enemy.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -49,22 +51,16 @@
       <FileName>Model\Combat\PlayerCharacterInstance.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjetPOO.Model.Data.DataAccess">
-    <Position X="21.75" Y="7.5" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AEAAEQAgAAAQAAAACAAAAAAQgAAAABAAAAAAAAAAAAA=</HashCode>
-      <FileName>Model\Data\DataAccess.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="ProjetPOO.Model.Game.GameState">
     <Position X="27.5" Y="0.5" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>CAQajACBADAgAIgAChFGBDEgQIAACQAAQAAAoAEAAAE=</HashCode>
+      <HashCode>CAQajACBADAgAIgAKhFGBDEgwIAACQAAQAAAoAEAAAE=</HashCode>
       <FileName>Model\Game\GameState.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="ProjetPOO.Model.Game.SaveGame">
-    <Position X="29.5" Y="10.25" Width="1.5" />
+    <Position X="29.75" Y="11.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAUCoAAAAAAAABAAACBAChQAQIAAAABACAAABAAAgAA=</HashCode>
       <FileName>Model\Game\SaveGame.cs</FileName>
@@ -78,7 +74,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="ProjetPOO.Model.Story.Condition">
-    <Position X="0.5" Y="10" Width="2.5" />
+    <Position X="0.5" Y="12.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAUCgAAAAACAAIwAAkFAAgAAQIAAgAAAAQAAAAAgAAA=</HashCode>
       <FileName>Model\Story\Condition.cs</FileName>
@@ -92,11 +88,12 @@
     </TypeIdentifier>
   </Class>
   <Class Name="ProjetPOO.Model.Gameplay.Inventory">
-    <Position X="27.5" Y="10.25" Width="1.75" />
+    <Position X="27.5" Y="11" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>CAQCwAAAIAAIIABAAABAAAAAQIEAAgAAAQAAAAAAAAE=</HashCode>
+      <HashCode>CAQCwAAAIAAIIABAIABAAAAAwIEAAgAAAQAAAAAAAAE=</HashCode>
       <FileName>Model\Gameplay\Inventory.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="ProjetPOO.Model.Gameplay.Loot">
     <Position X="16.25" Y="11.5" Width="2.75" />
@@ -134,9 +131,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="ProjetPOO.Model.Combat.PlayerCharacterTemplate">
-    <Position X="11.25" Y="7.25" Width="2" />
+    <Position X="11.25" Y="7.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>CBQCpRAECAKAABgBAABAAFQAQIAAAAAQBBAAAgAAgEQ=</HashCode>
+      <HashCode>CFQCpRAEGAKAABgBAABAAFQAQIAAAAIQBBAAAgAAgFQ=</HashCode>
       <FileName>Model\Combat\PlayerCharacterTemplate.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -187,6 +184,20 @@
     <TypeIdentifier>
       <HashCode>AAAQAAAAAQAAAgABAAAAAAAAAAAQAAAAAAAAAABAAIA=</HashCode>
       <FileName>Model\Story\ScenesCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjetPOO.Model.Combat.EnemyRace">
+    <Position X="16.25" Y="15" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>CAQCoAAAAAAgABiEAABAABQASIAAAAAAABAAAAAAgAQ=</HashCode>
+      <FileName>Model\Combat\EnemyRace.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjetPOO.Model.Combat.EnemyRacesCollection">
+    <Position X="19.25" Y="15" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAgAAABAAAAAAAAAABAAAAAAAAAAABAAIA=</HashCode>
+      <FileName>Model\Combat\EnemyRacesCollection.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Enum Name="ProjetPOO.Model.Combat.Enums.CombatActionType">

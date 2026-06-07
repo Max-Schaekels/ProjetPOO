@@ -5,11 +5,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     BackgroundColor="#F3F3F3">
 
-    <ScrollView>
-        <Grid Padding="20"
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ScrollTopButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#3A6EA5" />
+                <Setter Property="CornerRadius" Value="25" />
+                <Setter Property="WidthRequest" Value="50" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+
+        <ScrollView x:Name="EnemyEditorScrollView">
+            <Grid Padding="20"
               RowDefinitions="Auto,*">
 
-            <VerticalStackLayout Grid.Row="0"
+                <VerticalStackLayout Grid.Row="0"
                                  Spacing="10"
                                  Margin="0,0,0,20">
 
@@ -294,5 +311,15 @@
                 </VerticalStackLayout>
             </Grid>
         </Grid>
-    </ScrollView>
+        </ScrollView>
+
+        <Button Text="↑"
+            Clicked="ButtonScrollToTop_Clicked"
+            Style="{StaticResource ScrollTopButtonStyle}"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Margin="0,0,20,20"
+            ZIndex="10" />
+
+    </Grid>
 </ContentPage>

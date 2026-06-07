@@ -68,14 +68,25 @@
                 <Setter Property="TextColor" Value="#7A7A7A" />
             </Style>
 
+            <Style x:Key="ScrollTopButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#3A6EA5" />
+                <Setter Property="CornerRadius" Value="25" />
+                <Setter Property="WidthRequest" Value="50" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView>
-        <Grid Padding="20"
+    <Grid>
+
+        <ScrollView x:Name="SceneEditorScrollView">
+            <Grid Padding="20"
               RowDefinitions="Auto,*">
 
-            <!-- Header -->
+                <!-- Header -->
             <VerticalStackLayout Grid.Row="0"
                                  Spacing="14"
                                  Margin="0,0,0,24">
@@ -379,5 +390,15 @@
             </VerticalStackLayout>
 
         </Grid>
-    </ScrollView>
+        </ScrollView>
+
+        <Button Text="↑"
+            Clicked="ButtonScrollToTop_Clicked"
+            Style="{StaticResource ScrollTopButtonStyle}"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Margin="0,0,20,20"
+            ZIndex="10" />
+
+    </Grid>
 </ContentPage>
