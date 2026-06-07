@@ -70,6 +70,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<PlayerCharacterEditorViewModel>();
             builder.Services.AddTransient<PlayerCharacterEditorPage>();
 
+            builder.Services.AddTransient<GameScenarioListPage>();
+            builder.Services.AddTransient<GameScenarioListViewModel>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

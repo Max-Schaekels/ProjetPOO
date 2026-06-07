@@ -1,4 +1,9 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ProjetPOO.Model.Combat;
+using ProjetPOO.Model.Gameplay;
+using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.Interfaces;
 using ProjetPOO.View;
 using System;
@@ -6,10 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using ProjetPOO.Model.Story;
-using ProjetPOO.Model.Combat;
-using ProjetPOO.Model.Gameplay;
 
 namespace ProjetPOO.ViewModel
 {
@@ -657,16 +658,18 @@ namespace ProjetPOO.ViewModel
                 List<string> errors;
                 bool isPlayable = scenarioToValidate.ValidatePlayable(out errors);
 
+                ValidationResultPopup popup;
+
                 if (isPlayable)
                 {
-                    await alertService.ShowAlert("Vérification terminée","Aucun problème détecté. Le scénario semble cohérent et jouable." );
-
-                    return;
+                    popup = new ValidationResultPopup("Vérification terminée", new List<string>() );
+                }
+                else
+                {
+                    popup = new ValidationResultPopup( "Problèmes détectés",errors );
                 }
 
-                string message = BuildValidationMessage(errors);
-
-                await alertService.ShowAlert("Problèmes détectés", message);
+                Shell.Current.CurrentPage.ShowPopup(popup);
             }
             catch (Exception exception)
             {
@@ -674,29 +677,5 @@ namespace ProjetPOO.ViewModel
             }
         }
 
-        private string BuildValidationMessage(List<string> errors)
-        {
-            if (errors == null || errors.Count == 0)
-            {
-                return "Aucun problème détecté.";
-            }
-
-            StringBuilder messageBuilder = new StringBuilder();
-
-            int maximumDisplayedErrors = 12;
-
-            for (int i = 0; i < errors.Count && i < maximumDisplayedErrors; i++)
-            {
-                messageBuilder.AppendLine($"• {errors[i]}");
-            }
-
-            if (errors.Count > maximumDisplayedErrors)
-            {
-                messageBuilder.AppendLine();
-                messageBuilder.AppendLine($"... et {errors.Count - maximumDisplayedErrors} autre(s) problème(s).");
-            }
-
-            return messageBuilder.ToString();
-        }
     }
 }

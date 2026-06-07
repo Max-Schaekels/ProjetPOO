@@ -12,9 +12,11 @@ namespace ProjetPOO.ViewModel
     public partial class MainPageViewModel : BaseViewModel
     {
         private readonly ScenarioListPage scenarioListPage;
-        public MainPageViewModel(IAlertService alertService, IDataAccess dataAccess, ScenarioListPage scenarioListPage) : base(alertService, dataAccess)
+        private readonly GameScenarioListPage gameScenarioListPage;
+        public MainPageViewModel(IAlertService alertService, IDataAccess dataAccess, ScenarioListPage scenarioListPage, GameScenarioListPage gameScenarioListPage) : base(alertService, dataAccess)
         {
             this.scenarioListPage = scenarioListPage;
+            this.gameScenarioListPage = gameScenarioListPage;
             PageTitle = "Accueil";
         }
 
@@ -27,7 +29,7 @@ namespace ProjetPOO.ViewModel
         [RelayCommand()]
         private async Task Jouer()
         {
-            await alertService.ShowAlert("Jeu", "La partie jeu sera ajoutée plus tard.");
+            await Shell.Current.Navigation.PushAsync(gameScenarioListPage);
         }
 
         [RelayCommand()]
