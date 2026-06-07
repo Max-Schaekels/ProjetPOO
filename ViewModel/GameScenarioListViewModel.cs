@@ -15,8 +15,10 @@ namespace ProjetPOO.ViewModel
 {
     public partial class GameScenarioListViewModel : BaseViewModel
     {
-        public GameScenarioListViewModel(IAlertService alertService, IDataAccess dataAccessService) : base(alertService, dataAccessService)
+        private readonly PlayerCharacterSelectionPage playerCharacterSelectionPage;
+        public GameScenarioListViewModel(IAlertService alertService, IDataAccess dataAccessService, PlayerCharacterSelectionPage playerCharacterSelectionPage) : base(alertService, dataAccessService)
         {
+            this.playerCharacterSelectionPage = playerCharacterSelectionPage;
             PageTitle = "Choisir un scénario";
 
             scenarios = new ObservableCollection<Scenario>();
@@ -65,7 +67,12 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
-            await alertService.ShowAlert("Scénario jouable", "Le scénario peut être lancé. Prochaine étape : choix du personnage.");
+            if (playerCharacterSelectionPage.BindingContext is PlayerCharacterSelectionViewModel viewModel)
+            {
+                viewModel.LoadScenario(loadedScenario);
+            }
+
+            await Shell.Current.Navigation.PushAsync(playerCharacterSelectionPage);
         }
 
     }

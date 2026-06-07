@@ -73,6 +73,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<GameScenarioListPage>();
             builder.Services.AddTransient<GameScenarioListViewModel>();
 
+            builder.Services.AddTransient<PlayerCharacterSelectionPage>();
+            builder.Services.AddTransient<PlayerCharacterSelectionViewModel>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
