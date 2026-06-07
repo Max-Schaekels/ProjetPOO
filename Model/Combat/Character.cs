@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using ProjetPOO.Utilities.EntriesValidation;
 
 namespace ProjetPOO.Model.Combat
 {
-    public abstract class Character
+    public abstract class Character : INotifyPropertyChanged
     {
         private const int MINIMUM_NAME_LENGTH = 3;
         private const int MAXIMUM_NAME_LENGTH = 50; 
@@ -20,13 +21,18 @@ namespace ProjetPOO.Model.Combat
         private int _defense;
         private int _agility;
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public string Name
         {
             get => _name;
             private set
             {
-                if (ValidUtils.CheckEntryName(value, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH))
+                if (ValidUtils.CheckEntryName(value, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH) && _name != value)
+                {
                     _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
             }
         }
 
@@ -35,14 +41,14 @@ namespace ProjetPOO.Model.Combat
             get => _maxHp;
             protected set
             {
-                if (ValidUtils.CheckIfPositiveNumber(value))
+                if (ValidUtils.CheckIfPositiveNumber(value) && _maxHp != value)
                 {
                     _maxHp = value;
+                    OnPropertyChanged(nameof(MaxHp));
 
-                   
                     if (_currentHp > _maxHp)
                     {
-                        _currentHp = _maxHp;
+                        CurrentHp = _maxHp;
                     }
                 }
             }
@@ -53,9 +59,10 @@ namespace ProjetPOO.Model.Combat
             get => _currentHp;
             protected set
             {
-                if (ValidUtils.IsInRange(value, MINIMUM_HP, _maxHp))
+                if (ValidUtils.IsInRange(value, MINIMUM_HP, _maxHp) && _currentHp != value)
                 {
                     _currentHp = value;
+                    OnPropertyChanged(nameof(CurrentHp));
                 }
             }
         }
@@ -65,8 +72,11 @@ namespace ProjetPOO.Model.Combat
             get => _attack;
             protected set
             {
-                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                if (ValidUtils.CheckIfNonNegativeNumber(value) && _attack != value)
+                {
                     _attack = value;
+                    OnPropertyChanged(nameof(Attack));
+                }
             }
         }
 
@@ -75,8 +85,11 @@ namespace ProjetPOO.Model.Combat
             get => _defense;
             protected set
             {
-                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                if (ValidUtils.CheckIfNonNegativeNumber(value) && _defense != value)
+                {
                     _defense = value;
+                    OnPropertyChanged(nameof(Defense));
+                }
             }
         }
 
@@ -85,8 +98,11 @@ namespace ProjetPOO.Model.Combat
             get => _agility;
             protected set
             {
-                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                if (ValidUtils.CheckIfNonNegativeNumber(value) && _agility != value)
+                {
                     _agility = value;
+                    OnPropertyChanged(nameof(Agility));
+                }
             }
         }
 
@@ -184,6 +200,11 @@ namespace ProjetPOO.Model.Combat
             }
 
             Name = name;
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

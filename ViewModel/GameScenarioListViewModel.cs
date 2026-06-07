@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProjetPOO.Model.Combat;
 using ProjetPOO.Model.Story;
 using ProjetPOO.Utilities.Interfaces;
 using ProjetPOO.View;
@@ -56,6 +57,8 @@ namespace ProjetPOO.ViewModel
                 return;
             }
 
+            SetEnemyDisplayRaceNames(loadedScenario);
+
             List<string> errors;
             bool isPlayable = loadedScenario.ValidatePlayable(out errors);
 
@@ -73,6 +76,30 @@ namespace ProjetPOO.ViewModel
             }
 
             await Shell.Current.Navigation.PushAsync(playerCharacterSelectionPage);
+        }
+
+        private void SetEnemyDisplayRaceNames(Scenario scenario)
+        {
+            if (scenario == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < scenario.Enemies.Count; i++)
+            {
+                Enemy enemy = scenario.Enemies[i];
+
+                for (int j = 0; j < scenario.EnemyRaces.Count; j++)
+                {
+                    EnemyRace enemyRace = scenario.EnemyRaces[j];
+
+                    if (enemyRace.Id == enemy.EnemyRaceId)
+                    {
+                        enemy.SetEnemyRaceName(enemyRace.Name);
+                        break;
+                    }
+                }
+            }
         }
 
     }

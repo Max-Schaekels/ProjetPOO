@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using ProjetPOO.Utilities.EntriesValidation;
 
 namespace ProjetPOO.Model.Game
 {
-    public class GameState
+    public class GameState : INotifyPropertyChanged
     {
         private const int POTION_HEAL_AMOUNT = 5;
 
@@ -25,6 +26,8 @@ namespace ProjetPOO.Model.Game
         private int _selectedPlayerCharacterTemplateId;
         private PlayerCharacterInstance _playerCharacter;
         private CombatState? _currentCombat;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public int Id
         {
@@ -41,8 +44,11 @@ namespace ProjetPOO.Model.Game
             get => _currentSceneId;
             private set
             {
-                if (ValidUtils.CheckIfPositiveNumber(value))
+                if (ValidUtils.CheckIfPositiveNumber(value) && _currentSceneId != value)
+                {
                     _currentSceneId = value;
+                    OnPropertyChanged(nameof(CurrentSceneId));
+                }
             }
         }
 
@@ -51,19 +57,24 @@ namespace ProjetPOO.Model.Game
             get => _scenarioId;
             private set
             {
-                if (ValidUtils.CheckIfPositiveNumber(value))
+                if (ValidUtils.CheckIfPositiveNumber(value) && _scenarioId != value)
+                {
                     _scenarioId = value;
+                    OnPropertyChanged(nameof(ScenarioId));
+                }
             }
         }
-
 
         public int Gold
         {
             get => _gold;
             private set
             {
-                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                if (ValidUtils.CheckIfNonNegativeNumber(value) && _gold != value)
+                {
                     _gold = value;
+                    OnPropertyChanged(nameof(Gold));
+                }
             }
         }
 
@@ -72,8 +83,11 @@ namespace ProjetPOO.Model.Game
             get => _playerInventory;
             private set
             {
-                if(ValidUtils.CheckIfNotNull(value))
+                if (ValidUtils.CheckIfNotNull(value) && _playerInventory != value)
+                {
                     _playerInventory = value;
+                    OnPropertyChanged(nameof(PlayerInventory));
+                }
             }
         }
 
@@ -93,17 +107,26 @@ namespace ProjetPOO.Model.Game
             get => _playerCharacter;
             private set
             {
-                if (ValidUtils.CheckIfNotNull(value))
+                if (ValidUtils.CheckIfNotNull(value) && _playerCharacter != value)
+                {
                     _playerCharacter = value;
+                    OnPropertyChanged(nameof(PlayerCharacter));
+                }
             }
-        }  
+        }
 
         public CombatState? CurrentCombat
         {
             get => _currentCombat;
-            private set => _currentCombat = value;
+            private set
+            {
+                if (_currentCombat != value)
+                {
+                    _currentCombat = value;
+                    OnPropertyChanged(nameof(CurrentCombat));
+                }
+            }
         }
-
         public IReadOnlyList<string> Flags => _flags.AsReadOnly();
 
 
@@ -368,23 +391,9 @@ namespace ProjetPOO.Model.Game
             CurrentCombat = null;
         }
 
-        //implémentation futur
-        //public void InitializePlayerFromTemplate(PlayerCharacterTemplate template)
-        //{
-        //    if (template == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(template));
-        //    }
-
-        //    if (PlayerCharacter != null)
-        //    {
-        //        throw new InvalidOperationException("Le joueur de la partie est déjà initialisé.");
-        //    }
-
-        //    PlayerCharacterInstance instance = template.CreateInstance();
-
-        //    PlayerCharacter = instance;
-        //    SelectedPlayerCharacterTemplateId = instance.TemplateId;
-        //}
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

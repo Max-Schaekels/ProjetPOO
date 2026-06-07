@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,13 +8,15 @@ using ProjetPOO.Utilities.EntriesValidation;
 
 namespace ProjetPOO.Model.Gameplay
 {
-    public class Inventory
+    public class Inventory : INotifyPropertyChanged
     {
         private static int _nextId = 1;
 
         private int _id;
         private int _potionsCount;
         private int _keysCount;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public int Id
         {
@@ -30,8 +33,11 @@ namespace ProjetPOO.Model.Gameplay
             get => _potionsCount;
             private set
             {
-                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                if (ValidUtils.CheckIfNonNegativeNumber(value) && _potionsCount != value)
+                {
                     _potionsCount = value;
+                    OnPropertyChanged(nameof(PotionsCount));
+                }
             }
         }
 
@@ -40,8 +46,11 @@ namespace ProjetPOO.Model.Gameplay
             get => _keysCount;
             private set
             {
-                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                if (ValidUtils.CheckIfNonNegativeNumber(value) && _keysCount != value)
+                {
                     _keysCount = value;
+                    OnPropertyChanged(nameof(KeysCount));
+                }
             }
         }
 
@@ -137,6 +146,11 @@ namespace ProjetPOO.Model.Gameplay
                 return true;
             }
             return false;
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

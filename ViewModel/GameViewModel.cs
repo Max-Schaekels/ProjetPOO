@@ -50,6 +50,8 @@ namespace ProjetPOO.ViewModel
             playerIdentitySummary = string.Empty;
             playerStatsSummary = string.Empty;
             sceneDisplayTitle = string.Empty;
+
+            currentGameState = null;
         }
 
         [ObservableProperty]
@@ -103,10 +105,14 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private string sceneDisplayTitle;
 
+        [ObservableProperty]
+        private GameState? currentGameState;
+
         public void LoadGame(Scenario scenario, GameEngine engine)
         {
             selectedScenario = scenario;
             gameEngine = engine;
+            CurrentGameState = engine.State;
 
             PageTitle = scenario.Title;
 
@@ -233,22 +239,6 @@ namespace ProjetPOO.ViewModel
                 HasNoSceneImage = false;
             }
 
-            PlayerIdentitySummary =
-                $"{state.PlayerCharacter.Name} - {state.PlayerCharacter.ClassName} {state.PlayerCharacter.RaceName}\n" +
-                $"PV : {state.PlayerCharacter.CurrentHp}/{state.PlayerCharacter.MaxHp} | " +
-                $"Niveau : {state.PlayerCharacter.Level} | EXP : {state.PlayerCharacter.Experience}";
-
-            PlayerStatsSummary =
-                $"Attaque : {state.PlayerCharacter.Attack}\n" +
-                $"Défense : {state.PlayerCharacter.Defense}\n" +
-                $"Agilité : {state.PlayerCharacter.Agility}";
-
-            GoldSummary = $"Or : {state.Gold}";
-
-            InventorySummary =
-                $"Potions : {state.PlayerInventory.PotionsCount} | " +
-                $"Clés : {state.PlayerInventory.KeysCount}";
-
             IsShopVisible = currentScene.Type == SceneType.Shop;
             ShopSummary = string.Empty;
 
@@ -258,8 +248,7 @@ namespace ProjetPOO.ViewModel
 
                 SceneDisplayTitle = shop.Name;
 
-                ShopSummary =
-                    $"Potion : {shop.PotionPrice} or | Clé : {shop.KeyPrice} or";
+                ShopSummary = $"Potion : {shop.PotionPrice} or | Clé : {shop.KeyPrice} or";
             }
 
             IsCombatVisible = state.IsInCombat();

@@ -52,8 +52,11 @@ namespace ProjetPOO.Model.Combat
             get => _experience;
             private set
             {
-                if (ValidUtils.CheckIfNonNegativeNumber(value))
+                if (ValidUtils.CheckIfNonNegativeNumber(value) && _experience != value)
+                {
                     _experience = value;
+                    OnPropertyChanged(nameof(Experience));
+                }
             }
         }
 
@@ -62,8 +65,11 @@ namespace ProjetPOO.Model.Combat
             get => _level;
             private set
             {
-                if (ValidUtils.CheckIfPositiveNumber(value))
+                if (ValidUtils.CheckIfPositiveNumber(value) && _level != value)
+                {
                     _level = value;
+                    OnPropertyChanged(nameof(Level));
+                }
             }
         }
 
@@ -72,9 +78,10 @@ namespace ProjetPOO.Model.Combat
             get => _className;
             private set
             {
-                if (ValidUtils.CheckEntryName(value, 3, 50))
+                if (ValidUtils.CheckEntryName(value, 3, 50) && _className != value)
                 {
                     _className = value;
+                    OnPropertyChanged(nameof(ClassName));
                 }
             }
         }
@@ -84,9 +91,10 @@ namespace ProjetPOO.Model.Combat
             get => _raceName;
             private set
             {
-                if (ValidUtils.CheckEntryName(value, 3, 50))
+                if (ValidUtils.CheckEntryName(value, 3, 50) && _raceName != value)
                 {
                     _raceName = value;
+                    OnPropertyChanged(nameof(RaceName));
                 }
             }
         }

@@ -77,10 +77,41 @@
                                FontAttributes="Bold"
                                TextColor="#111111" />
 
-                        <Label Text="{Binding PlayerIdentitySummary}"
+                        <Label Text="{Binding CurrentGameState.PlayerCharacter.Name}"
                                FontSize="14"
-                               TextColor="#2D2D32"
-                               LineBreakMode="WordWrap" />
+                               TextColor="#2D2D32" />
+
+                        <Label Text="{Binding CurrentGameState.PlayerCharacter.ClassName, StringFormat='Classe : {0}'}"
+                               FontSize="14"
+                               TextColor="#2D2D32" />
+
+                        <Label Text="{Binding CurrentGameState.PlayerCharacter.RaceName, StringFormat='Race : {0}'}"
+                               FontSize="14"
+                               TextColor="#2D2D32" />
+
+                        <HorizontalStackLayout Spacing="4">
+
+                            <Label Text="{Binding CurrentGameState.PlayerCharacter.CurrentHp, StringFormat='PV : {0}'}"
+                                   FontSize="14"
+                                   TextColor="#2D2D32" />
+
+                            <Label Text="{Binding CurrentGameState.PlayerCharacter.MaxHp, StringFormat='/ {0}'}"
+                                   FontSize="14"
+                                   TextColor="#2D2D32" />
+
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout Spacing="8">
+
+                            <Label Text="{Binding CurrentGameState.PlayerCharacter.Level, StringFormat='Niveau : {0}'}"
+                                   FontSize="14"
+                                   TextColor="#2D2D32" />
+
+                            <Label Text="{Binding CurrentGameState.PlayerCharacter.Experience, StringFormat='EXP : {0}'}"
+                                   FontSize="14"
+                                   TextColor="#2D2D32" />
+
+                        </HorizontalStackLayout>
 
                     </VerticalStackLayout>
                 </Frame>
@@ -95,12 +126,16 @@
                                FontAttributes="Bold"
                                TextColor="#111111" />
 
-                        <Label Text="{Binding GoldSummary}"
+                        <Label Text="{Binding CurrentGameState.Gold, StringFormat='Or : {0}'}"
                                FontSize="14"
                                FontAttributes="Bold"
                                TextColor="#2D2D32" />
 
-                        <Label Text="{Binding InventorySummary}"
+                        <Label Text="{Binding CurrentGameState.PlayerInventory.PotionsCount, StringFormat='Potions : {0}'}"
+                               FontSize="14"
+                               TextColor="#2D2D32" />
+
+                        <Label Text="{Binding CurrentGameState.PlayerInventory.KeysCount, StringFormat='Clés : {0}'}"
                                FontSize="14"
                                TextColor="#2D2D32" />
 
@@ -117,10 +152,17 @@
                                FontAttributes="Bold"
                                TextColor="#111111" />
 
-                        <Label Text="{Binding PlayerStatsSummary}"
+                        <Label Text="{Binding CurrentGameState.PlayerCharacter.Attack, StringFormat='Attaque : {0}'}"
                                FontSize="14"
-                               TextColor="#2D2D32"
-                               LineBreakMode="WordWrap" />
+                               TextColor="#2D2D32" />
+
+                        <Label Text="{Binding CurrentGameState.PlayerCharacter.Defense, StringFormat='Défense : {0}'}"
+                               FontSize="14"
+                               TextColor="#2D2D32" />
+
+                        <Label Text="{Binding CurrentGameState.PlayerCharacter.Agility, StringFormat='Agilité : {0}'}"
+                               FontSize="14"
+                               TextColor="#2D2D32" />
 
                     </VerticalStackLayout>
                 </Frame>
@@ -236,9 +278,21 @@
                                        FontAttributes="Bold"
                                        TextColor="#111111" />
 
-                                <Label Text="{Binding CombatSummary}"
+                                <Label Text="{Binding CurrentGameState.CurrentCombat.Enemy.Name, StringFormat='Combat contre {0}'}"
                                        FontSize="14"
                                        TextColor="#2D2D32" />
+
+                                <HorizontalStackLayout Spacing="4">
+
+                                    <Label Text="{Binding CurrentGameState.CurrentCombat.Enemy.CurrentHp, StringFormat='Ennemi PV : {0}'}"
+                                           FontSize="14"
+                                           TextColor="#2D2D32" />
+
+                                    <Label Text="{Binding CurrentGameState.CurrentCombat.Enemy.MaxHp, StringFormat='/ {0}'}"
+                                           FontSize="14"
+                                           TextColor="#2D2D32" />
+
+                                </HorizontalStackLayout>
 
                                 <Label Text="Les actions de combat seront branchées à l'étape suivante."
                                        FontSize="13"
