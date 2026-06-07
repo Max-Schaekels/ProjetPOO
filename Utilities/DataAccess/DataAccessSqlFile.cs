@@ -2082,48 +2082,26 @@ namespace ProjetPOO.Utilities.DataAccess
         {
             string selectQuery = @"SELECT GameStateId FROM [SaveGame] WHERE Id = @Id";
 
-            string deleteSaveGameQuery = "DELETE FROM [SaveGame] WHERE Id = @Id";
+            int gameStateId = 0;
 
-            using (SqlTransaction transaction = SqlConnection.BeginTransaction())
+            using (SqlCommand command = new SqlCommand(selectQuery, SqlConnection))
             {
-                try
+                command.Parameters.AddWithValue("@Id", saveGameId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    int gameStateId = 0;
-
-                    using (SqlCommand command = new SqlCommand(selectQuery, SqlConnection, transaction))
+                    if (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@Id", saveGameId);
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                gameStateId = SqlDataHelper.ReadInt(reader, "GameStateId");
-                            }
-                        }
+                        gameStateId = SqlDataHelper.ReadInt(reader, "GameStateId");
                     }
-
-                    SqlCommandHelper.ExecuteNonQuery(
-                        SqlConnection,
-                        transaction,
-                        deleteSaveGameQuery,
-                        new SqlParameter("@Id", saveGameId)
-                    );
-
-                    transaction.Commit();
-
-                    if (gameStateId > 0)
-                    {
-                        DeleteGameState(gameStateId);
-                    }
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
                 }
             }
-        } 
+
+            if (gameStateId > 0)
+            {
+                DeleteGameState(gameStateId);
+            }
+        }
         #endregion
     }
 }

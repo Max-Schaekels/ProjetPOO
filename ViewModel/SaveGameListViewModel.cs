@@ -86,6 +86,40 @@ namespace ProjetPOO.ViewModel
             }
         }
 
+        [RelayCommand()]
+        private async Task DeleteSaveGame(SaveGame saveGame)
+        {
+            if (saveGame == null)
+            {
+                return;
+            }
+
+            bool confirm = await alertService.ShowConfirmation(
+                "Supprimer la sauvegarde",
+                $"Voulez-vous vraiment supprimer la sauvegarde \"{saveGame.Name}\" ?",
+                "Supprimer",
+                "Annuler"
+            );
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            try
+            {
+                dataAccess.DeleteSaveGame(saveGame.Id);
+
+                RefreshSaveGames();
+
+                await alertService.ShowAlert("Suppression", "La sauvegarde a été supprimée.");
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur suppression", exception.Message);
+            }
+        }
+
         private void SetEnemyDisplayRaceNames(Scenario scenario)
         {
             if (scenario == null)

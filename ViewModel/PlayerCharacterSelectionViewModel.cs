@@ -30,9 +30,6 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private ObservableCollection<PlayerCharacterTemplate> playerCharacters;
 
-        [ObservableProperty]
-        private PlayerCharacterTemplate? selectedPlayerCharacter;
-
         public void LoadScenario(Scenario scenario)
         {
             selectedScenario = scenario;
@@ -40,8 +37,7 @@ namespace ProjetPOO.ViewModel
             PageTitle = $"Personnage - {scenario.Title}";
 
             PlayerCharacters = new ObservableCollection<PlayerCharacterTemplate>(scenario.PlayerCharacters);
-
-            SelectedPlayerCharacter = null;
+           
         }
 
         [RelayCommand()]

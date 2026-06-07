@@ -32,15 +32,10 @@ namespace ProjetPOO.ViewModel
             sceneText = string.Empty;
             availableChoices = new ObservableCollection<Choice>();
 
-            playerSummary = string.Empty;
-            inventorySummary = string.Empty;
-            goldSummary = string.Empty;
-
             isShopVisible = false;
             shopSummary = string.Empty;
 
             isCombatVisible = false;
-            combatSummary = string.Empty;
 
             areChoicesVisible = false;
 
@@ -48,8 +43,6 @@ namespace ProjetPOO.ViewModel
             hasSceneImage = false;
             hasNoSceneImage = true;
 
-            playerIdentitySummary = string.Empty;
-            playerStatsSummary = string.Empty;
             sceneDisplayTitle = string.Empty;
 
             currentGameState = null;
@@ -68,14 +61,6 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private ObservableCollection<Choice> availableChoices;
 
-        [ObservableProperty]
-        private string playerSummary;
-
-        [ObservableProperty]
-        private string inventorySummary;
-
-        [ObservableProperty]
-        private string goldSummary;
 
         [ObservableProperty]
         private bool isShopVisible;
@@ -86,8 +71,6 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private bool isCombatVisible;
 
-        [ObservableProperty]
-        private string combatSummary;
 
         [ObservableProperty]
         private bool areChoicesVisible;
@@ -101,11 +84,6 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private bool hasNoSceneImage;
 
-        [ObservableProperty]
-        private string playerIdentitySummary;
-
-        [ObservableProperty]
-        private string playerStatsSummary;
 
         [ObservableProperty]
         private string sceneDisplayTitle;
@@ -354,14 +332,7 @@ namespace ProjetPOO.ViewModel
             }
 
             IsCombatVisible = state.IsInCombat();
-            CombatSummary = string.Empty;
 
-            if (IsCombatVisible && state.CurrentCombat != null)
-            {
-                CombatSummary =
-                    $"Combat contre {state.CurrentCombat.Enemy.Name}\n" +
-                    $"Ennemi PV : {state.CurrentCombat.Enemy.CurrentHp}/{state.CurrentCombat.Enemy.MaxHp}";
-            }
 
             AvailableChoices = new ObservableCollection<Choice>();
 

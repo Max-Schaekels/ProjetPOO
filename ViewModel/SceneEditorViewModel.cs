@@ -11,8 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProjetPOO.Utilities.DataAccess.Files;
-using System.IO;
-using System.Text;
 using ProjetPOO.Utilities.EntriesValidation;
 using ProjetPOO.View;
 
@@ -21,13 +19,11 @@ namespace ProjetPOO.ViewModel
 {
     public partial class SceneEditorViewModel : BaseViewModel
     {
-        private readonly DataFilesManager _dataFilesManager;
         private readonly ChoiceEditorPage choiceEditorPage;
         private Scenario? selectedScenario;
         private Scene? selectedScene;
         public SceneEditorViewModel(IAlertService alertService, IDataAccess dataAccessService, DataFilesManager dataFilesManager, ChoiceEditorPage choiceEditorPage) : base(alertService, dataAccessService)
         {
-            _dataFilesManager = dataFilesManager;
             this.choiceEditorPage = choiceEditorPage;
             PageTitle = "Éditeur de scène";
             sceneTitle = "Nouvelle Scène";

@@ -81,8 +81,11 @@
 
                                 </VerticalStackLayout>
 
-                                <Button Grid.Column="1"
-                                        Text="Charger"
+                                <VerticalStackLayout Grid.Column="1"
+                                     Spacing="8"
+                                     VerticalOptions="Center">
+
+                                    <Button Text="Charger"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadSaveGameCommand}"
                                         CommandParameter="{Binding}"
                                         BackgroundColor="#3A6EA5"
@@ -90,6 +93,17 @@
                                         CornerRadius="10"
                                         Padding="18,10"
                                         FontAttributes="Bold" />
+
+                                    <Button Text="Supprimer"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteSaveGameCommand}"
+                                        CommandParameter="{Binding}"
+                                        BackgroundColor="#B83232"
+                                        TextColor="White"
+                                        CornerRadius="10"
+                                        Padding="18,10"
+                                        FontAttributes="Bold" />
+
+                                </VerticalStackLayout>
 
                             </Grid>
                         </Frame>
