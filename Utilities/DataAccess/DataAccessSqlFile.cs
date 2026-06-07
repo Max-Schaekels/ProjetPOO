@@ -1785,6 +1785,12 @@ namespace ProjetPOO.Utilities.DataAccess
 
 
         #region GameState region
+        /// <summary>
+        /// Loads a runtime game state from the SQL database.
+        /// The related inventory, player character instance and flags are also restored.
+        /// </summary>
+        /// <param name="gameStateId">Identifier of the game state to load.</param>
+        /// <returns>The loaded game state, or null if it does not exist.</returns>
         public override GameState? GetGameStateById(int gameStateId)
         {
             string query = @"SELECT Id, ScenarioId, CurrentSceneId, Gold, InventoryId, PlayerCharacterInstanceId, SelectedPlayerCharacterTemplateId FROM [GameState] WHERE Id = @Id";
@@ -1838,6 +1844,14 @@ namespace ProjetPOO.Utilities.DataAccess
             return null;
         }
 
+        /// <summary>
+        /// Inserts a runtime game state into the SQL database.
+        /// The inventory and player character instance must already exist in the database.
+        /// </summary>
+        /// <param name="gameState">Game state to insert.</param>
+        /// <param name="inventoryId">Identifier of the related inventory.</param>
+        /// <param name="playerCharacterInstanceId">Identifier of the related player character instance.</param>
+        /// <returns>Identifier of the inserted game state.</returns>
         public override int AddGameState(GameState gameState, int inventoryId, int playerCharacterInstanceId)
         {
             if (gameState == null)
@@ -1881,6 +1895,11 @@ namespace ProjetPOO.Utilities.DataAccess
             );
         }
 
+        /// <summary>
+        /// Deletes a runtime game state and its related runtime data from the SQL database.
+        /// This includes save game, flags, inventory and player character instance.
+        /// </summary>
+        /// <param name="gameStateId">Identifier of the game state to delete.</param>
         public override void DeleteGameState(int gameStateId)
         {
             string selectQuery = @"SELECT InventoryId, PlayerCharacterInstanceId FROM [GameState] WHERE Id = @Id";
@@ -1965,6 +1984,11 @@ namespace ProjetPOO.Utilities.DataAccess
         #endregion
 
         #region SaveGame region
+        /// <summary>
+        /// Gets all save games stored in the SQL database.
+        /// The related full game state is not loaded by this method.
+        /// </summary>
+        /// <returns>List of available save games.</returns>
         public override List<SaveGame> GetAllSaveGames()
         {
             List<int> saveGameIds = new List<int>();
@@ -1996,6 +2020,12 @@ namespace ProjetPOO.Utilities.DataAccess
             return saveGames;
         }
 
+        /// <summary>
+        /// Gets one save game from the SQL database with its related game state.
+        /// This method is used when the user loads an existing save.
+        /// </summary>
+        /// <param name="saveGameId">Identifier of the save game to load.</param>
+        /// <returns>The loaded save game, or null if it does not exist.</returns>
         public override SaveGame? GetSaveGameById(int saveGameId)
         {
             string query = @"SELECT Id, Name, CreatedAt, LastSavedAt, GameStateId FROM [SaveGame] WHERE Id = @Id";
@@ -2039,6 +2069,12 @@ namespace ProjetPOO.Utilities.DataAccess
             return null;
         }
 
+        /// <summary>
+        /// Inserts a new save game linked to an existing game state into the SQL database.
+        /// </summary>
+        /// <param name="saveGame">Save game to insert.</param>
+        /// <param name="gameStateId">Identifier of the related game state.</param>
+        /// <returns>Identifier of the inserted save game.</returns>
         public override int AddSaveGame(SaveGame saveGame, int gameStateId)
         {
             if (saveGame == null)
@@ -2078,6 +2114,11 @@ namespace ProjetPOO.Utilities.DataAccess
             );
         }
 
+        /// <summary>
+        /// Deletes a save game and the game state linked to it.
+        /// Related runtime data is deleted through the game state deletion process.
+        /// </summary>
+        /// <param name="saveGameId">Identifier of the save game to delete.</param>
         public override void DeleteSaveGame(int saveGameId)
         {
             string selectQuery = @"SELECT GameStateId FROM [SaveGame] WHERE Id = @Id";

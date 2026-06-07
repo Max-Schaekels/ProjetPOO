@@ -27,7 +27,12 @@ namespace ProjetPOO.Model.Game
 
         // Démarrage / navigation
 
-
+        /// <summary>
+        /// Initializes the game state at the beginning of a scenario.
+        /// The current scene is set to the scenario start scene.
+        /// </summary>
+        /// <param name="scenario">Scenario to start.</param>
+        /// <returns>The initialized game state.</returns>
         public void StartScenario(Scenario scenario)
         {
             if (scenario == null)
@@ -78,9 +83,13 @@ namespace ProjetPOO.Model.Game
             return scene;
         }
 
-        
-        // Retourne les choix disponibles pour la scène courante (basé sur les conditions).
-       
+
+        /// <summary>
+        /// Gets the list of choices available for the current scene.
+        /// Only choices with valid conditions for the current game state are returned.
+        /// </summary>
+        /// <param name="scenario">Scenario currently played.</param>
+        /// <returns>List of choices available to the player.</returns>
         public List<Choice> GetAvailableChoices(Scenario scenario)
         {
             Scene scene = GetCurrentScene(scenario);
@@ -88,12 +97,11 @@ namespace ProjetPOO.Model.Game
         }
 
         /// <summary>
-        /// Joue un choix depuis la scène courante :
-        /// - vérifie appartenance + disponibilité
-        /// - applique effets
-        /// - navigue vers la TargetScene
-        /// - déclenche EnterCurrentScene (combat auto si nécessaire)
+        /// Plays the selected choice and applies its gameplay consequences.
+        /// Conditions are checked before applying effects and moving to the destination scene.
         /// </summary>
+        /// <param name="scenario">Scenario currently played.</param>
+        /// <param name="choice">Choice selected by the player.</param>
         public void PlayChoice(Scenario scenario, int choiceId)
         {
             if (scenario == null)
@@ -148,10 +156,7 @@ namespace ProjetPOO.Model.Game
 
         // Entrée dans une scène
 
-        /// <summary>
-        /// À appeler après chaque MoveToScene : déclenche les comportements automatiques
-        /// (ex: démarrer combat si scène Combat).
-        /// </summary>
+
         public void EnterCurrentScene(Scenario scenario)
         {
             if (scenario == null)
@@ -247,6 +252,13 @@ namespace ProjetPOO.Model.Game
             State.StartCombat(combat);
         }
 
+        /// <summary>
+        /// Plays one combat round according to the selected player action.
+        /// The method updates the player, the enemy and the combat state, then returns a round report.
+        /// </summary>
+        /// <param name="action">Action selected by the player for this round.</param>
+        /// <param name="scenario">Scenario currently played.</param>
+        /// <returns>Report containing the result of the combat round.</returns>
         public RoundReport PlayRound(Scenario scenario, CombatActionType playerAction)
         {
             if (scenario == null)
@@ -458,6 +470,12 @@ namespace ProjetPOO.Model.Game
             return ResolveShop(scenario, scene.ShopId.Value);
         }
 
+        /// <summary>
+        /// Tries to buy one potion from the current shop.
+        /// The player must have enough gold and the current scene must contain a shop.
+        /// </summary>
+        /// <param name="scenario">Scenario currently played.</param>
+        /// <returns>True if the potion was bought, otherwise false.</returns>
         public bool BuyPotionInCurrentShop(Scenario scenario)
         {
             if (scenario == null)
@@ -475,6 +493,12 @@ namespace ProjetPOO.Model.Game
             return shop.BuyPotion(State);
         }
 
+        /// <summary>
+        /// Tries to buy one key from the current shop.
+        /// The player must have enough gold and the current scene must contain a shop.
+        /// </summary>
+        /// <param name="scenario">Scenario currently played.</param>
+        /// <returns>True if the key was bought, otherwise false.</returns>
         public bool BuyKeyInCurrentShop(Scenario scenario)
         {
             if (scenario == null)

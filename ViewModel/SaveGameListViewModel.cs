@@ -30,6 +30,10 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private ObservableCollection<SaveGame> saveGames;
 
+        /// <summary>
+        /// Reloads the list of save games from the SQL database.
+        /// This method is called when the save game list page appears or after a deletion.
+        /// </summary>
         public void RefreshSaveGames()
         {
             SaveGames = new ObservableCollection<SaveGame>(dataAccess.GetAllSaveGames());
@@ -41,6 +45,12 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PopAsync();
         }
 
+        /// <summary>
+        /// Loads the selected save game from the SQL database and opens the game page.
+        /// The game engine is recreated from the saved game state.
+        /// </summary>
+        /// <param name="saveGame">Save game selected by the user.</param>
+        /// <returns>Asynchronous task.</returns>
         [RelayCommand()]
         private async Task LoadSaveGame(SaveGame saveGame)
         {
@@ -86,6 +96,12 @@ namespace ProjetPOO.ViewModel
             }
         }
 
+        /// <summary>
+        /// Deletes the selected save game and its related runtime data from the SQL database.
+        /// A confirmation message is displayed before deleting the save.
+        /// </summary>
+        /// <param name="saveGame">Save game selected by the user.</param>
+        /// <returns>Asynchronous task.</returns>
         [RelayCommand()]
         private async Task DeleteSaveGame(SaveGame saveGame)
         {

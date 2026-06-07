@@ -50,6 +50,12 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PushAsync(saveGameListPage);
         }
 
+        /// <summary>
+        /// Loads the selected scenario and checks if it is playable before starting a new game.
+        /// If the scenario is valid, the user is redirected to the character selection page.
+        /// </summary>
+        /// <param name="scenario">Scenario selected by the user.</param>
+        /// <returns>Asynchronous task.</returns>
         [RelayCommand()]
         private async Task PlayScenario(Scenario scenario)
         {
@@ -87,6 +93,11 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PushAsync(playerCharacterSelectionPage);
         }
 
+        /// <summary>
+        /// Sets the display race name of each enemy loaded from SQL.
+        /// Enemies only store the race identifier, so the race name is restored for display purposes.
+        /// </summary>
+        /// <param name="scenario">Scenario containing enemies and enemy races.</param>
         private void SetEnemyDisplayRaceNames(Scenario scenario)
         {
             if (scenario == null)

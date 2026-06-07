@@ -100,6 +100,12 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private bool canUsePotionInCombat;
 
+        /// <summary>
+        /// Loads a scenario and a game engine into the game page.
+        /// This method is used both for a new game and for a loaded save game.
+        /// </summary>
+        /// <param name="scenario">Scenario currently played.</param>
+        /// <param name="engine">Game engine containing the current game state.</param>
         public void LoadGame(Scenario scenario, GameEngine engine)
         {
             selectedScenario = scenario;
@@ -127,6 +133,11 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PopAsync();
         }
 
+        /// <summary>
+        /// Saves the current game state into the SQL database.
+        /// Saving during combat is blocked because combat state is not persisted yet.
+        /// </summary>
+        /// <returns>Asynchronous task.</returns>
         [RelayCommand()]
         private async Task SaveGame()
         {
@@ -186,6 +197,13 @@ namespace ProjetPOO.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Executes the selected narrative choice and refreshes the game page.
+        /// The choice can change the current scene, update resources or trigger gameplay effects.
+        /// </summary>
+        /// <param name="choice">Choice selected by the player.</param>
+        /// <returns>Asynchronous task.</returns>
         [RelayCommand()]
         private async Task PlayChoice(Choice choice)
         {
@@ -292,6 +310,10 @@ namespace ProjetPOO.ViewModel
             await PlayCombatAction(CombatActionType.Flee);
         }
 
+        /// <summary>
+        /// Refreshes all properties displayed by the game page.
+        /// This method is used after scene changes, shop actions and combat actions.
+        /// </summary>
         private void RefreshCurrentView()
         {
             if (selectedScenario == null || gameEngine == null)

@@ -120,12 +120,20 @@ namespace ProjetPOO.Model.Combat
             Agility = agility;
         }
 
+        /// <summary>
+        /// Checks if the character is still alive.
+        /// </summary>
+        /// <returns>True if current health points are greater than zero, otherwise false.</returns>
         public bool IsAlive()
         {
             return CurrentHp > 0;
         }
 
-
+        /// <summary>
+        /// Applies damage to the character after reducing it with defense.
+        /// Current health points cannot go below zero.
+        /// </summary>
+        /// <param name="amount">Raw damage amount before defense reduction.</param>
         public void ReceiveDamage(int amount)
         {
             if (ValidUtils.CheckIfNonNegativeNumber(amount))
@@ -142,6 +150,11 @@ namespace ProjetPOO.Model.Combat
             
         }
 
+        /// <summary>
+        /// Restores health points to the character.
+        /// Current health points cannot exceed maximum health points.
+        /// </summary>
+        /// <param name="amount">Amount of health points to restore.</param>
         public void Heal(int amount)
         {
             if(ValidUtils.CheckIfPositiveNumber(amount))

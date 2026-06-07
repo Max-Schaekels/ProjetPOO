@@ -30,6 +30,11 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private ObservableCollection<PlayerCharacterTemplate> playerCharacters;
 
+        /// <summary>
+        /// Loads the selected scenario and displays the available player characters.
+        /// This method is called before navigating to the character selection page.
+        /// </summary>
+        /// <param name="scenario">Scenario selected by the user.</param>
         public void LoadScenario(Scenario scenario)
         {
             selectedScenario = scenario;
@@ -46,6 +51,12 @@ namespace ProjetPOO.ViewModel
             await Shell.Current.Navigation.PopAsync();
         }
 
+        /// <summary>
+        /// Creates the initial game state with the selected player character and opens the game page.
+        /// The selected scenario is started from its configured start scene.
+        /// </summary>
+        /// <param name="playerCharacter">Player character selected by the user.</param>
+        /// <returns>Asynchronous task.</returns>
         [RelayCommand()]
         private async Task StartGame(PlayerCharacterTemplate playerCharacter)
         {

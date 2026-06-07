@@ -295,6 +295,12 @@ namespace ProjetPOO.Model.Story
             }
         }
 
+        /// <summary>
+        /// Checks if the choice contains valid data for edition and saving.
+        /// This validation verifies the basic information of the choice and its related conditions and effects.
+        /// </summary>
+        /// <param name="errors">List filled with validation error messages.</param>
+        /// <returns>True if the choice is valid, otherwise false.</returns>
         public bool ValidateSafe(out List<string> errors)
         {
             errors = new List<string>();
@@ -370,6 +376,12 @@ namespace ProjetPOO.Model.Story
             return errors.Count == 0;
         }
 
+        /// <summary>
+        /// Checks if the choice can be used during gameplay.
+        /// This validation verifies that the choice has a valid destination and usable gameplay rules.
+        /// </summary>
+        /// <param name="errors">List filled with validation error messages.</param>
+        /// <returns>True if the choice is playable, otherwise false.</returns>
         public bool ValidatePlayable(out List<string> errors)
         {
             bool baseOk = ValidateSafe(out errors);
@@ -393,7 +405,6 @@ namespace ProjetPOO.Model.Story
 
             return baseOk && errors.Count == 0;
         }
-
 
 
         private static int GenerateId()

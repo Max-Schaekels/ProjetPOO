@@ -451,7 +451,12 @@ namespace ProjetPOO.Model.Story
             return Type == SceneType.End;
         }
 
-        // Validation de la scène pour la création/édition (draft)
+        /// <summary>
+        /// Checks if the scene contains valid data for edition and saving.
+        /// This validation checks the basic consistency of the scene without checking the whole scenario path.
+        /// </summary>
+        /// <param name="errors">List filled with validation error messages.</param>
+        /// <returns>True if the scene is valid, otherwise false.</returns>
         public bool ValidateSafe(out List<string> errors)
         {
             errors = new List<string>();
@@ -513,7 +518,13 @@ namespace ProjetPOO.Model.Story
             return errors.Count == 0;
         }
 
-        // Validation de la scène pour le jeu
+        /// <summary>
+        /// Checks if the scene is correctly configured to be used during gameplay.
+        /// The required data depends on the scene type, such as choices, shop or combat destinations.
+        /// </summary>
+        /// <param name="scenario">Scenario containing the scene and related elements.</param>
+        /// <param name="errors">List filled with validation error messages.</param>
+        /// <returns>True if the scene is playable, otherwise false.</returns>
         public bool ValidatePlayable(out List<string> errors)
         {
             bool baseOk = ValidateSafe(out errors);

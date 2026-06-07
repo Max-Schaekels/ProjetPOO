@@ -111,6 +111,9 @@ namespace ProjetPOO.Model.Gameplay
             return KeysCount > 0;
         }
 
+        /// <summary>
+        /// Adds one potion to the inventory.
+        /// </summary>
         public void AddPotion(int amount)
         {
             if (ValidUtils.CheckIfPositiveNumber(amount))
@@ -120,6 +123,10 @@ namespace ProjetPOO.Model.Gameplay
 
         }
 
+        /// <summary>
+        /// Uses one potion if available.
+        /// </summary>
+        /// <returns>True if a potion was used, otherwise false.</returns>
         public bool ConsumePotion()
         {
             if (HasPotion())
@@ -130,6 +137,9 @@ namespace ProjetPOO.Model.Gameplay
             return false;
         }
 
+        /// <summary>
+        /// Adds one key to the inventory.
+        /// </summary>
         public void AddKey(int amount)
         {
             if (ValidUtils.CheckIfPositiveNumber(amount))
@@ -138,6 +148,10 @@ namespace ProjetPOO.Model.Gameplay
             }
         }
 
+        /// <summary>
+        /// Uses one key if available.
+        /// </summary>
+        /// <returns>True if a key was used, otherwise false.</returns>
         public bool ConsumeKey()
         {
             if (HasKey())

@@ -160,6 +160,12 @@ namespace ProjetPOO.Model.Combat
             return player;
         }
 
+
+        /// <summary>
+        /// Adds experience points to the player character.
+        /// The character can level up when enough experience is reached.
+        /// </summary>
+        /// <param name="amount">Amount of experience points to add.</param>
         public void GainExperience(int amount)
         {
             if (ValidUtils.CheckIfPositiveNumber(amount))
@@ -178,6 +184,9 @@ namespace ProjetPOO.Model.Combat
             return Experience >= GetExperienceRequiredForLevel(Level + 1);
         }
 
+        /// <summary>
+        /// Increases the player character level and improves its statistics.
+        /// </summary>
         private void LevelUp()
         {
             int required = GetExperienceRequiredForLevel(Level + 1);

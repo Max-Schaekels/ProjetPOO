@@ -550,6 +550,12 @@ namespace ProjetPOO.Model.Story
             return true;
         }
 
+        /// <summary>
+        /// Checks if the scenario data is valid enough to be saved safely.
+        /// This validation is used during edition and does not guarantee that the scenario is playable.
+        /// </summary>
+        /// <param name="errors">List filled with validation error messages.</param>
+        /// <returns>True if the scenario is valid, otherwise false.</returns>
         public bool ValidateSafe(out List<string> errors)
         {
             errors = new List<string>();
@@ -703,6 +709,12 @@ namespace ProjetPOO.Model.Story
             return errors.Count == 0;
         }
 
+        /// <summary>
+        /// Checks if the scenario can be played from start to end.
+        /// This validation is used before launching a game and blocks scenarios with missing or unreachable elements.
+        /// </summary>
+        /// <param name="errors">List filled with validation error messages.</param>
+        /// <returns>True if the scenario is playable, otherwise false.</returns>
         public bool ValidatePlayable(out List<string> errors)
         {
             bool baseOk = ValidateSafe(out errors);
