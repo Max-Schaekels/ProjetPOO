@@ -270,7 +270,7 @@
 
                             <!-- Combat intégré -->
                             <VerticalStackLayout IsVisible="{Binding IsCombatVisible}"
-                                                 Spacing="10"
+                                                 Spacing="12"
                                                  Margin="0,8,0,6">
 
                                 <Label Text="Combat"
@@ -294,9 +294,47 @@
 
                                 </HorizontalStackLayout>
 
-                                <Label Text="Les actions de combat seront branchées à l'étape suivante."
-                                       FontSize="13"
-                                       TextColor="#6B7280" />
+                                <Grid ColumnDefinitions="*,*,*,*"
+                                      ColumnSpacing="10"
+                                      Margin="0,8,0,0">
+
+                                    <Button Grid.Column="0"
+                                            Text="Attaquer"
+                                            Command="{Binding AttackCommand}"
+                                            Style="{StaticResource ChoiceButtonStyle}" />
+
+                                    <Button Grid.Column="1"
+                                            Text="Défendre"
+                                            Command="{Binding DefendCommand}"
+                                            Style="{StaticResource ChoiceButtonStyle}" />
+
+                                    <Button Grid.Column="2"
+                                            Text="Potion"
+                                            Command="{Binding UsePotionCommand}"
+                                            IsEnabled="{Binding CanUsePotionInCombat}"
+                                            Style="{StaticResource ChoiceButtonStyle}" />
+
+                                    <Button Grid.Column="3"
+                                            Text="Fuir"
+                                            Command="{Binding FleeCommand}"
+                                            Style="{StaticResource ChoiceButtonStyle}" />
+
+                                </Grid>
+
+                                <Frame IsVisible="{Binding HasRoundReport}"
+                                       CornerRadius="10"
+                                       Padding="12"
+                                       HasShadow="False"
+                                       BorderColor="#E5E5E5"
+                                       BackgroundColor="#FAFAFA"
+                                       Margin="0,8,0,0">
+
+                                    <Label Text="{Binding RoundReportText}"
+                                           FontSize="13"
+                                           TextColor="#2D2D32"
+                                           LineBreakMode="WordWrap" />
+
+                                </Frame>
 
                             </VerticalStackLayout>
 

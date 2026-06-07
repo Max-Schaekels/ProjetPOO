@@ -13,6 +13,7 @@ using ProjetPOO.Model.Story.Enums;
 using ProjetPOO.Utilities.Interfaces;
 using ProjetPOO.View;
 using System.Collections.ObjectModel;
+using ProjetPOO.Model.Combat.Enums;
 
 namespace ProjetPOO.ViewModel
 {
@@ -52,6 +53,10 @@ namespace ProjetPOO.ViewModel
             sceneDisplayTitle = string.Empty;
 
             currentGameState = null;
+
+            roundReportText = string.Empty;
+            hasRoundReport = false;
+            canUsePotionInCombat = false;
         }
 
         [ObservableProperty]
@@ -108,6 +113,15 @@ namespace ProjetPOO.ViewModel
         [ObservableProperty]
         private GameState? currentGameState;
 
+        [ObservableProperty]
+        private string roundReportText;
+
+        [ObservableProperty]
+        private bool hasRoundReport;
+
+        [ObservableProperty]
+        private bool canUsePotionInCombat;
+
         public void LoadGame(Scenario scenario, GameEngine engine)
         {
             selectedScenario = scenario;
@@ -115,6 +129,9 @@ namespace ProjetPOO.ViewModel
             CurrentGameState = engine.State;
 
             PageTitle = scenario.Title;
+
+            RoundReportText = string.Empty;
+            HasRoundReport = false;
 
             RefreshCurrentView();
         }
@@ -148,6 +165,8 @@ namespace ProjetPOO.ViewModel
 
             try
             {
+                RoundReportText = string.Empty;
+                HasRoundReport = false;
                 gameEngine.PlayChoice(selectedScenario, choice.Id);
 
                 RefreshCurrentView();
@@ -212,6 +231,30 @@ namespace ProjetPOO.ViewModel
             }
         }
 
+        [RelayCommand()]
+        private async Task Attack()
+        {
+            await PlayCombatAction(CombatActionType.Attack);
+        }
+
+        [RelayCommand()]
+        private async Task Defend()
+        {
+            await PlayCombatAction(CombatActionType.Defend);
+        }
+
+        [RelayCommand()]
+        private async Task UsePotion()
+        {
+            await PlayCombatAction(CombatActionType.UseItem);
+        }
+
+        [RelayCommand()]
+        private async Task Flee()
+        {
+            await PlayCombatAction(CombatActionType.Flee);
+        }
+
         private void RefreshCurrentView()
         {
             if (selectedScenario == null || gameEngine == null)
@@ -272,8 +315,110 @@ namespace ProjetPOO.ViewModel
                     AvailableChoices.Add(choices[i]);
                 }
             }
-
+            CanUsePotionInCombat = state.IsInCombat() && state.PlayerInventory.PotionsCount > 0;
             AreChoicesVisible = AvailableChoices.Count > 0 && !state.IsInCombat();
+        }
+
+        private async Task PlayCombatAction(CombatActionType actionType)
+        {
+            if (selectedScenario == null || gameEngine == null)
+            {
+                await alertService.ShowAlert("Erreur", "Aucune partie n'est chargée.");
+                return;
+            }
+
+            if (!gameEngine.State.IsInCombat())
+            {
+                await alertService.ShowAlert("Erreur combat", "Aucun combat n'est en cours.");
+                return;
+            }
+
+            try
+            {
+                RoundReport report = gameEngine.PlayRound(selectedScenario, actionType);
+
+                RoundReportText = BuildRoundReportText(report);
+                HasRoundReport = true;
+
+                RefreshCurrentView();
+            }
+            catch (Exception exception)
+            {
+                await alertService.ShowAlert("Erreur combat", exception.Message);
+            }
+        }
+
+        private string BuildRoundReportText(RoundReport report)
+        {
+            if (report == null)
+            {
+                return string.Empty;
+            }
+
+            List<string> lines = new List<string>();
+
+            if (report.PlayerDamage > 0)
+            {
+                lines.Add($"Vous infligez {report.PlayerDamage} dégât(s).");
+            }
+            else if (!report.PotionAttempted && !report.FleeAttempted)
+            {
+                lines.Add("Votre action n'inflige aucun dégât.");
+            }
+
+            if (report.PotionAttempted)
+            {
+                if (report.PotionConsumed)
+                {
+                    lines.Add("Vous utilisez une potion et récupérez des PV.");
+                }
+                else
+                {
+                    lines.Add("Vous n'avez aucune potion à utiliser.");
+                }
+            }
+
+            if (report.FleeAttempted)
+            {
+                if (report.FledSuccessfully)
+                {
+                    lines.Add("Vous parvenez à fuir le combat.");
+                }
+                else
+                {
+                    lines.Add("Vous tentez de fuir, mais échouez.");
+                }
+            }
+
+            if (report.EnemyDamage > 0)
+            {
+                lines.Add($"L'ennemi vous inflige {report.EnemyDamage} dégât(s).");
+            }
+            else if (report.Result == CombatResult.InProgress)
+            {
+                lines.Add("L'ennemi n'inflige aucun dégât.");
+            }
+
+            if (report.Result == CombatResult.Victory)
+            {
+                lines.Add("Victoire !");
+                lines.Add($"Expérience gagnée : {report.ExperienceGained}");
+
+                if (!string.IsNullOrWhiteSpace(report.LootDescription))
+                {
+                    lines.Add($"Butin : {report.LootDescription}");
+                }
+            }
+            else if (report.Result == CombatResult.Defeat)
+            {
+                lines.Add("Défaite...");
+            }
+            else if (report.Result == CombatResult.Fled)
+            {
+                lines.Add("Vous quittez le combat.");
+            }
+
+            return string.Join(Environment.NewLine, lines);
         }
     }
 }
