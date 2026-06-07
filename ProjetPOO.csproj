@@ -83,6 +83,9 @@
 	  <MauiXaml Update="View\EnemyRacePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="View\GamePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\GameScenarioListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

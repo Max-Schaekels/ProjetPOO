@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProjetPOO.View.GamePage"
+             BackgroundColor="#F3F3F3">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="InfoFrameStyle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="BorderColor" Value="#DDDDDD" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ChoiceButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#3A6EA5" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="18,14" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="ShopButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#3A6EA5" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="14,10" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20"
+                             Spacing="22">
+
+            <!-- Header -->
+            <Grid ColumnDefinitions="Auto,*"
+                  Margin="0,0,0,4">
+
+                <Button Grid.Column="0"
+                        Text="← Quitter"
+                        Command="{Binding BackCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="#2D2D32"
+                        Padding="0"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center" />
+
+                <Label Grid.Column="1"
+                       Text="{Binding PageTitle}"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="#111111"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+
+            </Grid>
+
+            <!-- Infos joueur -->
+            <HorizontalStackLayout Spacing="14"
+                                   HorizontalOptions="Center">
+
+                <Frame Style="{StaticResource InfoFrameStyle}"
+                       WidthRequest="310">
+
+                    <VerticalStackLayout Spacing="6">
+
+                        <Label Text="Personnage"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               TextColor="#111111" />
+
+                        <Label Text="{Binding PlayerIdentitySummary}"
+                               FontSize="14"
+                               TextColor="#2D2D32"
+                               LineBreakMode="WordWrap" />
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource InfoFrameStyle}"
+                       WidthRequest="230">
+
+                    <VerticalStackLayout Spacing="6">
+
+                        <Label Text="Ressources"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               TextColor="#111111" />
+
+                        <Label Text="{Binding GoldSummary}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2D2D32" />
+
+                        <Label Text="{Binding InventorySummary}"
+                               FontSize="14"
+                               TextColor="#2D2D32" />
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource InfoFrameStyle}"
+                       WidthRequest="210">
+
+                    <VerticalStackLayout Spacing="6">
+
+                        <Label Text="Statistiques"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               TextColor="#111111" />
+
+                        <Label Text="{Binding PlayerStatsSummary}"
+                               FontSize="14"
+                               TextColor="#2D2D32"
+                               LineBreakMode="WordWrap" />
+
+                    </VerticalStackLayout>
+                </Frame>
+
+            </HorizontalStackLayout>
+
+            <!-- Zone principale : image + scène -->
+            <Grid ColumnDefinitions="3*,5*"
+                  ColumnSpacing="18"
+                  Margin="0,4,0,0"
+                  MinimumHeightRequest="460">
+
+                <!-- Image / placeholder -->
+                <Frame Grid.Column="0"
+                       CornerRadius="15"
+                       Padding="0"
+                       HasShadow="False"
+                       BorderColor="#DDDDDD"
+                       BackgroundColor="#EFEFF1"
+                       MinimumHeightRequest="460">
+
+                    <Grid>
+
+                        <Image Source="{Binding SceneImageSource}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding HasSceneImage}" />
+
+                        <VerticalStackLayout IsVisible="{Binding HasNoSceneImage}"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center"
+                                             Spacing="10">
+
+                            <Label Text="🖼"
+                                   FontSize="42"
+                                   HorizontalOptions="Center"
+                                   TextColor="#8A8A8A" />
+
+                            <Label Text="Aucune image"
+                                   FontSize="14"
+                                   TextColor="#8A8A8A"
+                                   HorizontalOptions="Center" />
+
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </Frame>
+
+                <!-- Scène + choix -->
+                <Frame Grid.Column="1"
+                       CornerRadius="15"
+                       Padding="0"
+                       HasShadow="False"
+                       BorderColor="#DDDDDD"
+                       BackgroundColor="White"
+                       MinimumHeightRequest="460">
+
+                    <ScrollView>
+
+                        <VerticalStackLayout Padding="28"
+                                             Spacing="22">
+
+                            <!-- Texte narratif -->
+                            <VerticalStackLayout Spacing="12">
+
+                                <Label Text="{Binding SceneDisplayTitle}"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       TextColor="#111111" />
+
+                                <Label Text="{Binding SceneText}"
+                                       FontSize="15"
+                                       TextColor="#2D2D32"
+                                       LineBreakMode="WordWrap" />
+
+                            </VerticalStackLayout>
+
+                            <!-- Boutique intégrée -->
+                            <VerticalStackLayout IsVisible="{Binding IsShopVisible}"
+                                                 Spacing="12"
+                                                 Margin="0,8,0,6">
+
+                                <Label Text="Boutique"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#111111" />
+
+                                <Label Text="{Binding ShopSummary}"
+                                       FontSize="14"
+                                       TextColor="#2D2D32" />
+
+                                <HorizontalStackLayout Spacing="12"
+                                                       Margin="0,4,0,0">
+
+                                    <Button Text="Acheter potion"
+                                            Command="{Binding BuyPotionCommand}"
+                                            Style="{StaticResource ShopButtonStyle}" />
+
+                                    <Button Text="Acheter clé"
+                                            Command="{Binding BuyKeyCommand}"
+                                            Style="{StaticResource ShopButtonStyle}" />
+
+                                </HorizontalStackLayout>
+
+                            </VerticalStackLayout>
+
+                            <!-- Combat intégré -->
+                            <VerticalStackLayout IsVisible="{Binding IsCombatVisible}"
+                                                 Spacing="10"
+                                                 Margin="0,8,0,6">
+
+                                <Label Text="Combat"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#111111" />
+
+                                <Label Text="{Binding CombatSummary}"
+                                       FontSize="14"
+                                       TextColor="#2D2D32" />
+
+                                <Label Text="Les actions de combat seront branchées à l'étape suivante."
+                                       FontSize="13"
+                                       TextColor="#6B7280" />
+
+                            </VerticalStackLayout>
+
+                            <!-- Choix -->
+                            <VerticalStackLayout IsVisible="{Binding AreChoicesVisible}"
+                                                 Spacing="14"
+                                                 Margin="0,10,0,0"
+                                                 BindableLayout.ItemsSource="{Binding AvailableChoices}">
+
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Button Text="{Binding Label}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.PlayChoiceCommand}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource ChoiceButtonStyle}" />
+
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+
+                    </ScrollView>
+                </Frame>
+
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
