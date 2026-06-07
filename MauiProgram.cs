@@ -79,6 +79,9 @@ namespace ProjetPOO
             builder.Services.AddTransient<GamePage>();
             builder.Services.AddTransient<GameViewModel>();
 
+            builder.Services.AddTransient<SaveGameListPage>();
+            builder.Services.AddTransient<SaveGameListViewModel>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

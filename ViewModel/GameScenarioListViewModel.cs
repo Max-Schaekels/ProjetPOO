@@ -17,10 +17,13 @@ namespace ProjetPOO.ViewModel
     public partial class GameScenarioListViewModel : BaseViewModel
     {
         private readonly PlayerCharacterSelectionPage playerCharacterSelectionPage;
-        public GameScenarioListViewModel(IAlertService alertService, IDataAccess dataAccessService, PlayerCharacterSelectionPage playerCharacterSelectionPage) : base(alertService, dataAccessService)
+        private readonly SaveGameListPage saveGameListPage;
+        public GameScenarioListViewModel(IAlertService alertService, IDataAccess dataAccessService, PlayerCharacterSelectionPage playerCharacterSelectionPage, SaveGameListPage saveGameListPage) : base(alertService, dataAccessService)
         {
             this.playerCharacterSelectionPage = playerCharacterSelectionPage;
-            PageTitle = "Choisir un scénario";
+            this.saveGameListPage = saveGameListPage;
+
+            PageTitle = "Nouvelle partie";
 
             scenarios = new ObservableCollection<Scenario>();
 
@@ -39,6 +42,12 @@ namespace ProjetPOO.ViewModel
         private async Task Back()
         {
             await Shell.Current.Navigation.PopAsync();
+        }
+
+        [RelayCommand()]
+        private async Task GoToSaveGameList()
+        {
+            await Shell.Current.Navigation.PushAsync(saveGameListPage);
         }
 
         [RelayCommand()]
