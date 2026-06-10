@@ -1,8 +1,6 @@
 {
-  "$type": "ProjetPOO.Model.Story.EffectsCollection, ProjetPOO",
   "$values": [
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 1,
       "ChoiceId": 1,
       "Type": 0,
@@ -10,7 +8,6 @@
       "FlagKey": null
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 2,
       "ChoiceId": 1,
       "Type": 7,
@@ -18,7 +15,6 @@
       "FlagKey": "BossDefeated"
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 3,
       "ChoiceId": 2,
       "Type": 4,
@@ -26,7 +22,6 @@
       "FlagKey": null
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 4,
       "ChoiceId": 2,
       "Type": 8,
@@ -34,7 +29,6 @@
       "FlagKey": "DoorOpened"
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 5,
       "ChoiceId": 3,
       "Type": 0,
@@ -42,7 +36,6 @@
       "FlagKey": null
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 6,
       "ChoiceId": 4,
       "Type": 7,
@@ -50,7 +43,6 @@
       "FlagKey": "MerchantHelped"
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 7,
       "ChoiceId": 5,
       "Type": 0,
@@ -58,7 +50,6 @@
       "FlagKey": null
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 8,
       "ChoiceId": 6,
       "Type": 8,
@@ -66,7 +57,6 @@
       "FlagKey": "BossDefeated"
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 9,
       "ChoiceId": 7,
       "Type": 7,
@@ -74,7 +64,6 @@
       "FlagKey": "TowerEntered"
     },
     {
-      "$type": "ProjetPOO.Model.Story.Effect, ProjetPOO",
       "Id": 10,
       "ChoiceId": 10,
       "Type": 0,

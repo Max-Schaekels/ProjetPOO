@@ -1,11 +1,11 @@
 {
-  "$type": "ProjetPOO.Model.Combat.PlayerCharactersCollection, ProjetPOO",
   "$values": [
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 1,
       "ScenarioId": 1,
       "Name": "Guerrier",
+      "ClassName": "Guerrier",
+      "RaceName": "Humain",
       "MaxHp": 30,
       "Attack": 8,
       "Defense": 6,
@@ -14,10 +14,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 2,
       "ScenarioId": 1,
       "Name": "Mage",
+      "ClassName": "Mage",
+      "RaceName": "Humain",
       "MaxHp": 20,
       "Attack": 10,
       "Defense": 3,
@@ -26,10 +27,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 3,
       "ScenarioId": 2,
       "Name": "Voleur",
+      "ClassName": "Voleur",
+      "RaceName": "Humain",
       "MaxHp": 24,
       "Attack": 7,
       "Defense": 4,
@@ -38,10 +40,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 4,
       "ScenarioId": 2,
       "Name": "Paladin",
+      "ClassName": "Paladin",
+      "RaceName": "Humain",
       "MaxHp": 35,
       "Attack": 7,
       "Defense": 8,
@@ -50,10 +53,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 5,
       "ScenarioId": 3,
       "Name": "Archer",
+      "ClassName": "Archer",
+      "RaceName": "Elfe",
       "MaxHp": 22,
       "Attack": 8,
       "Defense": 4,
@@ -62,10 +66,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 6,
       "ScenarioId": 4,
       "Name": "Moine",
+      "ClassName": "Moine",
+      "RaceName": "Humain",
       "MaxHp": 26,
       "Attack": 6,
       "Defense": 6,
@@ -74,10 +79,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 7,
       "ScenarioId": 5,
       "Name": "Berserker",
+      "ClassName": "Berserker",
+      "RaceName": "Nain",
       "MaxHp": 34,
       "Attack": 10,
       "Defense": 4,
@@ -86,10 +92,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 8,
       "ScenarioId": 6,
       "Name": "Assassin",
+      "ClassName": "Assassin",
+      "RaceName": "Humain",
       "MaxHp": 20,
       "Attack": 9,
       "Defense": 3,
@@ -98,10 +105,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 9,
       "ScenarioId": 7,
       "Name": "Chevalier",
+      "ClassName": "Chevalier",
+      "RaceName": "Humain",
       "MaxHp": 32,
       "Attack": 7,
       "Defense": 7,
@@ -110,10 +118,11 @@
       "StartingLevel": 1
     },
     {
-      "$type": "ProjetPOO.Model.Combat.PlayerCharacterTemplate, ProjetPOO",
       "Id": 10,
       "ScenarioId": 8,
       "Name": "Sorcier",
+      "ClassName": "Sorcier",
+      "RaceName": "Humain",
       "MaxHp": 18,
       "Attack": 11,
       "Defense": 2,

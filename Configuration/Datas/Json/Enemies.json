@@ -1,8 +1,6 @@
 {
-  "$type": "System.Collections.Generic.List`1[[ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO]], System.Private.CoreLib",
   "$values": [
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 1,
       "ScenarioId": 1,
       "EnemyName": "Petit slime",
@@ -22,7 +20,6 @@
       "KeyAmountMax": 0
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 2,
       "ScenarioId": 1,
       "EnemyName": null,
@@ -42,7 +39,6 @@
       "KeyAmountMax": 1
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 3,
       "ScenarioId": 2,
       "EnemyName": "Dragon",
@@ -62,7 +58,6 @@
       "KeyAmountMax": 2
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 4,
       "ScenarioId": 2,
       "EnemyName": "Slime des ruines",
@@ -82,7 +77,6 @@
       "KeyAmountMax": 0
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 5,
       "ScenarioId": 3,
       "EnemyName": null,
@@ -102,7 +96,6 @@
       "KeyAmountMax": 1
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 6,
       "ScenarioId": 3,
       "EnemyName": "Dragonnet",
@@ -122,7 +115,6 @@
       "KeyAmountMax": 1
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 7,
       "ScenarioId": 4,
       "EnemyName": "Slime noir",
@@ -142,7 +134,6 @@
       "KeyAmountMax": 0
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 8,
       "ScenarioId": 5,
       "EnemyName": null,
@@ -162,7 +153,6 @@
       "KeyAmountMax": 1
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 9,
       "ScenarioId": 6,
       "EnemyName": "Dragon ancien",
@@ -182,7 +172,6 @@
       "KeyAmountMax": 2
     },
     {
-      "$type": "ProjetPOO.Utilities.DataAccess.JsonDtos.EnemyJsonDto, ProjetPOO",
       "Id": 10,
       "ScenarioId": 7,
       "EnemyName": "Slime royal",

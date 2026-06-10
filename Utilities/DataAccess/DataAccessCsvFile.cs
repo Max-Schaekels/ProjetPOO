@@ -73,25 +73,26 @@ namespace ProjetPOO.Utilities.DataAccess
             {
                 if (scenario.Id == scenarioId)
                 {
-                    return scenario;
+                    ScenesCollection scenes = GetScenesByScenarioId(scenarioId);
+                    EnemiesCollection enemies = GetEnemiesByScenarioId(scenarioId);
+                    EnemyRacesCollection enemyRaces = GetEnemyRacesByScenarioId(scenarioId);
+                    ShopsCollection shops = GetShopsByScenarioId(scenarioId);
+                    PlayerCharactersCollection playerCharacters = GetPlayerCharacterTemplatesByScenarioId(scenarioId);
+
+                    return Scenario.Load(
+                        scenario.Id,
+                        scenario.Title,
+                        scenario.Description,
+                        scenario.StartSceneId,
+                        scenes,
+                        enemies,
+                        enemyRaces,
+                        shops,
+                        playerCharacters);
                 }
             }
 
             return null;
-        }
-        private static Scenario GetScenario(string csvLine)
-        {
-            string[] fields = csvLine.Split(';');
-            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("SCENARIO"))
-            {
-                Scenario scenario = Scenario.Load(int.Parse(fields[1]), fields[2], fields[3], int.Parse(fields[4]),null, null,null, null);
-
-                return scenario;
-            }
-            else
-            {
-                return null;
-            }
         }
 
 
@@ -150,11 +151,14 @@ namespace ProjetPOO.Utilities.DataAccess
                 return null;
             }
         }
-        private static Scene GetScene(string csvLine)
+        private Scene GetScene(string csvLine)
         {
             string[] fields = csvLine.Split(';');
+
             if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("SCENE"))
             {
+                int sceneId = int.Parse(fields[1]);
+
                 SceneType sceneType;
                 Enum.TryParse(fields[4], out sceneType);
 
@@ -165,7 +169,9 @@ namespace ProjetPOO.Utilities.DataAccess
                 int? defeatTargetSceneId = string.IsNullOrWhiteSpace(fields[10]) ? null : int.Parse(fields[10]);
                 int? victoryTargetSceneId = string.IsNullOrWhiteSpace(fields[11]) ? null : int.Parse(fields[11]);
 
-                Scene scene = Scene.Load( int.Parse(fields[1]), fields[2], fields[3], sceneType, int.Parse(fields[5]), pictureFileName,shopId, enemyId,fleeTargetSceneId,defeatTargetSceneId,victoryTargetSceneId, null);
+                ChoicesCollection choices = GetChoicesBySceneId(sceneId);
+
+                Scene scene = Scene.Load(sceneId, fields[2], fields[3], sceneType, int.Parse(fields[5]), pictureFileName, shopId, enemyId, fleeTargetSceneId, defeatTargetSceneId, victoryTargetSceneId, choices);
 
                 return scene;
             }
@@ -253,9 +259,15 @@ namespace ProjetPOO.Utilities.DataAccess
         private Choice GetChoice(string csvLine)
         {
             string[] fields = csvLine.Split(';');
+
             if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("CHOICE"))
             {
-                Choice choice = Choice.Load( int.Parse(fields[1]), fields[2], int.Parse(fields[3]), int.Parse(fields[4]), null, null);
+                int choiceId = int.Parse(fields[1]);
+
+                ConditionsCollection conditions = GetConditionsByChoiceId(choiceId);
+                EffectsCollection effects = GetEffectsByChoiceId(choiceId);
+
+                Choice choice = Choice.Load(choiceId,fields[2], int.Parse(fields[3]),int.Parse(fields[4]), conditions,effects);
 
                 return choice;
             }
@@ -638,7 +650,7 @@ namespace ProjetPOO.Utilities.DataAccess
                 {
                     EnemyRace enemyRace = GetEnemyRace(s);
 
-                    if (enemyRace != null && enemyRace.ScenarioId == scenarioId)
+                    if (enemyRace != null && (enemyRace.ScenarioId == 0 || enemyRace.ScenarioId == scenarioId))
                     {
                         enemyRaces.AddEnemyRace(enemyRace);
                     }

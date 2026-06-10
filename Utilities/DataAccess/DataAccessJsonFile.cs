@@ -45,6 +45,7 @@ namespace ProjetPOO.Utilities.DataAccess
             cachedShops = null;
             cachedPlayerCharacters = null;
             cachedScenarios = null;
+            cachedEnemyRaces = null;
         }
 
         private List<T>? ReadJsonValues<T>(string codeFunction)
@@ -155,7 +156,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new ConditionsCollection();
             }
 
             ConditionsCollection conditions = new ConditionsCollection();
@@ -182,7 +183,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new EffectsCollection();
             }
 
             EffectsCollection effects = new EffectsCollection();
@@ -209,7 +210,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new ChoicesCollection();
             }
 
             ChoicesCollection choices = new ChoicesCollection();
@@ -241,7 +242,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new ScenesCollection();
             }
 
             ScenesCollection scenes = new ScenesCollection();
@@ -272,7 +273,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new EnemiesCollection();
             }
 
             EnemiesCollection enemies = new EnemiesCollection();
@@ -301,7 +302,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new ShopsCollection();
             }
 
             ShopsCollection shops = new ShopsCollection();
@@ -330,7 +331,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new PlayerCharactersCollection();
             }
 
             PlayerCharactersCollection players = new PlayerCharactersCollection();
@@ -359,7 +360,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new List<Scenario>();
             }
 
             List<Scenario> scenarios = new List<Scenario>();
@@ -663,192 +664,49 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override void UpdateAllScenarios(List<Scenario> scenarios)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("SCENARIOS");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(scenarios, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateAllScenarios error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateAllScenes(ScenesCollection scenes)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("SCENES");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(scenes, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateAllScenes error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateAllChoices(ChoicesCollection choices)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("CHOICES");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(choices, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateAllChoices error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateAllConditions(ConditionsCollection conditions)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("CONDITIONS");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(conditions, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateAllConditions error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateAllEffects(EffectsCollection effects)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("EFFECTS");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(effects, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateAllEffects error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateAllEnemies(EnemiesCollection enemies)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("ENEMIES");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(enemies, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateAllEnemies error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateAllShops(ShopsCollection shops)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("SHOPS");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(shops, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateAllShops error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateAllPlayerCharacterTemplates(PlayerCharactersCollection playerCharacterTemplates)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("PLAYERCHARACTERS");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(playerCharacterTemplates, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateAllPlayerCharacterTemplates error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateChoice(Choice choice)
         {
-            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction("CHOICES");
-
-            if (IsValidAccessPath)
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
-                string json = JsonConvert.SerializeObject(choice, Formatting.Indented, settings);
-                File.WriteAllText(AccessPath, json);
-                ClearCache();
-            }
-            else
-            {
-                Console.WriteLine("UpdateChoice error can't update datasource file");
-            }
+            throw new NotImplementedException();
         }
+        
 
         public override EnemyRacesCollection GetAllEnemyRaces()
         {
@@ -861,7 +719,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (dtos == null)
             {
-                return null;
+                return new EnemyRacesCollection();
             }
 
             EnemyRacesCollection enemyRaces = new EnemyRacesCollection();
@@ -889,7 +747,7 @@ namespace ProjetPOO.Utilities.DataAccess
 
             if (allEnemyRaces == null)
             {
-                return null;
+                return new EnemyRacesCollection(scenarioId);
             }
 
             EnemyRacesCollection enemyRaces = new EnemyRacesCollection(scenarioId);

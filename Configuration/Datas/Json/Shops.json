@@ -1,8 +1,6 @@
 {
-  "$type": "ProjetPOO.Model.Gameplay.ShopsCollection, ProjetPOO",
   "$values": [
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 1,
       "ScenarioId": 1,
       "Name": "Marchand du village",
@@ -10,23 +8,20 @@
       "KeyPrice": 25
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 2,
-      "ScenarioId": 1,
+      "ScenarioId": 2,
       "Name": "Vieil alchimiste",
       "PotionPrice": 15,
       "KeyPrice": 40
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 3,
-      "ScenarioId": 2,
-      "Name": null,
+      "ScenarioId": 3,
+      "Name": "Échoppe délabrée",
       "PotionPrice": 20,
       "KeyPrice": 50
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 4,
       "ScenarioId": 3,
       "Name": "Marchand ambulant",
@@ -34,23 +29,20 @@
       "KeyPrice": 30
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 5,
       "ScenarioId": 4,
-      "Name": null,
+      "Name": "Boutique du marais",
       "PotionPrice": 14,
       "KeyPrice": 35
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 6,
       "ScenarioId": 5,
-      "Name": null,
+      "Name": "Marchand de la caverne",
       "PotionPrice": 18,
       "KeyPrice": 45
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 7,
       "ScenarioId": 6,
       "Name": "Herboriste du bois",
@@ -58,15 +50,13 @@
       "KeyPrice": 28
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 8,
       "ScenarioId": 7,
-      "Name": null,
+      "Name": "Intendant du fort",
       "PotionPrice": 16,
       "KeyPrice": 38
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 9,
       "ScenarioId": 8,
       "Name": "Gardien du temple",
@@ -74,7 +64,6 @@
       "KeyPrice": 55
     },
     {
-      "$type": "ProjetPOO.Model.Gameplay.Shop, ProjetPOO",
       "Id": 10,
       "ScenarioId": 9,
       "Name": "Vendeur du port",
