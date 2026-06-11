@@ -184,22 +184,22 @@ namespace ProjetPOO.ViewModel
         public bool HasNoSceneImagePreview => SceneImagePreview == null;
         private string GetScenesImagesDirectoryPath()
         {
-            if (string.IsNullOrWhiteSpace(DataFile.FilesPathDir))
+            string applicationDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+            DirectoryInfo? currentDirectory = new DirectoryInfo(applicationDirectoryPath);
+
+            while (currentDirectory != null && !Directory.Exists(Path.Combine(currentDirectory.FullName, "Configuration", "Datas")))
             {
-                throw new InvalidOperationException("Le dossier de données n'est pas configuré.");
+                currentDirectory = currentDirectory.Parent;
             }
 
-            string? jsonDirectoryPath = DataFile.FilesPathDir;
-
-            DirectoryInfo? jsonDirectory = new DirectoryInfo(jsonDirectoryPath);
-            DirectoryInfo? datasDirectory = jsonDirectory.Parent;
-
-            if (datasDirectory == null)
+            if (currentDirectory == null)
             {
-                throw new InvalidOperationException("Impossible de retrouver le dossier Datas.");
+                throw new InvalidOperationException("Impossible de retrouver le dossier Configuration/Datas.");
             }
 
-            string imagesDirectoryPath = Path.Combine(datasDirectory.FullName, "Images", "Scenes");
+            string imagesDirectoryPath = Path.Combine(currentDirectory.FullName, "Configuration", "Datas", "Images", "Scenes");
+
             return imagesDirectoryPath;
         }
 

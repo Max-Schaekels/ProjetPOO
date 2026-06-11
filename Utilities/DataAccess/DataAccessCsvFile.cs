@@ -60,6 +60,31 @@ namespace ProjetPOO.Utilities.DataAccess
             }
         }
 
+        private static Scenario GetScenario(string csvLine)
+        {
+            string[] fields = csvLine.Split(';');
+
+            if (!string.IsNullOrEmpty(fields[0]) && fields[0].Equals("SCENARIO"))
+            {
+                Scenario scenario = Scenario.Load(
+                    int.Parse(fields[1]),
+                    fields[2],
+                    fields[3],
+                    int.Parse(fields[4]),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
+
+                return scenario;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public override Scenario? GetScenarioById(int scenarioId)
         {
             List<Scenario> scenarios = GetAllScenarios();

@@ -336,9 +336,20 @@ namespace ProjetPOO.ViewModel
             }
             else
             {
-                SceneImageSource = currentScene.PictureFileName;
-                HasSceneImage = true;
-                HasNoSceneImage = false;
+                string fullImagePath = GetSceneImageFullPath(currentScene.PictureFileName);
+
+                if (File.Exists(fullImagePath))
+                {
+                    SceneImageSource = fullImagePath;
+                    HasSceneImage = true;
+                    HasNoSceneImage = false;
+                }
+                else
+                {
+                    SceneImageSource = string.Empty;
+                    HasSceneImage = false;
+                    HasNoSceneImage = true;
+                }
             }
 
             IsShopVisible = currentScene.Type == SceneType.Shop;
@@ -471,6 +482,35 @@ namespace ProjetPOO.ViewModel
             }
 
             return string.Join(Environment.NewLine, lines);
+        }
+
+        private string GetScenesImagesDirectoryPath()
+        {
+            string applicationDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+            DirectoryInfo? currentDirectory = new DirectoryInfo(applicationDirectoryPath);
+
+            while (currentDirectory != null && !Directory.Exists(Path.Combine(currentDirectory.FullName, "Configuration", "Datas")))
+            {
+                currentDirectory = currentDirectory.Parent;
+            }
+
+            if (currentDirectory == null)
+            {
+                throw new InvalidOperationException("Impossible de retrouver le dossier Configuration/Datas.");
+            }
+
+            string imagesDirectoryPath = Path.Combine(currentDirectory.FullName, "Configuration", "Datas", "Images", "Scenes");
+
+            return imagesDirectoryPath;
+        }
+
+        private string GetSceneImageFullPath(string pictureFileName)
+        {
+            string imagesDirectoryPath = GetScenesImagesDirectoryPath();
+            string fullImagePath = Path.Combine(imagesDirectoryPath, pictureFileName);
+
+            return fullImagePath;
         }
     }
 }
