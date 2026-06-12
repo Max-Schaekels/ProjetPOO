@@ -48,6 +48,14 @@ namespace ProjetPOO.Utilities.DataAccess
             cachedEnemyRaces = null;
         }
 
+        /// <summary>
+        /// Lit un fichier JSON correspondant au code fonction fourni et tente de le convertir en liste d'objets du type demandé.
+        /// La méthode prend en charge deux formats : un objet wrapper contenant une propriété Values et une liste JSON directe.
+        /// Si le fichier est vide ou si la désérialisation échoue, une liste vide est retournée afin d'éviter de bloquer le chargement.
+        /// </summary>
+        /// <typeparam name="T">Type des objets attendus dans le fichier JSON.</typeparam>
+        /// <param name="codeFunction">Code fonction utilisé pour retrouver le chemin du fichier JSON dans le gestionnaire de fichiers.</param>
+        /// <returns>Liste des objets lus depuis le fichier JSON, ou une liste vide si aucune donnée valide n'est trouvée.</returns>
         private List<T>? ReadJsonValues<T>(string codeFunction)
         {
             AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction(codeFunction);
@@ -93,6 +101,35 @@ namespace ProjetPOO.Utilities.DataAccess
             }
 
             return new List<T>();
+        }
+
+        /// <summary>
+        /// Écrit une liste d'objets dans le fichier JSON correspondant au code fonction fourni.
+        /// Les données sont encapsulées dans un objet wrapper compatible avec la lecture effectuée par ReadJsonValues.
+        /// Après l'écriture, le cache est vidé afin que les prochaines lectures utilisent les données mises à jour.
+        /// </summary>
+        /// <typeparam name="T">Type des objets à écrire dans le fichier JSON.</typeparam>
+        /// <param name="codeFunction">Code fonction utilisé pour retrouver le chemin du fichier JSON dans le gestionnaire de fichiers.</param>
+        /// <param name="values">Liste des objets à sérialiser dans le fichier JSON.</param>
+        private void WriteJsonValues<T>(string codeFunction, List<T> values)
+        {
+            AccessPath = DataFilesManager.DataFiles.GetFilePathByCodeFunction(codeFunction);
+
+            if (!IsValidAccessPath)
+            {
+                Console.WriteLine($"WriteJsonValues error can't update datasource file for {codeFunction}");
+                return;
+            }
+
+            JsonCollectionDto<T> wrapper = new JsonCollectionDto<T>
+            {
+                Values = values
+            };
+
+            string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
+            File.WriteAllText(AccessPath, json);
+
+            ClearCache();
         }
 
         private string GetSafeTitle(string? value)
@@ -664,42 +701,207 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override void UpdateAllScenarios(List<Scenario> scenarios)
         {
-            throw new NotImplementedException();
+            List<ScenarioJsonDto> dtos = new List<ScenarioJsonDto>();
+
+            for (int i = 0; i < scenarios.Count; i++)
+            {
+                Scenario scenario = scenarios[i];
+
+                ScenarioJsonDto dto = new ScenarioJsonDto
+                {
+                    Id = scenario.Id,
+                    Title = scenario.Title,
+                    Description = scenario.Description,
+                    StartSceneId = scenario.StartSceneId
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("SCENARIOS", dtos);
         }
 
         public override void UpdateAllScenes(ScenesCollection scenes)
         {
-            throw new NotImplementedException();
+            List<SceneJsonDto> dtos = new List<SceneJsonDto>();
+
+            for (int i = 0; i < scenes.Count; i++)
+            {
+                Scene scene = scenes[i];
+
+                SceneJsonDto dto = new SceneJsonDto
+                {
+                    Id = scene.Id,
+                    Title = scene.Title,
+                    Text = scene.Text,
+                    Type = scene.Type,
+                    ScenarioId = scene.ScenarioId,
+                    PictureFileName = scene.PictureFileName,
+                    ShopId = scene.ShopId,
+                    EnemyId = scene.EnemyId,
+                    FleeTargetSceneId = scene.FleeTargetSceneId,
+                    DefeatTargetSceneId = scene.DefeatTargetSceneId,
+                    VictoryTargetSceneId = scene.VictoryTargetSceneId
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("SCENES", dtos);
         }
 
         public override void UpdateAllChoices(ChoicesCollection choices)
         {
-            throw new NotImplementedException();
+            List<ChoiceJsonDto> dtos = new List<ChoiceJsonDto>();
+
+            for (int i = 0; i < choices.Count; i++)
+            {
+                Choice choice = choices[i];
+
+                ChoiceJsonDto dto = new ChoiceJsonDto
+                {
+                    Id = choice.Id,
+                    Label = choice.Label,
+                    TargetSceneId = choice.TargetSceneId,
+                    SceneId = choice.SceneId
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("CHOICES", dtos);
         }
 
         public override void UpdateAllConditions(ConditionsCollection conditions)
         {
-            throw new NotImplementedException();
+            List<ConditionJsonDto> dtos = new List<ConditionJsonDto>();
+
+            for (int i = 0; i < conditions.Count; i++)
+            {
+                Condition condition = conditions[i];
+
+                ConditionJsonDto dto = new ConditionJsonDto
+                {
+                    Id = condition.Id,
+                    ChoiceId = condition.ChoiceId,
+                    Type = condition.Type,
+                    MinValue = condition.MinValue
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("CONDITIONS", dtos);
         }
 
         public override void UpdateAllEffects(EffectsCollection effects)
         {
-            throw new NotImplementedException();
+            List<EffectJsonDto> dtos = new List<EffectJsonDto>();
+
+            for (int i = 0; i < effects.Count; i++)
+            {
+                Effect effect = effects[i];
+
+                EffectJsonDto dto = new EffectJsonDto
+                {
+                    Id = effect.Id,
+                    ChoiceId = effect.ChoiceId,
+                    Type = effect.Type,
+                    Amount = effect.Amount,
+                    FlagKey = effect.FlagKey
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("EFFECTS", dtos);
         }
 
         public override void UpdateAllEnemies(EnemiesCollection enemies)
         {
-            throw new NotImplementedException();
+            List<EnemyJsonDto> dtos = new List<EnemyJsonDto>();
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                Enemy enemy = enemies[i];
+
+                EnemyJsonDto dto = new EnemyJsonDto
+                {
+                    Id = enemy.Id,
+                    ScenarioId = enemy.ScenarioId,
+                    EnemyName = enemy.EnemyName,
+                    EnemyRaceId = enemy.EnemyRaceId,
+                    MaxHp = enemy.MaxHp,
+                    Attack = enemy.Attack,
+                    Defense = enemy.Defense,
+                    Agility = enemy.Agility,
+                    RewardExperience = enemy.RewardExperience,
+                    RewardGoldMin = enemy.RewardGoldMin,
+                    RewardGoldMax = enemy.RewardGoldMax,
+                    PotionDropChance = enemy.PotionDropChance,
+                    PotionAmountMin = enemy.PotionAmountMin,
+                    PotionAmountMax = enemy.PotionAmountMax,
+                    KeyDropChance = enemy.KeyDropChance,
+                    KeyAmountMin = enemy.KeyAmountMin,
+                    KeyAmountMax = enemy.KeyAmountMax
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("ENEMIES", dtos);
         }
 
         public override void UpdateAllShops(ShopsCollection shops)
         {
-            throw new NotImplementedException();
+            List<ShopJsonDto> dtos = new List<ShopJsonDto>();
+
+            for (int i = 0; i < shops.Count; i++)
+            {
+                Shop shop = shops[i];
+
+                ShopJsonDto dto = new ShopJsonDto
+                {
+                    Id = shop.Id,
+                    ScenarioId = shop.ScenarioId,
+                    Name = shop.Name,
+                    PotionPrice = shop.PotionPrice,
+                    KeyPrice = shop.KeyPrice
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("SHOPS", dtos);
         }
 
         public override void UpdateAllPlayerCharacterTemplates(PlayerCharactersCollection playerCharacterTemplates)
         {
-            throw new NotImplementedException();
+            List<PlayerCharacterTemplateJsonDto> dtos = new List<PlayerCharacterTemplateJsonDto>();
+
+            for (int i = 0; i < playerCharacterTemplates.Count; i++)
+            {
+                PlayerCharacterTemplate playerCharacterTemplate = playerCharacterTemplates[i];
+
+                PlayerCharacterTemplateJsonDto dto = new PlayerCharacterTemplateJsonDto
+                {
+                    Id = playerCharacterTemplate.Id,
+                    ScenarioId = playerCharacterTemplate.ScenarioId,
+                    Name = playerCharacterTemplate.Name,
+                    ClassName = playerCharacterTemplate.ClassName,
+                    RaceName = playerCharacterTemplate.RaceName,
+                    MaxHp = playerCharacterTemplate.MaxHp,
+                    Attack = playerCharacterTemplate.Attack,
+                    Defense = playerCharacterTemplate.Defense,
+                    Agility = playerCharacterTemplate.Agility,
+                    StartingExperience = playerCharacterTemplate.StartingExperience,
+                    StartingLevel = playerCharacterTemplate.StartingLevel
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("PLAYERCHARACTERS", dtos);
         }
 
         public override void UpdateChoice(Choice choice)
@@ -795,7 +997,24 @@ namespace ProjetPOO.Utilities.DataAccess
 
         public override void UpdateAllEnemyRaces(EnemyRacesCollection enemyRaces)
         {
-            throw new NotImplementedException();
+            List<EnemyRaceJsonDto> dtos = new List<EnemyRaceJsonDto>();
+
+            for (int i = 0; i < enemyRaces.Count; i++)
+            {
+                EnemyRace enemyRace = enemyRaces[i];
+
+                EnemyRaceJsonDto dto = new EnemyRaceJsonDto
+                {
+                    Id = enemyRace.Id,
+                    ScenarioId = enemyRace.ScenarioId,
+                    Name = enemyRace.Name,
+                    Description = enemyRace.Description
+                };
+
+                dtos.Add(dto);
+            }
+
+            WriteJsonValues("ENEMYRACES", dtos);
         }
 
         public override void DeleteEnemyRace(int enemyRaceId)

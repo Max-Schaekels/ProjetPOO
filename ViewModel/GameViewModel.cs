@@ -411,6 +411,16 @@ namespace ProjetPOO.ViewModel
             }
         }
 
+        /// <summary>
+        /// Construit le texte affiché après un round de combat.
+        /// La méthode transforme les informations du RoundReport en phrases lisibles pour le joueur.
+        /// </summary>
+        /// <param name="report">Rapport contenant les résultats du round de combat.</param>
+        /// <returns>Texte descriptif du round, ou une chaîne vide si le rapport est null.</returns>
+        /// <remarks>
+        /// Le texte généré dépend de l'action du joueur, des dégâts infligés, des dégâts reçus
+        /// et du résultat final du combat : victoire, défaite, fuite ou combat toujours en cours.
+        /// </remarks>
         private string BuildRoundReportText(RoundReport report)
         {
             if (report == null)
@@ -418,6 +428,7 @@ namespace ProjetPOO.ViewModel
                 return string.Empty;
             }
 
+            // On construit le rapport ligne par ligne pour n'afficher que les informations utiles du round.
             List<string> lines = new List<string>();
 
             if (report.PlayerDamage > 0)
@@ -484,6 +495,12 @@ namespace ProjetPOO.ViewModel
             return string.Join(Environment.NewLine, lines);
         }
 
+        /// <summary>
+        /// Retrouve le chemin du dossier contenant les images des scènes.
+        /// La méthode remonte l'arborescence depuis le dossier d'exécution de l'application jusqu'à retrouver le dossier Configuration/Datas.
+        /// </summary>
+        /// <returns>Chemin complet vers le dossier Configuration/Datas/Images/Scenes.</returns>
+        /// <exception cref="InvalidOperationException">Lancée si le dossier Configuration/Datas est introuvable.</exception>
         private string GetScenesImagesDirectoryPath()
         {
             string applicationDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -505,6 +522,12 @@ namespace ProjetPOO.ViewModel
             return imagesDirectoryPath;
         }
 
+        /// <summary>
+        /// Construit le chemin complet d'une image de scène à partir de son nom de fichier.
+        /// La méthode utilise le dossier des images de scènes comme dossier de base.
+        /// </summary>
+        /// <param name="pictureFileName">Nom du fichier image associé à la scène.</param>
+        /// <returns>Chemin complet vers le fichier image de la scène.</returns>
         private string GetSceneImageFullPath(string pictureFileName)
         {
             string imagesDirectoryPath = GetScenesImagesDirectoryPath();

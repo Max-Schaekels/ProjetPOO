@@ -384,6 +384,15 @@ namespace ProjetPOO.ViewModel
             return null;
         }
 
+        /// <summary>
+        /// Recharge le choix sélectionné depuis la source de données.
+        /// Cette méthode permet de rafraîchir les conditions et les effets liés au choix après un retour de navigation,
+        /// tout en conservant les valeurs actuellement saisies dans le formulaire d'édition.
+        /// </summary>
+        /// <remarks>
+        /// Le libellé et la scène cible sont sauvegardés temporairement avant le rechargement,
+        /// puis réappliqués afin d'éviter d'écraser les modifications non sauvegardées.
+        /// </remarks>
         public void RefreshLoadedChoice()
         {
             if (selectedChoice == null)

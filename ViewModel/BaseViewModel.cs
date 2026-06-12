@@ -19,14 +19,13 @@ namespace ProjetPOO.ViewModel
             this.alertService = alertService;
             dataAccess = dataAccessService;
             pageTitle = string.Empty;
-            isBusy = false;
+
         }
 
         [ObservableProperty]
         private string pageTitle;
 
-        [ObservableProperty]
-        private bool isBusy;
+
 
     }
 }

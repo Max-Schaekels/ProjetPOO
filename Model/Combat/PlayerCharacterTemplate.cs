@@ -308,8 +308,7 @@ namespace ProjetPOO.Model.Combat
 
             if (ScenarioId != 0 && ScenarioId != scenarioId)
             {
-                throw new InvalidOperationException(
-                    $"Le template appartient déjà à un autre scénario (ScenarioId={ScenarioId}, nouveau={scenarioId}).");
+                throw new InvalidOperationException(  $"Le template appartient déjà à un autre scénario (ScenarioId={ScenarioId}, nouveau={scenarioId}).");
             }
 
             ScenarioId = scenarioId;

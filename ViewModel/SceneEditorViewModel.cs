@@ -171,6 +171,8 @@ namespace ProjetPOO.ViewModel
             set
             {
                 _sceneImagePreview = value;
+                // La modification de l'image influence aussi les propriétés calculées utilisées par le XAML.
+                // On notifie donc l'image et les deux états d'affichage : avec aperçu ou sans aperçu.
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasSceneImagePreview));
                 OnPropertyChanged(nameof(HasNoSceneImagePreview));
@@ -182,6 +184,13 @@ namespace ProjetPOO.ViewModel
         public bool HasSceneImagePreview => SceneImagePreview != null;
 
         public bool HasNoSceneImagePreview => SceneImagePreview == null;
+
+        /// <summary>
+        /// Retrouve le chemin du dossier contenant les images des scènes.
+        /// La méthode remonte l'arborescence depuis le dossier d'exécution de l'application jusqu'à retrouver le dossier Configuration/Datas.
+        /// </summary>
+        /// <returns>Chemin complet vers le dossier Configuration/Datas/Images/Scenes.</returns>
+        /// <exception cref="InvalidOperationException">Lancée si le dossier Configuration/Datas est introuvable.</exception>
         private string GetScenesImagesDirectoryPath()
         {
             string applicationDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -203,6 +212,12 @@ namespace ProjetPOO.ViewModel
             return imagesDirectoryPath;
         }
 
+        /// <summary>
+        /// Construit un nom de fichier sécurisé pour une image de scène.
+        /// Le nom est basé sur le titre de la scène, complété par la date et l'heure afin de limiter les risques de doublon.
+        /// </summary>
+        /// <param name="originalFileName">Nom du fichier image original sélectionné par l'utilisateur.</param>
+        /// <returns>Nom de fichier sécurisé avec extension.</returns>
         private string BuildSafeImageFileName(string originalFileName)
         {
             string extension = Path.GetExtension(originalFileName).ToLowerInvariant();
@@ -223,6 +238,13 @@ namespace ProjetPOO.ViewModel
             return finalFileName;
         }
 
+        /// <summary>
+        /// Construit une base de nom de fichier utilisable à partir d'un texte fourni.
+        /// Les lettres et les chiffres sont conservés, tandis que les espaces, tirets et underscores sont remplacés par un underscore.
+        /// Les autres caractères sont ignorés afin d'éviter les caractères invalides dans un nom de fichier.
+        /// </summary>
+        /// <param name="value">Texte utilisé pour construire la base du nom de fichier.</param>
+        /// <returns>Base de nom de fichier sécurisée, ou "scene" si aucune valeur exploitable n'est trouvée.</returns>
         private string BuildSafeFileNameBase(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -230,6 +252,8 @@ namespace ProjetPOO.ViewModel
                 return "scene";
             }
 
+            // StringBuilder permet de construire progressivement le nom du fichier
+            // en gardant uniquement les caractères autorisés ou facilement remplaçables.
             StringBuilder builder = new StringBuilder();
 
             for (int i = 0; i < value.Length; i++)
@@ -354,11 +378,7 @@ namespace ProjetPOO.ViewModel
             {
                 if (selectedScene == null)
                 {
-                    Scene scene = new Scene(
-                        SceneTitle.Trim(),
-                        SceneText.Trim(),
-                        SelectedSceneType
-                    );
+                    Scene scene = new Scene( SceneTitle.Trim(), SceneText.Trim(), SelectedSceneType );
 
                     scene.AssignToScenario(selectedScenario.Id);
 
@@ -493,8 +513,7 @@ namespace ProjetPOO.ViewModel
 
                 string selectedFileName = fileResult.FileName;
 
-                if (!ValidUtils.CheckFileFormat(selectedFileName, Scene.ALLOWED_PICTURE_FILE_FORMATS) &&
-                    !selectedFileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+                if (!ValidUtils.CheckFileFormat(selectedFileName, Scene.ALLOWED_PICTURE_FILE_FORMATS) && !selectedFileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
                 {
                     await alertService.ShowAlert("Image invalide", "Veuillez sélectionner une image au format .jpg, .jpeg ou .png.");
                     return;
@@ -794,6 +813,15 @@ namespace ProjetPOO.ViewModel
             }
         }
 
+        /// <summary>
+        /// Recharge la scène sélectionnée et le scénario associé depuis la source de données.
+        /// Cette méthode permet de rafraîchir les listes liées à la scène après un retour de navigation,
+        /// tout en conservant les valeurs actuellement saisies dans le formulaire d'édition.
+        /// </summary>
+        /// <remarks>
+        /// Les champs du formulaire sont sauvegardés temporairement avant le rechargement,
+        /// puis réappliqués après l'appel à LoadScene afin d'éviter d'écraser les modifications non sauvegardées.
+        /// </remarks>
         public void RefreshLoadedScene()
         {
             if (selectedScene == null)

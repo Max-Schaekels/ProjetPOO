@@ -68,8 +68,7 @@ namespace ProjetPOO.Model.Gameplay
             }
             else if (shop.ScenarioId != OwnerScenarioId)
             {
-                throw new InvalidOperationException(
-                    $"La boutique \"{shop.Name}\" appartient déjà à un autre scénario (ScenarioId={shop.ScenarioId}, attendu={OwnerScenarioId}).");
+                throw new InvalidOperationException( $"La boutique \"{shop.Name}\" appartient déjà à un autre scénario (ScenarioId={shop.ScenarioId}, attendu={OwnerScenarioId}).");
             }
 
             Add(shop);

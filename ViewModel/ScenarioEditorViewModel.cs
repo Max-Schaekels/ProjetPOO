@@ -556,6 +556,15 @@ namespace ProjetPOO.ViewModel
             IsPlayerCharactersEmpty = PlayerCharactersCount == 0;
         }
 
+        /// <summary>
+        /// Recharge le scénario sélectionné depuis la source de données.
+        /// Cette méthode permet de rafraîchir les éléments liés au scénario après un retour de navigation,
+        /// tout en conservant le titre et la description actuellement saisis dans le formulaire.
+        /// </summary>
+        /// <remarks>
+        /// Les champs principaux sont sauvegardés temporairement avant le rechargement,
+        /// puis réappliqués après l'appel à LoadScenario afin d'éviter d'écraser les modifications non sauvegardées.
+        /// </remarks>
         public void RefreshLoadedScenario()
         {
             if (selectedScenario == null)
@@ -581,6 +590,12 @@ namespace ProjetPOO.ViewModel
             ScenarioDescription = currentDescription;
         }
 
+        /// <summary>
+        /// Rattache le nom de race à chaque ennemi à partir de son identifiant de race.
+        /// Cette méthode est utilisée pour permettre un affichage lisible des ennemis dans l'éditeur.
+        /// </summary>
+        /// <param name="enemies">Collection des ennemis à compléter.</param>
+        /// <param name="enemyRaces">Collection des races ennemies disponibles.</param>
         private void SetEnemyDisplayRaceNames(EnemiesCollection enemies, EnemyRacesCollection enemyRaces)
         {
             if (enemies == null || enemyRaces == null)

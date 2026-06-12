@@ -32,7 +32,7 @@ namespace ProjetPOO
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            builder.Services.AddSingleton<DataFilesManager>(new DataFilesManager(CONFIG_PORT_SQL));
+            builder.Services.AddSingleton<DataFilesManager>(new DataFilesManager(CONFIG_HOME_SQL));
 
             //Singleton for AlertServiceDisplay
             builder.Services.AddSingleton<IAlertService, AlertServiceDisplay>();
